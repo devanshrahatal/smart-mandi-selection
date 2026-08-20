@@ -3,7 +3,7 @@
  * Configures routes for Public Landing Page and Protected Admin Dashboard.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -14,6 +14,7 @@ import { useLanguage } from "./hooks/useLanguage";
 
 import Navbar from "./components/Navbar";
 import LanguageSelector from "./components/LanguageSelector";
+import VoiceDemoModal from "./components/VoiceDemoModal";
 import LoginPage from "./pages/LoginPage";
 import DashboardOverview from "./pages/DashboardOverview";
 import MandiDetailPage from "./pages/MandiDetailPage";
@@ -55,6 +56,8 @@ function ProtectedRoute({ children }) {
 // Public Landing Page with dynamic translations
 function LandingPage() {
   const { t } = useLanguage();
+  const [voiceModalOpen, setVoiceModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const MOCK_STATS = [
     { label: t("statMandis"), value: "2,847", change: "+124 this month" },
@@ -225,6 +228,126 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* WhatsApp Voice & Text Bot Live Sandbox Card */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-emerald-950/90 via-slate-900/95 to-teal-950/90 border border-emerald-500/40 shadow-2xl shadow-emerald-950/60 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Top Tag & Title */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                Live WhatsApp AI Assistant
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                Try the Zero-App Voice & Text Bot on WhatsApp
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+                Farmers don't need to install any app. Send a regional voice note, location pin, or crop name directly on WhatsApp for instant net profit recommendations.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setVoiceModalOpen(true)}
+              className="self-start sm:self-center px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 hover:text-white text-xs font-bold transition-all flex items-center gap-2 shadow-lg whitespace-nowrap"
+            >
+              <span>🎙️</span>
+              <span>Try In-Browser Simulator</span>
+            </button>
+          </div>
+
+          {/* 3 Step Interactive Instructions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Step 1 */}
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                  Step 1: Open Bot Gateway
+                </span>
+                <h3 className="text-sm font-bold text-white mt-2">Connect to WhatsApp Sandbox</h3>
+                <p className="text-xs text-slate-400 mt-1 font-mono">
+                  Number: <b className="text-slate-200">+1 (415) 523-8886</b>
+                </p>
+              </div>
+              <a
+                href="https://wa.me/14155238886?text=join%20smart-mandi"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 w-full py-2 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-md"
+              >
+                <span>💬</span>
+                <span>Open in WhatsApp</span>
+              </a>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-mono font-bold text-teal-400 uppercase tracking-wider bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+                  Step 2: Activate Session
+                </span>
+                <h3 className="text-sm font-bold text-white mt-2">Send Sandbox Join Code</h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Send this one-time message to start:
+                </p>
+                <div className="mt-2 p-2 rounded-lg bg-slate-900 border border-emerald-500/30 flex items-center justify-between font-mono text-xs text-emerald-300">
+                  <span>join smart-mandi</span>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard?.writeText("join smart-mandi");
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2500);
+                }}
+                className="mt-4 w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <span>📋</span>
+                <span>{copied ? "✓ Copied!" : "Copy Code"}</span>
+              </button>
+            </div>
+
+            {/* Step 3 */}
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-mono font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+                  Step 3: Ask Any Query
+                </span>
+                <h3 className="text-sm font-bold text-white mt-2">Voice, Text or Location</h3>
+                <div className="space-y-1.5 mt-2 text-[11px] font-mono text-slate-300">
+                  <div className="p-1.5 rounded bg-slate-900/80 border border-slate-800 truncate">
+                    🎙️ "भैया 20 क्विंटल टमाटर बेचना है"
+                  </div>
+                  <div className="p-1.5 rounded bg-slate-900/80 border border-slate-800 truncate">
+                    💬 "Tomato 20q from Jaipur"
+                  </div>
+                  <div className="p-1.5 rounded bg-slate-900/80 border border-slate-800 truncate">
+                    📍 Drop WhatsApp Location Pin
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 text-[10px] text-emerald-400/90 font-medium">
+                ⚡ Instant net profit & voice note reply!
+              </div>
+            </div>
+          </div>
+
+          {/* Prototype Evaluation Disclaimer Banner */}
+          <div className="mt-5 p-3 rounded-xl bg-slate-950/80 border border-slate-800/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] text-slate-400">
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-400 font-bold">ℹ️ Prototype Notice:</span>
+              <span>
+                Connected to the official <b>Twilio WhatsApp Sandbox Gateway</b> for live SIH 2026 jury evaluation.
+              </span>
+            </div>
+            <span className="text-slate-500 font-mono text-[10px] whitespace-nowrap">
+              Gov shortcode deployment ready (+91)
+            </span>
+          </div>
+        </div>
+      </section>
+
       {/* Comparison Demo */}
       <section id="comparison" className="max-w-7xl mx-auto px-6 py-20">
         <div className="mb-10">
@@ -331,6 +454,12 @@ function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Voice AI Demo Modal */}
+      <VoiceDemoModal
+        isOpen={voiceModalOpen}
+        onClose={() => setVoiceModalOpen(false)}
+      />
     </div>
   );
 }
