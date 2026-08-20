@@ -134,8 +134,8 @@ def get_admin_profile(current_admin: AdminUser = Depends(get_current_admin)):
 def trigger_seed(db: Session = Depends(get_db)):
     """Populate database with 10 mandis, 5 crops, 1,500 prices, and cost configs."""
     try:
-        from scripts.seed_data import seed
-        seed(db)
+        from app.utils.seed_data import seed_database
+        seed_database(db)
         return {"status": "success", "message": "Demo data populated successfully"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -153,8 +153,8 @@ def get_dashboard_overview(
     # Auto-seed if running on a fresh database
     if db.query(Mandi).count() == 0:
         try:
-            from scripts.seed_data import seed
-            seed(db)
+            from app.utils.seed_data import seed_database
+            seed_database(db)
         except Exception as err:
             logger.warning("Auto-seed on overview failed: %s", err)
 
@@ -248,8 +248,8 @@ def get_admin_mandis(
     """List all active mandis with their location and editable cost parameters."""
     if db.query(Mandi).count() == 0:
         try:
-            from scripts.seed_data import seed
-            seed(db)
+            from app.utils.seed_data import seed_database
+            seed_database(db)
         except Exception as err:
             logger.warning("Auto-seed in get_admin_mandis failed: %s", err)
     return db.query(Mandi).order_by(Mandi.name.asc()).all()

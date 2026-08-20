@@ -56,11 +56,8 @@ async def lifespan(app: FastAPI):
                 db.commit()
                 logger.info("Default admin password refreshed to real bcrypt hash")
 
-            # Check if demo crops need seeding
-            if db.query(Crop).count() == 0:
-                from scripts.seed_data import seed
-                seed()
-                logger.info("Initial dataset seeded successfully")
+            from app.utils.seed_data import seed_database
+            seed_database(db)
         finally:
             db.close()
     except Exception as e:
