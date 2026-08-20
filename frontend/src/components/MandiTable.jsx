@@ -5,8 +5,10 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../hooks/useLanguage";
 
 export default function MandiTable({ mandis = [], onEditCost }) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
 
   const filtered = mandis.filter(
@@ -23,14 +25,16 @@ export default function MandiTable({ mandis = [], onEditCost }) {
         <div className="relative w-full sm:w-72">
           <input
             type="text"
-            placeholder="Search by mandi, state, or district..."
+            placeholder={t("searchMandiPlaceholder") || "Search by mandi, state, or district..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-xs text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
           />
         </div>
         <span className="text-xs text-[var(--color-text-muted)] font-mono self-end sm:self-center">
-          Showing {filtered.length} of {mandis.length} mandis
+          {t("showingMandisCount")
+            ? t("showingMandisCount").replace("{count}", filtered.length).replace("{total}", mandis.length)
+            : `Showing ${filtered.length} of ${mandis.length} mandis`}
         </span>
       </div>
 
@@ -39,12 +43,12 @@ export default function MandiTable({ mandis = [], onEditCost }) {
         <table className="w-full text-left text-xs">
           <thead className="bg-[var(--color-surface-raised)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-muted)] uppercase tracking-wider font-medium">
             <tr>
-              <th className="py-3.5 px-4">Mandi Name</th>
-              <th className="py-3.5 px-4">State / District</th>
-              <th className="py-3.5 px-4 text-right">Commission</th>
-              <th className="py-3.5 px-4 text-right">Loading</th>
-              <th className="py-3.5 px-4 text-right">Transport Rate</th>
-              <th className="py-3.5 px-4 text-center">Actions</th>
+              <th className="py-3.5 px-4">{t("thMandiName")}</th>
+              <th className="py-3.5 px-4">{t("thStateDistrict")}</th>
+              <th className="py-3.5 px-4 text-right">{t("thCommissionPct")}</th>
+              <th className="py-3.5 px-4 text-right">{t("thLoadingCost")}</th>
+              <th className="py-3.5 px-4 text-right">{t("thTransportRate")}</th>
+              <th className="py-3.5 px-4 text-center">{t("thActions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--color-border-subtle)]">
@@ -86,14 +90,14 @@ export default function MandiTable({ mandis = [], onEditCost }) {
                         to={`/admin/mandis?mandi_id=${mandi.id}`}
                         className="px-2.5 py-1 rounded bg-[var(--color-surface-overlay)] hover:bg-[var(--color-border)] text-white text-[11px] font-medium transition-colors"
                       >
-                        Trends
+                        {t("priceTrendsTab") || "Trends"}
                       </Link>
                       {onEditCost && (
                         <button
                           onClick={() => onEditCost(mandi)}
                           className="px-2.5 py-1 rounded border border-[var(--color-accent)]/30 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 text-[11px] font-medium transition-colors"
                         >
-                          Edit Costs
+                          {t("editCostsBtn") || "Edit Costs"}
                         </button>
                       )}
                     </div>
