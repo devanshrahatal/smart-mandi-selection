@@ -1,6 +1,7 @@
 """
 Auto-seeding utility for Smart Mandi database.
-Provides 10 Mandis, 5 Crops, 1,500 Price Records, Cost Configs, and Sample Queries.
+Provides comprehensive APMC Mandis (including Tier-1 and Tier-2 hubs like Vadodara, Surat, Rajkot, Pune, Nashik),
+5 Crops, 30-day Price Records, Cost Configs, and Sample Queries.
 """
 
 import random
@@ -16,6 +17,83 @@ from app.core.security import get_password_hash
 logger = logging.getLogger(__name__)
 
 MANDIS = [
+    # Gujarat Markets
+    {
+        "name": "Vadodara APMC",
+        "state": "Gujarat",
+        "district": "Vadodara",
+        "latitude": 22.3168,
+        "longitude": 73.2386,
+        "address": "Sayajipura APMC Market Yard, NH-8, Vadodara, Gujarat 390019",
+        "cost": {"commission": 5.0, "loading": 28, "unloading": 20, "transport_rate": 2.2},
+    },
+    {
+        "name": "Ahmedabad APMC",
+        "state": "Gujarat",
+        "district": "Ahmedabad",
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "address": "APMC Market, Jamalpur, Ahmedabad, Gujarat 380022",
+        "cost": {"commission": 5.5, "loading": 32, "unloading": 22, "transport_rate": 2.4},
+    },
+    {
+        "name": "Surat APMC",
+        "state": "Gujarat",
+        "district": "Surat",
+        "latitude": 21.1925,
+        "longitude": 72.8423,
+        "address": "Sardar Market APMC, Sahara Darwaja, Surat, Gujarat 395002",
+        "cost": {"commission": 5.2, "loading": 30, "unloading": 22, "transport_rate": 2.3},
+    },
+    {
+        "name": "Rajkot APMC",
+        "state": "Gujarat",
+        "district": "Rajkot",
+        "latitude": 22.3216,
+        "longitude": 70.8123,
+        "address": "Bedi Mandi Yard, Rajkot, Gujarat 360003",
+        "cost": {"commission": 4.8, "loading": 26, "unloading": 18, "transport_rate": 2.1},
+    },
+
+    # Maharashtra Markets
+    {
+        "name": "Vashi APMC",
+        "state": "Maharashtra",
+        "district": "Thane",
+        "latitude": 19.0760,
+        "longitude": 72.9987,
+        "address": "APMC Market, Sector 19, Vashi, Navi Mumbai 400703",
+        "cost": {"commission": 7.0, "loading": 50, "unloading": 40, "transport_rate": 3.5},
+    },
+    {
+        "name": "Pune APMC",
+        "state": "Maharashtra",
+        "district": "Pune",
+        "latitude": 18.4967,
+        "longitude": 73.8643,
+        "address": "Gultekdi Market Yard, Pune, Maharashtra 411037",
+        "cost": {"commission": 6.0, "loading": 38, "unloading": 28, "transport_rate": 2.7},
+    },
+    {
+        "name": "Nashik APMC",
+        "state": "Maharashtra",
+        "district": "Nashik",
+        "latitude": 20.0063,
+        "longitude": 73.7903,
+        "address": "Dindori Road Market Yard, Nashik, Maharashtra 422004",
+        "cost": {"commission": 5.0, "loading": 30, "unloading": 20, "transport_rate": 2.2},
+    },
+    {
+        "name": "Nagpur APMC",
+        "state": "Maharashtra",
+        "district": "Nagpur",
+        "latitude": 21.1738,
+        "longitude": 79.1354,
+        "address": "Kalamna Market Yard, Nagpur, Maharashtra 440008",
+        "cost": {"commission": 5.5, "loading": 32, "unloading": 24, "transport_rate": 2.4},
+    },
+
+    # Delhi & North India
     {
         "name": "Azadpur Mandi",
         "state": "Delhi",
@@ -26,22 +104,31 @@ MANDIS = [
         "cost": {"commission": 8.0, "loading": 45, "unloading": 35, "transport_rate": 3.0},
     },
     {
-        "name": "Vashi APMC",
-        "state": "Maharashtra",
-        "district": "Thane",
-        "latitude": 19.0760,
-        "longitude": 72.9987,
-        "address": "APMC Market, Vashi, Navi Mumbai 400703",
-        "cost": {"commission": 7.0, "loading": 50, "unloading": 40, "transport_rate": 3.5},
-    },
-    {
         "name": "Kota Krishi Mandi",
         "state": "Rajasthan",
         "district": "Kota",
         "latitude": 25.2138,
         "longitude": 75.8648,
-        "address": "Krishi Upaj Mandi, Kota, Rajasthan 324001",
+        "address": "Bhamashah Krishi Upaj Mandi, Kota, Rajasthan 324005",
         "cost": {"commission": 4.5, "loading": 25, "unloading": 15, "transport_rate": 2.0},
+    },
+    {
+        "name": "Jaipur Muhana Mandi",
+        "state": "Rajasthan",
+        "district": "Jaipur",
+        "latitude": 26.8124,
+        "longitude": 75.7483,
+        "address": "Muhana Mandi Yard, Sanganer, Jaipur, Rajasthan 302029",
+        "cost": {"commission": 4.8, "loading": 28, "unloading": 18, "transport_rate": 2.1},
+    },
+    {
+        "name": "Indore Mandi",
+        "state": "Madhya Pradesh",
+        "district": "Indore",
+        "latitude": 22.7196,
+        "longitude": 75.8577,
+        "address": "Choithram Mandi, Indore, MP 452014",
+        "cost": {"commission": 5.0, "loading": 30, "unloading": 20, "transport_rate": 2.0},
     },
     {
         "name": "Jalandhar Sabzi Mandi",
@@ -53,22 +140,13 @@ MANDIS = [
         "cost": {"commission": 5.0, "loading": 30, "unloading": 20, "transport_rate": 2.2},
     },
     {
-        "name": "Hubli-Dharwad APMC",
-        "state": "Karnataka",
-        "district": "Dharwad",
-        "latitude": 15.3647,
-        "longitude": 75.1240,
-        "address": "APMC Market Yard, Hubli, Karnataka 580028",
-        "cost": {"commission": 5.5, "loading": 28, "unloading": 18, "transport_rate": 2.3},
-    },
-    {
-        "name": "Indore Mandi",
-        "state": "Madhya Pradesh",
-        "district": "Indore",
-        "latitude": 22.7196,
-        "longitude": 75.8577,
-        "address": "Krishi Upaj Mandi, Indore, MP 452001",
-        "cost": {"commission": 5.0, "loading": 30, "unloading": 20, "transport_rate": 2.0},
+        "name": "Lucknow Mandi",
+        "state": "Uttar Pradesh",
+        "district": "Lucknow",
+        "latitude": 26.8467,
+        "longitude": 80.9462,
+        "address": "Dubagga Mandi, Lucknow, UP 226003",
+        "cost": {"commission": 6.0, "loading": 35, "unloading": 25, "transport_rate": 2.5},
     },
     {
         "name": "Patna Mandi",
@@ -76,26 +154,17 @@ MANDIS = [
         "district": "Patna",
         "latitude": 25.6093,
         "longitude": 85.1376,
-        "address": "Kankarbagh Mandi, Patna, Bihar 800020",
+        "address": "Mithapur Mandi, Patna, Bihar 800001",
         "cost": {"commission": 3.5, "loading": 20, "unloading": 15, "transport_rate": 1.8},
     },
     {
-        "name": "Lucknow Mandi",
-        "state": "Uttar Pradesh",
-        "district": "Lucknow",
-        "latitude": 26.8467,
-        "longitude": 80.9462,
-        "address": "Kaiserbagh Mandi, Lucknow, UP 226001",
-        "cost": {"commission": 6.0, "loading": 35, "unloading": 25, "transport_rate": 2.5},
-    },
-    {
-        "name": "Ahmedabad APMC",
-        "state": "Gujarat",
-        "district": "Ahmedabad",
-        "latitude": 23.0225,
-        "longitude": 72.5714,
-        "address": "APMC Market, Jamalpur, Ahmedabad 380022",
-        "cost": {"commission": 5.5, "loading": 32, "unloading": 22, "transport_rate": 2.4},
+        "name": "Hubli-Dharwad APMC",
+        "state": "Karnataka",
+        "district": "Dharwad",
+        "latitude": 15.3647,
+        "longitude": 75.1240,
+        "address": "APMC Market Yard, Amargol, Hubli, Karnataka 580025",
+        "cost": {"commission": 5.5, "loading": 28, "unloading": 18, "transport_rate": 2.3},
     },
     {
         "name": "Bowenpally Market",
@@ -103,7 +172,7 @@ MANDIS = [
         "district": "Hyderabad",
         "latitude": 17.4700,
         "longitude": 78.4800,
-        "address": "Bowenpally Market Yard, Hyderabad 500011",
+        "address": "Bowenpally Market Yard, Secunderabad, Telangana 500011",
         "cost": {"commission": 6.0, "loading": 35, "unloading": 28, "transport_rate": 2.6},
     },
 ]
@@ -118,117 +187,127 @@ CROPS = [
 
 BASE_PRICES = {
     "Tomato": 2200,
-    "Onion": 1800,
-    "Potato": 1200,
-    "Wheat": 2400,
-    "Banana": 2600,
+    "Onion": 1850,
+    "Potato": 1350,
+    "Wheat": 2275,
+    "Banana": 1650,
 }
 
+# Regional price variation multipliers
 MANDI_PRICE_MULTIPLIERS = {
+    "Vadodara APMC": 1.04,
+    "Ahmedabad APMC": 1.07,
+    "Surat APMC": 1.09,
+    "Rajkot APMC": 0.98,
     "Azadpur Mandi": 1.15,
-    "Vashi APMC": 1.20,
-    "Kota Krishi Mandi": 0.95,
-    "Jalandhar Sabzi Mandi": 1.00,
-    "Hubli-Dharwad APMC": 0.98,
-    "Indore Mandi": 1.02,
-    "Patna Mandi": 0.90,
-    "Lucknow Mandi": 1.05,
-    "Ahmedabad APMC": 1.08,
+    "Vashi APMC": 1.18,
+    "Pune APMC": 1.10,
+    "Nashik APMC": 0.95,
+    "Nagpur APMC": 1.02,
+    "Kota Krishi Mandi": 0.96,
+    "Jaipur Muhana Mandi": 1.03,
+    "Indore Mandi": 0.97,
+    "Jalandhar Sabzi Mandi": 1.02,
+    "Lucknow Mandi": 1.04,
+    "Patna Mandi": 0.94,
+    "Hubli-Dharwad APMC": 1.03,
     "Bowenpally Market": 1.06,
 }
 
 
-def generate_price_series(base_price: float, multiplier: float, days: int = 30) -> list:
-    random.seed(42)
-    trend = random.uniform(-0.003, 0.003)
+def generate_price_series(base_price: float, multiplier: float, days: int = 30):
+    """Generate 30-day simulated price trajectory with realistic market volatility."""
+    adj_base = base_price * multiplier
     prices = []
-    current = base_price * multiplier
-
-    for day in range(days):
-        noise = random.gauss(0, base_price * 0.02)
-        current = current * (1 + trend) + noise
-        current = max(current, base_price * 0.7)
-        current = min(current, base_price * 1.5)
-
-        spread = current * random.uniform(0.05, 0.12)
-        min_p = round(current - spread * 0.4, 2)
-        max_p = round(current + spread * 0.6, 2)
-        modal_p = round(current, 2)
+    current = adj_base
+    for _ in range(days):
+        pct_change = random.gauss(0.001, 0.018)
+        current = max(adj_base * 0.75, min(adj_base * 1.35, current * (1 + pct_change)))
+        spread = current * random.uniform(0.04, 0.08)
+        min_p = round(current - spread, 1)
+        modal_p = round(current, 1)
+        max_p = round(current + spread, 1)
         prices.append((min_p, modal_p, max_p))
-
     return prices
 
 
 def seed_database(db: Optional[Session] = None):
-    """Seed mandis, crops, prices, and sample queries if not already present."""
+    """Populate database with mandis, crops, prices, cost configs, and admin user."""
     close_db = False
     if db is None:
-        Base.metadata.create_all(bind=engine)
         db = SessionLocal()
         close_db = True
 
     try:
-        # Check if already seeded
-        if db.query(Mandi).count() > 0:
-            return
-
-        # 1. Mandis & Cost Configs
+        # 1. Seed or Upsert Mandis & CostConfigs
         mandi_objects = {}
-        for m in MANDIS:
-            mandi = Mandi(
-                name=m["name"],
-                state=m["state"],
-                district=m["district"],
-                address=m["address"],
-                latitude=m["latitude"],
-                longitude=m["longitude"],
-            )
-            db.add(mandi)
-            db.flush()
-            mandi_objects[m["name"]] = mandi
+        for m_data in MANDIS:
+            mandi = db.query(Mandi).filter(Mandi.name == m_data["name"]).first()
+            if not mandi:
+                mandi = Mandi(
+                    name=m_data["name"],
+                    state=m_data["state"],
+                    district=m_data["district"],
+                    latitude=m_data["latitude"],
+                    longitude=m_data["longitude"],
+                    address=m_data["address"],
+                    is_active=True,
+                )
+                db.add(mandi)
+                db.flush()
 
-            cost = CostConfig(
-                mandi_id=mandi.id,
-                commission_percentage=m["cost"]["commission"],
-                loading_cost_per_quintal=m["cost"]["loading"],
-                unloading_cost_per_quintal=m["cost"]["unloading"],
-                transport_rate_per_km_per_quintal=m["cost"]["transport_rate"],
-            )
-            db.add(cost)
+                cfg = m_data["cost"]
+                cost_config = CostConfig(
+                    mandi_id=mandi.id,
+                    commission_percentage=cfg["commission"],
+                    loading_cost_per_quintal=cfg["loading"],
+                    unloading_cost_per_quintal=cfg["unloading"],
+                    transport_rate_per_km_per_quintal=cfg["transport_rate"],
+                )
+                db.add(cost_config)
+            mandi_objects[m_data["name"]] = mandi
 
-        # 2. Crops
+        # 2. Seed Crops
         crop_objects = {}
         for c in CROPS:
-            crop = Crop(
-                name=c["name"],
-                category=c["category"],
-                perishability_index=c["perishability_index"],
-            )
-            db.add(crop)
-            db.flush()
+            crop = db.query(Crop).filter(Crop.name == c["name"]).first()
+            if not crop:
+                crop = Crop(
+                    name=c["name"],
+                    category=c["category"],
+                    perishability_index=c["perishability_index"],
+                )
+                db.add(crop)
+                db.flush()
             crop_objects[c["name"]] = crop
 
         # 3. 30-Day Price History
         today = date.today()
         for mandi_name, mandi_obj in mandi_objects.items():
-            multiplier = MANDI_PRICE_MULTIPLIERS[mandi_name]
+            multiplier = MANDI_PRICE_MULTIPLIERS.get(mandi_name, 1.0)
             for crop_name, crop_obj in crop_objects.items():
-                base = BASE_PRICES[crop_name]
-                random.seed(hash(f"{mandi_name}_{crop_name}"))
-                series = generate_price_series(base, multiplier, days=30)
+                existing_prices = (
+                    db.query(MandiPrice)
+                    .filter(MandiPrice.mandi_id == mandi_obj.id, MandiPrice.crop_id == crop_obj.id)
+                    .count()
+                )
+                if existing_prices == 0:
+                    base = BASE_PRICES[crop_name]
+                    random.seed(hash(f"{mandi_name}_{crop_name}"))
+                    series = generate_price_series(base, multiplier, days=30)
 
-                for day_offset, (min_p, modal_p, max_p) in enumerate(series):
-                    price_date = today - timedelta(days=29 - day_offset)
-                    price = MandiPrice(
-                        mandi_id=mandi_obj.id,
-                        crop_id=crop_obj.id,
-                        min_price=min_p,
-                        modal_price=modal_p,
-                        max_price=max_p,
-                        date=price_date,
-                        source="seed_data",
-                    )
-                    db.add(price)
+                    for day_offset, (min_p, modal_p, max_p) in enumerate(series):
+                        price_date = today - timedelta(days=29 - day_offset)
+                        price = MandiPrice(
+                            mandi_id=mandi_obj.id,
+                            crop_id=crop_obj.id,
+                            min_price=min_p,
+                            modal_price=modal_p,
+                            max_price=max_p,
+                            date=price_date,
+                            source="seed_data",
+                        )
+                        db.add(price)
 
         # 4. Default Admin User
         admin = db.query(AdminUser).filter(AdminUser.username == "admin").first()
@@ -242,70 +321,60 @@ def seed_database(db: Optional[Session] = None):
             db.add(admin)
 
         # 5. Demo Farmer Queries
-        now = datetime.utcnow()
-        kota_mandi = mandi_objects.get("Kota Krishi Mandi")
-        azadpur_mandi = mandi_objects.get("Azadpur Mandi")
-        vashi_mandi = mandi_objects.get("Vashi APMC")
-        tomato_crop = crop_objects.get("Tomato")
-        onion_crop = crop_objects.get("Onion")
-        potato_crop = crop_objects.get("Potato")
-        wheat_crop = crop_objects.get("Wheat")
+        if db.query(FarmerQuery).count() == 0:
+            now = datetime.utcnow()
+            kota_mandi = mandi_objects.get("Kota Krishi Mandi")
+            azadpur_mandi = mandi_objects.get("Azadpur Mandi")
+            vashi_mandi = mandi_objects.get("Vashi APMC")
+            vadodara_mandi = mandi_objects.get("Vadodara APMC")
+            tomato_crop = crop_objects.get("Tomato")
+            onion_crop = crop_objects.get("Onion")
+            potato_crop = crop_objects.get("Potato")
+            wheat_crop = crop_objects.get("Wheat")
 
-        demo_queries = [
-            FarmerQuery(
-                phone_number="+919876543210",
-                crop_id=tomato_crop.id if tomato_crop else None,
-                crop_name="Tomato",
-                quantity_quintals=20.0,
-                latitude=26.9124,
-                longitude=75.7873,
-                recommended_mandi_id=kota_mandi.id if kota_mandi else None,
-                query_text="Tomato 20q from Jaipur",
-                response_text="Best Mandi: Kota Krishi Mandi | Net Profit: Rs 38,400",
-                created_at=now - timedelta(minutes=25),
-            ),
-            FarmerQuery(
-                phone_number="+919812345678",
-                crop_id=onion_crop.id if onion_crop else None,
-                crop_name="Onion",
-                quantity_quintals=50.0,
-                latitude=19.9975,
-                longitude=73.7898,
-                recommended_mandi_id=vashi_mandi.id if vashi_mandi else None,
-                query_text="50 quintals onion from Nashik",
-                response_text="Best Mandi: Vashi APMC | Net Profit: Rs 78,500",
-                created_at=now - timedelta(hours=2),
-            ),
-            FarmerQuery(
-                phone_number="+919765432109",
-                crop_id=potato_crop.id if potato_crop else None,
-                crop_name="Potato",
-                quantity_quintals=35.0,
-                latitude=27.1767,
-                longitude=78.0081,
-                recommended_mandi_id=azadpur_mandi.id if azadpur_mandi else None,
-                query_text="Potato 35q from Agra",
-                response_text="Best Mandi: Azadpur Mandi | Net Profit: Rs 34,200",
-                created_at=now - timedelta(hours=4),
-            ),
-            FarmerQuery(
-                phone_number="+919654321098",
-                crop_id=wheat_crop.id if wheat_crop else None,
-                crop_name="Wheat",
-                quantity_quintals=100.0,
-                latitude=29.6857,
-                longitude=76.9905,
-                recommended_mandi_id=azadpur_mandi.id if azadpur_mandi else None,
-                query_text="Wheat 100q from Karnal",
-                response_text="Best Mandi: Azadpur Mandi | Net Profit: Rs 2,15,000",
-                created_at=now - timedelta(hours=6),
-            ),
-        ]
-        for q in demo_queries:
-            db.add(q)
+            demo_queries = [
+                FarmerQuery(
+                    phone_number="+919876543210",
+                    crop_id=tomato_crop.id if tomato_crop else None,
+                    crop_name="Tomato",
+                    quantity_quintals=20.0,
+                    latitude=26.9124,
+                    longitude=75.7873,
+                    recommended_mandi_id=kota_mandi.id if kota_mandi else None,
+                    query_text="Tomato 20q from Jaipur",
+                    response_text="Best Mandi: Kota Krishi Mandi | Net Profit: Rs 38,400",
+                    created_at=now - timedelta(minutes=25),
+                ),
+                FarmerQuery(
+                    phone_number="+919812345678",
+                    crop_id=onion_crop.id if onion_crop else None,
+                    crop_name="Onion",
+                    quantity_quintals=50.0,
+                    latitude=19.9975,
+                    longitude=73.7898,
+                    recommended_mandi_id=vashi_mandi.id if vashi_mandi else None,
+                    query_text="50 quintals onion from Nashik",
+                    response_text="Best Mandi: Vashi APMC | Net Profit: Rs 78,500",
+                    created_at=now - timedelta(hours=2),
+                ),
+                FarmerQuery(
+                    phone_number="+919823456789",
+                    crop_id=tomato_crop.id if tomato_crop else None,
+                    crop_name="Tomato",
+                    quantity_quintals=30.0,
+                    latitude=22.3072,
+                    longitude=73.1812,
+                    recommended_mandi_id=vadodara_mandi.id if vadodara_mandi else None,
+                    query_text="30 quintals tomato from Vadodara",
+                    response_text="Best Mandi: Vadodara APMC | Net Profit: Rs 61,200",
+                    created_at=now - timedelta(hours=3),
+                ),
+            ]
+            for q in demo_queries:
+                db.add(q)
 
         db.commit()
-        logger.info("Successfully seeded Smart Mandi dataset (10 mandis, 5 crops, 1,500 prices, 5 queries)")
+        logger.info("Successfully seeded Smart Mandi dataset (%d mandis, 5 crops)", len(MANDIS))
     except Exception as e:
         db.rollback()
         logger.error("Seeding error: %s", e)

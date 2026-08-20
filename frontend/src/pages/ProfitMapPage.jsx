@@ -4,9 +4,13 @@ import ProfitMap from "../components/ProfitMap";
 import { useLanguage } from "../hooks/useLanguage";
 
 const POPULAR_ORIGINS = [
-  { name: "Jaipur, Rajasthan", lat: 26.9124, lon: 75.7873 },
-  { name: "Nashik, Maharashtra", lat: 19.9975, lon: 73.7898 },
+  { name: "Vadodara, Gujarat", lat: 22.3072, lon: 73.1812 },
+  { name: "Surat, Gujarat", lat: 21.1702, lon: 72.8311 },
+  { name: "Rajkot, Gujarat", lat: 22.3039, lon: 70.8022 },
   { name: "Ahmedabad, Gujarat", lat: 23.0225, lon: 72.5714 },
+  { name: "Pune, Maharashtra", lat: 18.5204, lon: 73.8567 },
+  { name: "Nashik, Maharashtra", lat: 19.9975, lon: 73.7898 },
+  { name: "Jaipur, Rajasthan", lat: 26.9124, lon: 75.7873 },
   { name: "Indore, Madhya Pradesh", lat: 22.7196, lon: 75.8577 },
   { name: "Delhi NCR", lat: 28.7165, lon: 77.1724 },
 ];
