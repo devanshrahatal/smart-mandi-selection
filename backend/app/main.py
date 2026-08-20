@@ -22,6 +22,7 @@ from app.jobs.price_refresh_job import (
 )
 
 
+import logging
 from app.database import Base, engine, SessionLocal
 from app.models.admin_user import AdminUser
 from app.models.crop import Crop
