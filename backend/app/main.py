@@ -22,10 +22,22 @@ from app.jobs.price_refresh_job import (
 )
 
 
+import logging
+from app.database import Base, engine
+import app.models  # Ensure all ORM models are registered
+
+logger = logging.getLogger(__name__)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle manager for background jobs and client connections."""
-    # Startup
+    # Startup: Ensure database tables exist
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        logger.warning(f"Database auto-creation check: {e}")
+
     start_price_refresh_scheduler()
     yield
     # Shutdown

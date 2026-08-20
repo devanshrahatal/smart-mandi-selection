@@ -9,14 +9,29 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from app.config import settings
 
 # --- Engine ---
-# MySQL via PyMySQL — pool_pre_ping keeps connections alive
-engine = create_engine(
-    settings.DATABASE_URL,
-    pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20,
-    echo=settings.DEBUG,  # log SQL queries when DEBUG=true
-)
+db_url = settings.DATABASE_URL or "sqlite:///./smart_mandi.db"
+if db_url.startswith("sqlite"):
+    engine = create_engine(
+        db_url,
+        connect_args={"check_same_thread": False},
+        echo=settings.DEBUG,
+    )
+elif db_url.startswith("postgres://"):
+    # Handle older postgres:// URLs from hosting providers
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+    engine = create_engine(
+        db_url,
+        pool_pre_ping=True,
+        echo=settings.DEBUG,
+    )
+else:
+    engine = create_engine(
+        db_url,
+        pool_pre_ping=True,
+        pool_size=10,
+        max_overflow=20,
+        echo=settings.DEBUG,
+    )
 
 # --- Session factory ---
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
