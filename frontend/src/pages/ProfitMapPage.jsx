@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { apiClient } from "../api/client";
 import ProfitMap from "../components/ProfitMap";
 import { useLanguage } from "../hooks/useLanguage";
 
@@ -21,8 +21,8 @@ export default function ProfitMapPage() {
   const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
-    // Fetch crops
-    axios.get("/api/crops").then((res) => {
+    // Fetch crops via apiClient
+    apiClient.get("/api/crops").then((res) => {
       if (res.data && res.data.length > 0) {
         setCrops(res.data);
       }
@@ -38,7 +38,7 @@ export default function ProfitMapPage() {
         farmer_latitude: selectedOrigin.lat,
         farmer_longitude: selectedOrigin.lon,
       };
-      const res = await axios.post("/api/recommendations", payload);
+      const res = await apiClient.post("/api/recommendations", payload);
       if (res.data && res.data.ranked_mandis) {
         const mapped = res.data.ranked_mandis.map((m) => ({
           mandi_id: m.mandi_id,
@@ -68,21 +68,21 @@ export default function ProfitMapPage() {
   }, [selectedCrop, selectedOrigin, quantity]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="bg-slate-800/80 border border-slate-700/60 backdrop-blur-md rounded-2xl p-6 shadow-xl">
         <h1 className="text-2xl font-black text-slate-100 flex items-center gap-2">
-          {t.mapTitle || "Geospatial Mandi Net Profit Map"}
+          {t("mapTitle")}
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          {t.mapSubtitle || "Interactive road haulage and net take-home profit routing comparison."}
+          {t("mapSubtitle")}
         </p>
 
         {/* Filter Controls */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              {t.mapOriginLabel || "Farmer Origin"}
+              {t("mapOriginLabel")}
             </label>
             <select
               value={selectedOrigin.name}
@@ -102,7 +102,7 @@ export default function ProfitMapPage() {
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              {t.mapCropLabel || "Crop"}
+              {t("mapCropLabel")}
             </label>
             <select
               value={selectedCrop}
@@ -112,16 +112,16 @@ export default function ProfitMapPage() {
               {crops.length > 0 ? (
                 crops.map((c) => (
                   <option key={c.id} value={c.name}>
-                    {c.name} ({c.category})
+                    {t(c.name) || c.name} ({c.category})
                   </option>
                 ))
               ) : (
                 <>
-                  <option value="Tomato">Tomato</option>
-                  <option value="Onion">Onion</option>
-                  <option value="Potato">Potato</option>
-                  <option value="Wheat">Wheat</option>
-                  <option value="Banana">Banana</option>
+                  <option value="Tomato">{t("Tomato") || "Tomato"}</option>
+                  <option value="Onion">{t("Onion") || "Onion"}</option>
+                  <option value="Potato">{t("Potato") || "Potato"}</option>
+                  <option value="Wheat">{t("Wheat") || "Wheat"}</option>
+                  <option value="Banana">{t("Banana") || "Banana"}</option>
                 </>
               )}
             </select>
@@ -129,7 +129,7 @@ export default function ProfitMapPage() {
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              {t.mapQuantityLabel || "Quantity (Quintals)"}: <b className="text-emerald-400">{quantity}q</b>
+              {t("mapQuantityLabel")}: <b className="text-emerald-400 font-mono">{quantity}q</b>
             </label>
             <input
               type="range"
@@ -148,57 +148,81 @@ export default function ProfitMapPage() {
       <ProfitMap
         farmerLocation={{
           lat: selectedOrigin.lat,
-          lon: selectedOrigin.lon,
+          lng: selectedOrigin.lon,
           name: selectedOrigin.name,
         }}
         mandis={recommendations}
-        cropName={selectedCrop}
-        quantity={quantity}
+        cropName={t(selectedCrop) || selectedCrop}
+        quantityQuintals={quantity}
       />
 
-      {/* Ranked Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {recommendations.slice(0, 3).map((mandi, idx) => (
-          <div
-            key={mandi.mandi_id}
-            className={`p-5 rounded-2xl border transition-all ${
-              idx === 0
-                ? "bg-emerald-950/40 border-emerald-500/60 shadow-lg shadow-emerald-900/20"
-                : "bg-slate-800/60 border-slate-700/50"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded ${
-                idx === 0
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                  : "bg-slate-900/80 text-slate-300"
-              }`}>
-                {idx === 0 ? "Rank #1 • Top Choice" : idx === 1 ? "Rank #2 • Option" : "Rank #3 • Option"}
-              </span>
-              <span className="text-xs text-slate-400">
-                {mandi.distance_km?.toFixed(0)} km
-              </span>
-            </div>
-
-            <h3 className="text-lg font-bold text-slate-100 mt-2">{mandi.mandi_name}</h3>
-            <p className="text-xs text-slate-400">{mandi.district}, {mandi.state}</p>
-
-            <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-baseline justify-between">
-              <div>
-                <span className="text-[11px] text-slate-400 uppercase">Net Take-Home:</span>
-                <div className="text-xl font-black text-emerald-400">
-                  ₹{mandi.net_profit_per_quintal?.toLocaleString()}<span className="text-xs text-slate-400">/q</span>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="text-[11px] text-slate-400 uppercase">Total Cash:</span>
-                <div className="text-sm font-bold text-slate-200">
-                  ₹{mandi.total_net_profit?.toLocaleString()}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Ranked Table */}
+      <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
+        <h2 className="text-lg font-bold text-slate-100 mb-4">
+          {t("mapRankedHeading")} ({t(selectedCrop) || selectedCrop} — {quantity}q)
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-700">
+              <tr>
+                <th className="py-3 px-4">Rank</th>
+                <th className="py-3 px-4">Mandi</th>
+                <th className="py-3 px-4">Distance & Time</th>
+                <th className="py-3 px-4 text-right">Modal Price</th>
+                <th className="py-3 px-4 text-right">Deductions/q</th>
+                <th className="py-3 px-4 text-right">Net Profit/q</th>
+                <th className="py-3 px-4 text-right">Total Take-Home</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700/60 font-mono">
+              {recommendations.map((m, idx) => (
+                <tr
+                  key={m.mandi_id}
+                  className={`hover:bg-slate-700/40 transition-colors ${
+                    idx === 0 ? "bg-emerald-950/20 font-bold" : ""
+                  }`}
+                >
+                  <td className="py-3 px-4">
+                    <span
+                      className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                        idx === 0
+                          ? "bg-emerald-500 text-slate-950"
+                          : idx === 1
+                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                          : "bg-slate-700 text-slate-300"
+                      }`}
+                    >
+                      #{idx + 1} {idx === 0 ? "BEST" : ""}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 font-sans font-semibold text-slate-100">
+                    {m.mandi_name}
+                    <div className="text-[10px] text-slate-400 font-normal">{m.state}</div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-300">
+                    {m.distance_km} km ({m.travel_time_hours}h)
+                  </td>
+                  <td className="py-3 px-4 text-right text-slate-200">₹{m.modal_price}</td>
+                  <td className="py-3 px-4 text-right text-rose-400 font-medium">-₹{m.deductions}</td>
+                  <td
+                    className={`py-3 px-4 text-right text-sm font-black ${
+                      idx === 0 ? "text-emerald-400" : "text-slate-200"
+                    }`}
+                  >
+                    ₹{m.net_profit_per_quintal}
+                  </td>
+                  <td
+                    className={`py-3 px-4 text-right text-sm font-black ${
+                      idx === 0 ? "text-emerald-300" : "text-slate-100"
+                    }`}
+                  >
+                    ₹{m.total_net_profit?.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

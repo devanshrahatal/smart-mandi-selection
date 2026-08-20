@@ -80,7 +80,7 @@ export default function DashboardOverview() {
             className="surface-card p-5 border border-[var(--color-border-subtle)] space-y-1"
           >
             <p className="text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">
-              {m.label}
+              {t(m.label) || m.label}
             </p>
             <p className="text-2xl font-bold mono tracking-tight text-white">
               {m.value}
@@ -88,7 +88,7 @@ export default function DashboardOverview() {
             {m.change && (
               <p className="text-[11px] text-[var(--color-accent)] flex items-center gap-1 font-mono">
                 <span>↑</span>
-                <span>{m.change}</span>
+                <span>{t(m.change) || m.change}</span>
               </p>
             )}
           </div>
@@ -103,13 +103,13 @@ export default function DashboardOverview() {
         >
           <div>
             <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-              Interactive Geospatial Map
+              {t("mapBannerTag")}
             </span>
             <h3 className="text-base font-bold text-white mt-1 group-hover:text-emerald-300 transition-colors">
-              Explore Mandi Profit & Route Map →
+              {t("mapBannerTitle")}
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Visual road haulage routes, green-to-red profit pins, and live deduction comparisons.
+              {t("mapBannerDesc")}
             </p>
           </div>
         </a>
@@ -120,13 +120,13 @@ export default function DashboardOverview() {
         >
           <div>
             <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
-              Kisan Shared Logistics
+              {t("poolBannerTag")}
             </span>
             <h3 className="text-base font-bold text-white mt-1 group-hover:text-teal-300 transition-colors">
-              Open Kisan Pool & Savings Calculator →
+              {t("poolBannerTitle")}
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Cluster smallholder harvests (5-25q) to slash commercial truckload freight by 45-60%.
+              {t("poolBannerDesc")}
             </p>
           </div>
         </a>
@@ -138,7 +138,7 @@ export default function DashboardOverview() {
         <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white">{t("topCropsTitle")}</h2>
-            <span className="text-[11px] font-mono text-[var(--color-text-muted)]">By volume</span>
+            <span className="text-[11px] font-mono text-[var(--color-text-muted)]">{t("byVolume")}</span>
           </div>
 
           <div className="space-y-3">
@@ -146,7 +146,7 @@ export default function DashboardOverview() {
               data.top_crops.map((c) => (
                 <div key={c.crop_name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-white">{c.crop_name}</span>
+                    <span className="font-medium text-white">{t(c.crop_name) || c.crop_name}</span>
                     <span className="font-mono text-[var(--color-text-secondary)]">
                       {c.query_count} queries ({c.percentage}%)
                     </span>
@@ -161,7 +161,7 @@ export default function DashboardOverview() {
               ))
             ) : (
               <div className="text-xs text-[var(--color-text-muted)] py-4 text-center">
-                No crop queries logged yet. Test with WhatsApp simulator or API!
+                {t("noQueriesYet")}
               </div>
             )}
           </div>
@@ -171,7 +171,7 @@ export default function DashboardOverview() {
         <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white">{t("topMandisTitle")}</h2>
-            <span className="text-[11px] font-mono text-[var(--color-text-muted)]">Highest Net Profit Rank</span>
+            <span className="text-[11px] font-mono text-[var(--color-text-muted)]">{t("highestProfitRank")}</span>
           </div>
 
           <div className="space-y-2.5">
@@ -198,7 +198,7 @@ export default function DashboardOverview() {
               ))
             ) : (
               <div className="text-xs text-[var(--color-text-muted)] py-4 text-center">
-                No recommendation logs yet.
+                {t("noRecsYet")}
               </div>
             )}
           </div>
@@ -215,46 +215,36 @@ export default function DashboardOverview() {
             </p>
           </div>
           <span className="text-xs font-mono text-[var(--color-text-secondary)]">
-            Total Queries: {data?.total_queries || 0}
+            {t("totalQueriesLabel")}: {data?.total_queries || 0}
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[var(--color-surface-raised)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-muted)] font-medium">
-              <tr>
-                <th className="py-2.5 px-3">Phone</th>
-                <th className="py-2.5 px-3">Crop</th>
-                <th className="py-2.5 px-3 text-right">Quantity</th>
-                <th className="py-2.5 px-3">Timestamp</th>
-                <th className="py-2.5 px-3">Recommendation Outcome</th>
+            <thead>
+              <tr className="border-b border-[var(--color-border-subtle)] text-[var(--color-text-muted)]">
+                <th className="pb-3 font-medium">{t("thPhone")}</th>
+                <th className="pb-3 font-medium">{t("thCrop")}</th>
+                <th className="pb-3 font-medium">{t("thQuantity")}</th>
+                <th className="pb-3 font-medium">{t("thTimestamp")}</th>
+                <th className="pb-3 font-medium">{t("thOutcome")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--color-border-subtle)]">
+            <tbody className="divide-y divide-[var(--color-border-subtle)] font-mono">
               {data?.recent_queries && data.recent_queries.length > 0 ? (
-                data.recent_queries.map((q) => (
-                  <tr key={q.id} className="hover:bg-[var(--color-surface-overlay)] transition-colors">
-                    <td className="py-2.5 px-3 font-mono text-[var(--color-text-secondary)]">
-                      {q.phone_number}
-                    </td>
-                    <td className="py-2.5 px-3 font-medium text-white">
-                      {q.crop_name}
-                    </td>
-                    <td className="py-2.5 px-3 text-right font-mono text-white">
-                      {q.quantity_quintals} q
-                    </td>
-                    <td className="py-2.5 px-3 text-[var(--color-text-muted)] font-mono text-[11px]">
-                      {q.created_at}
-                    </td>
-                    <td className="py-2.5 px-3 text-[var(--color-text-secondary)] max-w-md truncate">
-                      {q.response_preview}
-                    </td>
+                data.recent_queries.map((q, idx) => (
+                  <tr key={idx} className="hover:bg-[var(--color-surface-overlay)] transition-colors">
+                    <td className="py-3 text-white">{q.phone_number}</td>
+                    <td className="py-3 text-[var(--color-accent)] font-semibold">{t(q.crop_name) || q.crop_name}</td>
+                    <td className="py-3 text-slate-300">{q.quantity_quintals} q</td>
+                    <td className="py-3 text-[var(--color-text-muted)]">{q.created_at}</td>
+                    <td className="py-3 text-slate-300 font-sans text-xs">{q.response_preview}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="py-8 text-center text-xs text-[var(--color-text-muted)]">
-                    No queries logged yet. Queries sent via WhatsApp Bot or API will stream here automatically.
+                  <td colSpan={5} className="py-6 text-center text-[var(--color-text-muted)] font-sans">
+                    {t("noQueriesYet")}
                   </td>
                 </tr>
               )}

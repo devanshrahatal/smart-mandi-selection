@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { apiClient } from "../api/client";
 import { useLanguage } from "../hooks/useLanguage";
 
 const SAMPLE_VOICE_QUERIES = [
@@ -45,7 +45,7 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
     setLoading(true);
     setResult(null);
     try {
-      const res = await axios.post("/api/whatsapp/simulate-voice", {
+      const res = await apiClient.post("/api/whatsapp/simulate-voice", {
         phone_number: "+919876543210",
         spoken_query: customText,
         language: selectedSample.lang,

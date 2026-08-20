@@ -115,7 +115,7 @@ export default function MandiDetailPage() {
             >
               {crops.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name} ({c.category})
+                  {t(c.name) || c.name} ({c.category})
                 </option>
               ))}
             </select>
@@ -128,26 +128,26 @@ export default function MandiDetailPage() {
         <div className="surface-card p-4 space-y-1">
           <p className="text-xs text-[var(--color-text-muted)] font-medium uppercase">{t("kpiModalPrice")}</p>
           <p className="text-2xl font-bold mono text-[var(--color-accent)]">₹{latestPrice.toLocaleString()}</p>
-          <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">per quintal</p>
+          <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">{t("currentPriceBadge")}</p>
         </div>
 
         <div className="surface-card p-4 space-y-1">
           <p className="text-xs text-[var(--color-text-muted)] font-medium uppercase">{t("kpiHigh")}</p>
           <p className="text-2xl font-bold mono text-white">₹{highestPrice.toLocaleString()}</p>
-          <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">Peak transaction</p>
+          <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">{t("peakPriceBadge")}</p>
         </div>
 
         <div className="surface-card p-4 space-y-1">
           <p className="text-xs text-[var(--color-text-muted)] font-medium uppercase">{t("kpiLow")}</p>
           <p className="text-2xl font-bold mono text-white">₹{lowestPrice.toLocaleString()}</p>
-          <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">Floor transaction</p>
+          <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">{t("floorPriceBadge")}</p>
         </div>
 
         <div className="surface-card p-4 space-y-1">
           <p className="text-xs text-[var(--color-text-muted)] font-medium uppercase">{t("kpiPerishability")}</p>
           <p className="text-2xl font-bold mono text-[var(--color-warning)]">{selectedCrop?.perishability_index || 0.5}</p>
           <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">
-            {selectedCrop?.perishability_index > 0.6 ? "High spoilage risk" : "Low spoilage risk"}
+            {selectedCrop?.perishability_index > 0.6 ? t("highRiskBadge") : t("lowRiskBadge")}
           </p>
         </div>
       </div>
@@ -157,10 +157,10 @@ export default function MandiDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-base font-semibold text-white">
-              {selectedMandi?.name} — {selectedCrop?.name} Price History
+              {selectedMandi?.name} — {t(selectedCrop?.name) || selectedCrop?.name} {t("priceHistoryTitle")}
             </h2>
             <p className="text-xs text-[var(--color-text-muted)]">
-              Daily modal price movements over the last 30 trading sessions.
+              {t("priceHistorySubtitle")}
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs font-mono text-[var(--color-text-secondary)]">
