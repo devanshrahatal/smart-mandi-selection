@@ -1,5 +1,6 @@
 # 🌾 Smart Mandi Selection Intelligence Platform
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-smart--mandi--selection.vercel.app-22c55e?style=for-the-badge&logo=vercel&logoColor=white)](https://smart-mandi-selection.vercel.app/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18+-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1.svg?logo=mysql&logoColor=white)](https://www.mysql.com)
@@ -7,7 +8,9 @@
 [![Twilio](https://img.shields.io/badge/Twilio-WhatsApp%20Bot-F22F46.svg?logo=twilio&logoColor=white)](https://www.twilio.com)
 [![Tests](https://img.shields.io/badge/Tests-16%20Passed%20(100%25)-brightgreen.svg)]()
 
-> **Smart India Hackathon (SIH 2026)**  
+> 🌐 **Live Web Application:** [https://smart-mandi-selection.vercel.app/](https://smart-mandi-selection.vercel.app/)  
+> 📖 **API Documentation (Swagger):** [https://smart-mandi-selection.onrender.com/docs](https://smart-mandi-selection.onrender.com/docs)  
+> 👨‍💻 **Engineered & Architected by:** **Devansh Rahatal**  
 > *Helping farmers maximize real take-home earnings by calculating Net Profit (Price minus Transport, Handling, Mandi Commission, and Transit Spoilage) across candidate markets.*
 
 ---

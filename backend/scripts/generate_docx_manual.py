@@ -9,9 +9,8 @@ import os
 def create_manual():
     doc = docx.Document()
 
-    # Set standard margins (1 inch)
-    sections = doc.sections
-    for section in sections:
+    # Set standard margins
+    for section in doc.sections:
         section.top_margin = Inches(0.8)
         section.bottom_margin = Inches(0.8)
         section.left_margin = Inches(0.85)
@@ -31,13 +30,13 @@ def create_manual():
             tcMar.append(node)
         tcPr.append(tcMar)
 
-    # Palette
-    COLOR_PRIMARY = RGBColor(16, 185, 129)   # Emerald 500
+    # Color Palette
+    COLOR_PRIMARY = RGBColor(16, 185, 129)   # Emerald
     COLOR_DARK = RGBColor(15, 23, 42)        # Slate 900
     COLOR_MUTED = RGBColor(100, 116, 139)    # Slate 500
     COLOR_TEXT = RGBColor(30, 41, 59)        # Slate 800
 
-    # Document Header Title
+    # Title Header
     title_p = doc.add_paragraph()
     title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     title_run = title_p.add_run("🌾 SMART MANDI SELECTION PLATFORM")
@@ -48,25 +47,26 @@ def create_manual():
 
     sub_p = doc.add_paragraph()
     sub_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    sub_run = sub_p.add_run("Comprehensive End-to-End User Manual & Step-by-Step Operating Guide\n")
+    sub_run = sub_p.add_run("Official End-to-End Operating Guide: Problem, Solution & User Manual\n")
     sub_run.font.name = 'Calibri'
     sub_run.font.size = Pt(13)
     sub_run.font.italic = True
     sub_run.font.color.rgb = COLOR_MUTED
 
     # Meta Table
-    meta_table = doc.add_table(rows=4, cols=2)
+    meta_table = doc.add_table(rows=5, cols=2)
     meta_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     meta_data = [
-        ("Project Lead & Author:", "Devansh Rahatal (Lead Architect & Developer)"),
-        ("Project Classification:", "Agricultural Price Intelligence & Logistics Optimization"),
-        ("Web Application:", "React (Vite) + FastAPI + Leaflet GIS + Twilio WhatsApp Bot"),
-        ("Documentation Version:", "Version 1.0 (Production & Jury Presentation Edition)"),
+        ("Project Creator & Lead Architect:", "Devansh Rahatal"),
+        ("Live Web Application URL:", "https://smart-mandi-selection.vercel.app/"),
+        ("API Documentation (Swagger):", "https://smart-mandi-selection.onrender.com/docs"),
+        ("Core Technology Stack:", "React 18 (Vite) + FastAPI + Leaflet GIS + Twilio WhatsApp Bot"),
+        ("Documentation Version:", "Version 1.0 (Production Release)"),
     ]
     for i, (label, val) in enumerate(meta_data):
         row = meta_table.rows[i]
         c1, c2 = row.cells[0], row.cells[1]
-        c1.width = Inches(2.2)
+        c1.width = Inches(2.3)
         c2.width = Inches(4.5)
         set_cell_background(c1, "F1F5F9")
         set_cell_background(c2, "F8FAFC")
@@ -86,14 +86,13 @@ def create_manual():
 
     doc.add_paragraph()
 
-    # Section Helper
     def add_heading_1(text):
         p = doc.add_paragraph()
         p.paragraph_format.space_before = Pt(14)
         p.paragraph_format.space_after = Pt(4)
         r = p.add_run(text)
         r.font.name = 'Calibri'
-        r.font.size = Pt(15)
+        r.font.size = Pt(14)
         r.font.bold = True
         r.font.color.rgb = COLOR_DARK
         return p
@@ -104,7 +103,7 @@ def create_manual():
         p.paragraph_format.space_after = Pt(2)
         r = p.add_run(text)
         r.font.name = 'Calibri'
-        r.font.size = Pt(12)
+        r.font.size = Pt(11.5)
         r.font.bold = True
         r.font.color.rgb = COLOR_PRIMARY
         return p
@@ -123,100 +122,61 @@ def create_manual():
         r.font.color.rgb = COLOR_TEXT
         return p
 
-    # --- 1. EXECUTIVE SUMMARY ---
-    add_heading_1("1. Executive Summary & The Core Problem")
-    add_p("Most agricultural market applications display only the Gross Modal Price (advertised mandi price). As a result, farmers frequently travel long distances chasing high prices, only to suffer severe financial losses due to transport fees, APMC mandi commissions, handling charges, and transit spoilage.")
-    add_p("Smart Mandi solves this 'Price Illusion' by computing the exact Net Take-Home Profit for every candidate mandi within a 300 km radius.")
+    # --- 1. THE PROBLEM ---
+    add_heading_1("1. The Problem: 'The Price Illusion' in Indian Agriculture")
+    add_p("Over 86% of Indian farmers are smallholders who operate on slim profit margins. When choosing where to sell their crops, farmers rely on traditional government portals or word-of-mouth price sheets that display only the Gross Modal Price (the advertised auction price at a mandi).")
     
-    add_p("Net Profit = Modal Price - Transport Cost - Loading/Unloading - Mandi Commission - Transit Spoilage", bold_prefix="Mathematical Formula: ")
-    add_p("Where Spoilage Deduction = Modal Price × Perishability Index (Tomato: 0.85, Onion: 0.25, Potato: 0.20, Wheat: 0.05, Banana: 0.70) × (Transit Hours / 24) × 0.15.")
+    add_heading_2("1.1 The Anatomy of the Price Trap")
+    add_p("1. Advertised Price Deception: A price of ₹2,900/quintal in a distant metro mandi appears far better than ₹2,450/quintal in a local mandi. In reality, travelling further drains the farmer's wallet.")
+    add_p("2. Unaccounted Transport Freight: Commercial vehicle freight (Tata Ace / Eicher) costs ₹12–₹18/km, which quickly consumes gross revenue over long distances.")
+    add_p("3. Hidden Mandi Commissions & Taxes: APMC market fees and middleman (arhtiya) commissions range from 1.5% to 8% depending on the state.")
+    add_p("4. Handling & Labor Charges: Unregulated loading, unloading, weighing, and bag-stitching levies per quintal.")
+    add_p("5. Perishable Produce Spoilage: Crops like tomatoes, onions, and bananas suffer transit degradation under heat and rough roads, causing direct weight loss and distress price cuts upon arrival.")
 
-    # --- 2. WEB APPLICATION WALKTHROUGH ---
-    add_heading_1("2. Web Application Step-by-Step User Guide")
+    add_heading_2("1.2 Real Case Study: Jaipur Tomato Farmer (20 Quintals)")
+    add_p("• Kota Krishi Mandi (Nearby): Advertised ₹2,450/q -> Deductions -₹713/q -> Real Take-Home: ₹1,737.16/q (🥇 BEST PROFIT: +₹3,382 total profit)")
+    add_p("• Azadpur, Delhi (Distant Metro): Advertised ₹2,901/q -> Deductions -₹1,334/q -> Real Take-Home: ₹1,568.06/q (🥈 Trap: ₹169/q LOWER profit despite higher price)")
+    add_p("• Vashi, Mumbai (Far Metro): Advertised ₹2,820/q -> Deductions -₹3,054/q -> Real Take-Home: ₹0.00/q (❌ Severe Net Financial Loss)")
 
-    add_heading_2("2.1 Public Landing Page (Home)")
-    add_p("1. Navigate to the web application URL (e.g. http://localhost:5173 or the deployed Vercel URL).")
-    add_p("2. View the Live Scenario Comparison Table illustrating how a Jaipur tomato farmer makes ₹169/quintal MORE net cash in nearby Kota than in Azadpur (Delhi), despite Azadpur having a higher raw price.")
-    add_p("3. Switch language effortlessly between English, Hindi (हिंदी), Marathi (मराठी), and Gujarati (ગુજરાતી) using the top language selector.")
-    add_p("4. Access the 1-Click WhatsApp Assistant banner or launch the In-Browser Voice Simulator.")
+    # --- 2. THE SOLUTION ---
+    add_heading_1("2. The Solution Engineered by Devansh Rahatal")
+    add_p("To eliminate this market asymmetry, Devansh Rahatal engineered the Smart Mandi Selection & Logistics Optimization Platform — an end-to-end intelligent decision engine that calculates real take-home net profit and optimizes freight aggregation.")
 
-    add_heading_2("2.2 Interactive Profit Map (/map)")
-    add_p("1. Click 'Profit Map' in the navigation bar.")
-    add_p("2. Select your Origin Hub (e.g., Vadodara, Surat, Rajkot, Jaipur, Pune, Nashik, etc.).")
-    add_p("3. Select your Crop (Tomato, Onion, Potato, Wheat, Banana) and set your Harvest Quantity via the interactive slider.")
-    add_p("4. Observe the Leaflet GIS Map: It automatically plots ranked profit routes from your farm:")
-    add_p("   • Green Route (#1): Maximum Net Profit destination (Optimal market).")
-    add_p("   • Teal Route (#2): Moderate profit alternative.")
-    add_p("   • Amber/Red Route (#3): Lower net profit / high-distance market.")
-    add_p("5. Click any Mandi Pin to view a full breakdown modal (Take-Home Net Profit, Gross Price, Total Deductions, Distance in km).")
+    add_heading_2("2.1 Core Architectural Pillars")
+    add_p("1. 5-Factor Net Profit Mathematical Formulation:")
+    add_p("   Net Profit = Modal Price - (Transport Cost + Handling + Mandi Commission + Transit Spoilage)")
+    add_p("   Where Transit Spoilage = Modal Price × Perishability Index × (Transit Hours / 24) × 0.15 (Tomato: 0.85, Banana: 0.70, Onion: 0.25, Potato: 0.20, Wheat: 0.05).")
+    add_p("2. Interactive Leaflet GIS Route Mapping: Color-coded visual route lines (Green = #1 Optimal Net Profit, Teal = Moderate, Amber = Suboptimal) allowing farmers to immediately see why proximity and net profit trump raw prices.")
+    add_p("3. Kisan Pool Shared Freight Optimizer: Solves small-batch transport penalties by algorithmically pooling neighboring farmers' harvest into larger freight vehicles (Tata Ace → Eicher 14ft → 19ft Heavy Truck → 16-Ton Taurus), reducing individual transport costs by 35% to 55%.")
+    add_p("4. Zero-App WhatsApp Voice & Text AI Assistant: Multi-lingual conversational bot supporting regional voice notes in Hindi, Marathi, Gujarati, and English with instant synthesized voice note audio replies and GPS location pin support.")
+    add_p("5. Live Admin Analytics & Dynamic Cost Parameter Controls: Real-time query stream, price trend curves, and live fee configuration for APMC administrators.")
 
-    add_heading_2("2.3 Kisan Pool Shared Freight Optimizer (/pooling)")
-    add_p("1. Click 'Kisan Pool' in the navigation bar.")
-    add_p("2. Use the Interactive Savings Calculator:")
-    add_p("   • Set Solo Quantity (e.g., 12 quintals).")
-    add_p("   • Set Total Pooled Quantity (e.g., 36 quintals).")
-    add_p("   • Set Distance (e.g., 248 km).")
-    add_p("3. The system dynamically matches the optimal commercial vehicle (Tata Ace vs Eicher 14ft vs 19ft Heavy Truck vs 16-Ton Taurus) and calculates instant savings per quintal (typically 35% to 55% reduction in freight costs).")
-    add_p("4. View Active Pooling Batches in real time and connect with cluster FPOs with 1 click.")
+    # --- 3. STEP-BY-STEP USER GUIDE ---
+    add_heading_1("3. Comprehensive Step-by-Step User Manual")
 
-    add_heading_2("2.4 Admin Intelligence Dashboard (/admin/dashboard)")
-    add_p("1. Click 'Admin Dashboard' or navigate to /admin/login.")
-    add_p("2. Sign in with the seeded credentials: Username: admin | Password: admin123.")
-    add_p("3. View real-time platform metrics: Mandis Tracked, Active Farmers, Average Savings per Quintal, and Total Queries.")
-    add_p("4. Inspect the Top Queried Crops volume chart and Top Recommended Mandis.")
-    add_p("5. Monitor the Live Farmer Query Stream containing real-time WhatsApp incoming queries and recommendation responses.")
-    add_p("6. Click 'Export Report' to download the complete platform dataset as a CSV spreadsheet.")
+    add_heading_2("3.1 Web Application Walkthrough (https://smart-mandi-selection.vercel.app/)")
+    add_p("• Public Landing Page: View the live comparison scenario, switch languages (English, Hindi, Marathi, Gujarati), connect to WhatsApp, or launch the In-Browser Voice Simulator.")
+    add_p("• Interactive Profit Map (/map): Select your Origin Hub (Vadodara, Surat, Rajkot, Jaipur, Pune, Nashik, etc.), pick your Crop, and set harvest quantity. Read color-coded route lines and click mandi pins for net profit breakdowns.")
+    add_p("• Kisan Pool Shared Logistics (/pooling): Adjust solo vs pooled quantity and distance. Discover matched commercial trucks and instant savings per quintal.")
+    add_p("• Admin Intelligence Dashboard (/admin/dashboard): Sign in with admin / admin123. Monitor mandis tracked, top crops volume, live WhatsApp incoming queries, and export reports as CSV.")
+    add_p("• Price Trends & Cost Configuration (/admin/mandis, /admin/costs): View 30-day historical modal price curves and adjust mandi commission %, loading/unloading rates, and transport coefficients in real time.")
 
-    add_heading_2("2.5 Mandi Details & Cost Parameters (/admin/mandis, /admin/costs)")
-    add_p("1. In 'Price Trends', view 30-day historical modal price curves across crops and markets.")
-    add_p("2. In 'Cost Parameters', adjust mandi-specific commission % (e.g. 5% to 8%), loading charges (₹/quintal), unloading charges, and base transport rates (₹/km/q).")
-    add_p("3. Changes immediately update the live net profit calculations across the platform.")
+    add_heading_2("3.2 WhatsApp Voice & Text AI Assistant (Step-by-Step)")
+    add_p("1. Save & Open Gateway: Message the Twilio WhatsApp Gateway at +1 (415) 523-8886.")
+    add_p("2. Activate Session: Send the one-time code join unusual-sea (Direct Link: https://wa.me/14155238886?text=join%20unusual-sea).")
+    add_p("3. Natural Text Queries: Type 'Tomato 20q from Jaipur', 'कांदा 15 क्विंटल नाशिक', or 'Potato 30q from Agra'.")
+    add_p("4. Voice Notes (Speech-to-Speech): Hold the mic button and speak in Hindi, Marathi, or Gujarati. The bot replies with a text summary and a synthesized regional Voice Note MP3!")
+    add_p("5. GPS Location Pin: Send your current WhatsApp location pin 📍 for automated distance and profit calculation.")
 
-    # --- 3. WHATSAPP BOT USER GUIDE ---
-    add_heading_1("3. WhatsApp Voice & Text AI Assistant (Step-by-Step)")
-    add_p("The WhatsApp Bot allows smallholder farmers to get instant mandi recommendations without downloading or installing any mobile application.")
+    # --- 4. TECHNICAL SETUP ---
+    add_heading_1("4. Technical Setup & Developer Execution")
+    add_p("• Backend: Open terminal in backend/ -> Run: .\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000 (API Docs: http://localhost:8000/docs)")
+    add_p("• Frontend: Open terminal in frontend/ -> Run: npm run dev (Web App: http://localhost:5173)")
 
-    add_heading_2("3.1 Connecting to the WhatsApp Gateway")
-    add_p("1. Save or open the Twilio WhatsApp Gateway number on your phone: +1 (415) 523-8886.")
-    add_p("2. Send the one-time Sandbox Activation Code: join unusual-sea.")
-    add_p("3. You will receive an immediate confirmation message: 'You are all set! You can now test your integration.'")
-
-    add_heading_2("3.2 Sending Natural Text Queries")
-    add_p("Simply type any natural query. For example:")
-    add_p("• 'Tomato 20q from Jaipur'")
-    add_p("• 'कांदा 15 क्विंटल नाशिक'")
-    add_p("• 'Potato 30q from Agra'")
-    add_p("• 'Wheat 50 quintal'")
-    add_p("The bot calculates all candidate mandis and returns the ranked net profit table directly in WhatsApp.")
-
-    add_heading_2("3.3 Sending Regional Voice Notes (Speech-to-Speech)")
-    add_p("1. Hold the microphone button in WhatsApp and speak in your native dialect (Hindi, Marathi, Gujarati, or English):")
-    add_p("   • Hindi: 'भैया 20 क्विंटल टमाटर बेचना है जयपुर से'")
-    add_p("   • Marathi: 'नमस्कार, 15 क्विंटल कांदा नाशिकमधून विकायचा आहे'")
-    add_p("   • Gujarati: 'નમસ્તે, 20 ક્વિન્ટલ ડુંગળી રાજકોટથી વેચવી છે'")
-    add_p("2. The backend uses speech recognition to parse the crop and quantity, and sends back both a text summary AND an instant Voice Note MP3 in your native language explaining the best mandi to visit.")
-
-    add_heading_2("3.4 Sharing GPS Location Pins")
-    add_p("1. Tap the attachment icon in WhatsApp -> Select 'Location' -> Send your Current Location 📍.")
-    add_p("2. The bot instantly resolves your exact latitude & longitude and computes road distances to all nearby APMC mandis via Google Maps / Haversine routing.")
-
-    # --- 4. TECHNICAL ARCHITECTURE & DEPLOYMENT ---
-    add_heading_1("4. Technical Setup & Deployment Reference")
-    add_p("• Backend Framework: FastAPI (Python 3.11+), SQLAlchemy 2.0 ORM, Uvicorn.")
-    add_p("• Frontend Framework: React 18, Vite 5/6, TailwindCSS, Leaflet Map GIS, Lucide Icons.")
-    add_p("• Database: SQLite (Zero-configuration local / Render cloud fallback) or MySQL 8.0.")
-    add_p("• Voice AI Engine: gTTS Regional Audio Synthesis + Browser SpeechRecognition.")
-    add_p("• WhatsApp Integration: Twilio Programmable Messaging Webhook API.")
-
-    add_heading_2("4.1 Running Locally on Developer Machines")
-    add_p("1. Backend: Open terminal in backend/ -> Run: .\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000")
-    add_p("2. Frontend: Open terminal in frontend/ -> Run: npm run dev -> Open http://localhost:5173")
-    add_p("3. Interactive Swagger API Docs: Available at http://localhost:8000/docs")
-
-    # Output file
+    # Save
     output_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Smart_Mandi_Platform_User_Manual.docx"))
     doc.save(output_path)
-    print(f"Successfully generated User Manual at: {output_path}")
+    print(f"Successfully generated updated User Manual at: {output_path}")
 
 if __name__ == "__main__":
     create_manual()
