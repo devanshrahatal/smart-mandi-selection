@@ -10,7 +10,11 @@ from typing import Optional, Dict, Any
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+try:
+    import jwt
+    from jwt.exceptions import PyJWTError as JWTError
+except ImportError:
+    from jose import JWTError, jwt  # type: ignore
 from sqlalchemy.orm import Session
 
 from app.config import settings
