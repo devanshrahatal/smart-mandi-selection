@@ -3,23 +3,26 @@ import logging
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from app.config import settings
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 # --- Base class for all ORM models ---
 Base = declarative_base()
 
+SQLITE_DB_PATH = (Path(__file__).resolve().parent.parent / "smart_mandi.db").as_posix()
+SQLITE_FALLBACK_URL = f"sqlite:///{SQLITE_DB_PATH}"
+
 
 def get_engine():
     """Create database engine with automatic cloud SQLite fallback if MySQL is unreachable."""
-    db_url = settings.DATABASE_URL or "sqlite:///./smart_mandi.db"
+    db_url = settings.DATABASE_URL or SQLITE_FALLBACK_URL
 
     # If running in cloud environment (Render/Railway) and DATABASE_URL points to localhost, fallback to SQLite
     is_cloud = os.getenv("RENDER") or os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("VERCEL")
     if is_cloud and ("localhost" in db_url or "127.0.0.1" in db_url):
         logger.warning("Cloud environment detected with localhost DATABASE_URL. Falling back to SQLite.")
-        db_url = "sqlite:///./smart_mandi.db"
+        db_url = SQLITE_FALLBACK_URL
 
     try:
         if db_url.startswith("sqlite"):
@@ -50,7 +53,7 @@ def get_engine():
     except Exception as err:
         logger.warning("Database connection to %s failed (%s). Falling back to SQLite.", db_url, err)
         return create_engine(
-            "sqlite:///./smart_mandi.db",
+            SQLITE_FALLBACK_URL,
             connect_args={"check_same_thread": False},
             echo=settings.DEBUG,
         )
