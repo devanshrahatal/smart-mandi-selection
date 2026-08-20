@@ -4,14 +4,14 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 from pathlib import Path
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 # --- Base class for all ORM models ---
 Base = declarative_base()
 
-SQLITE_DB_PATH = (Path(__file__).resolve().parent.parent / "smart_mandi.db").as_posix()
-SQLITE_FALLBACK_URL = f"sqlite:///{SQLITE_DB_PATH}"
+SQLITE_FALLBACK_URL = "sqlite:///smart_mandi.db"
 
 
 def get_engine():
