@@ -90,11 +90,20 @@ def admin_login(req: LoginRequest, db: Session = Depends(get_db)):
         data={"sub": admin.username, "role": admin.role}
     )
 
+    user_out = AdminUserOut(
+        id=admin.id or 1,
+        username=admin.username,
+        email=admin.email,
+        role=admin.role,
+        is_active=admin.is_active,
+        created_at=admin.created_at or datetime.utcnow(),
+    )
+
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",
         expires_in_minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES,
-        user=AdminUserOut.model_validate(admin),
+        user=user_out,
     )
 
 
