@@ -45,11 +45,8 @@ export default function Navbar() {
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-white/5 p-0.5 border border-emerald-500/30 transition-transform group-hover:scale-105 shadow-md shadow-emerald-500/10 shrink-0"
               />
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center">
                   <span className="font-bold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">{t("appName")}</span>
-                  <span className="hidden sm:inline-block text-[9px] sm:text-[10px] text-emerald-400 font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 whitespace-nowrap">
-                    SIH 2026
-                  </span>
                 </div>
                 <p className="text-[9px] text-[var(--color-text-muted)] font-medium leading-none mt-0.5 hidden md:block truncate">
                   Better Prices • Lower Costs • Higher Profits

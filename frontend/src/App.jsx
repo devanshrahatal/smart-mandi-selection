@@ -139,11 +139,8 @@ function LandingPage() {
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-white/5 p-0.5 border border-emerald-500/30 shadow-md shadow-emerald-500/10 shrink-0"
             />
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center">
                 <span className="font-bold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">{t("appName")}</span>
-                <span className="hidden sm:inline-block text-[9px] sm:text-[10px] text-emerald-400 font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 whitespace-nowrap">
-                  SIH 2026
-                </span>
               </div>
               <p className="text-[9px] text-[var(--color-text-muted)] font-medium leading-none mt-0.5 hidden md:block truncate">
                 Better Prices • Lower Costs • Higher Profits
@@ -183,11 +180,6 @@ function LandingPage() {
 
           {/* Text Content & Headings — Appears 2nd on Mobile, 1st on Desktop */}
           <div className="order-2 lg:order-1 lg:col-span-7 animate-fade-in-up flex flex-col items-center lg:items-start text-center lg:text-left mt-2 lg:mt-0">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs text-emerald-300 mb-5">
-              <span className="status-dot bg-emerald-400" />
-              {t("heroTag")}
-            </div>
-
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4 text-white">
               {t("heroTitleLine1")}
               <br />
@@ -341,7 +333,7 @@ function LandingPage() {
             <div className="flex items-center gap-2">
               <span className="text-emerald-400 font-bold">ℹ️ Prototype Notice:</span>
               <span>
-                Connected to the official <b>Twilio WhatsApp Sandbox Gateway</b> for live SIH 2026 jury evaluation.
+                Connected to the official <b>Twilio WhatsApp Sandbox Gateway</b> for live interactive evaluation.
               </span>
             </div>
             <span className="text-slate-500 font-mono text-[10px] whitespace-nowrap">
@@ -445,7 +437,7 @@ function LandingPage() {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-white">{t("appName")}</span>
             <span>·</span>
-            <span>SIH 2026</span>
+            <span>Smart Agriculture Platform</span>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/admin/dashboard" className="hover:text-white transition-colors">

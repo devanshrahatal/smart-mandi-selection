@@ -141,7 +141,7 @@ export default function KisanPoolPage() {
       <div className="bg-gradient-to-r from-emerald-950/80 via-slate-900/90 to-teal-950/80 border border-emerald-500/40 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
           <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full inline-block mb-3">
-            SIH 2026 Innovation
+            Shared Freight Optimization
           </span>
           <h1 className="text-3xl font-black text-slate-100 tracking-tight">
             {t("poolTitle")}

@@ -95,7 +95,7 @@ export default function DashboardOverview() {
         ))}
       </div>
 
-      {/* SIH Innovation Feature Cards */}
+      {/* Platform Innovation Feature Cards */}
       <div className="grid md:grid-cols-2 gap-4">
         <a
           href="/map"
