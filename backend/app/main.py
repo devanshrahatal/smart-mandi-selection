@@ -22,8 +22,10 @@ from app.jobs.price_refresh_job import (
 )
 
 
-import logging
-from app.database import Base, engine
+from app.database import Base, engine, SessionLocal
+from app.models.admin_user import AdminUser
+from app.models.crop import Crop
+from app.core.security import get_password_hash
 import app.models  # Ensure all ORM models are registered
 
 logger = logging.getLogger(__name__)
@@ -32,11 +34,36 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle manager for background jobs and client connections."""
-    # Startup: Ensure database tables exist
+    # Startup: Ensure database tables exist and default admin is seeded
     try:
         Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            admin = db.query(AdminUser).filter(AdminUser.username == "admin").first()
+            if not admin:
+                admin = AdminUser(
+                    username="admin",
+                    email="admin@smartmandi.in",
+                    hashed_password=get_password_hash("admin123"),
+                    role="admin",
+                )
+                db.add(admin)
+                db.commit()
+                logger.info("Default admin user created (admin / admin123)")
+            elif admin.hashed_password.startswith("$2b$12$placeholder") or not admin.hashed_password.startswith("$2b$"):
+                admin.hashed_password = get_password_hash("admin123")
+                db.commit()
+                logger.info("Default admin password refreshed to real bcrypt hash")
+
+            # Check if demo crops need seeding
+            if db.query(Crop).count() == 0:
+                from scripts.seed_data import seed
+                seed()
+                logger.info("Initial dataset seeded successfully")
+        finally:
+            db.close()
     except Exception as e:
-        logger.warning(f"Database auto-creation check: {e}")
+        logger.warning(f"Database auto-creation & seeding check: {e}")
 
     start_price_refresh_scheduler()
     yield
