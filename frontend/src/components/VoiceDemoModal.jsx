@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { apiClient } from "../api/client";
 import { useLanguage } from "../hooks/useLanguage";
 
@@ -26,12 +26,13 @@ const SAMPLE_VOICE_QUERIES = [
 ];
 
 export default function VoiceDemoModal({ isOpen, onClose }) {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [selectedSample, setSelectedSample] = useState(SAMPLE_VOICE_QUERIES[0]);
   const [customText, setCustomText] = useState(SAMPLE_VOICE_QUERIES[0].transcript);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
 
   if (!isOpen) return null;
 
@@ -39,11 +40,50 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
     setSelectedSample(sample);
     setCustomText(sample.transcript);
     setResult(null);
+    setIsPlaying(false);
+  };
+
+  const resolveAudioUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("https://") || (url.startsWith("http://") && !url.includes("localhost"))) {
+      return url;
+    }
+    const clean = url.replace(/^https?:\/\/[^\/]+/, "");
+    const base = (apiClient.defaults.baseURL || "https://smart-mandi-selection.onrender.com").replace(/\/$/, "");
+    return `${base}${clean.startsWith("/") ? "" : "/"}${clean}`;
+  };
+
+  const playBrowserVoice = (text, lang) => {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const langMap = { hi: "hi-IN", mr: "mr-IN", gu: "gu-IN", en: "en-IN" };
+      utterance.lang = langMap[lang] || "hi-IN";
+      utterance.rate = 0.95;
+      utterance.onstart = () => setIsPlaying(true);
+      utterance.onend = () => setIsPlaying(false);
+      utterance.onerror = () => setIsPlaying(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handlePlayVoiceNote = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch(() => {
+        // Fallback to client-side speech synthesis if MP3 is blocked by browser
+        if (result?.spoken_summary) {
+          playBrowserVoice(result.spoken_summary, result.language);
+        }
+      });
+    } else if (result?.spoken_summary) {
+      playBrowserVoice(result.spoken_summary, result.language);
+    }
   };
 
   const handleRunVoiceSimulation = async () => {
     setLoading(true);
     setResult(null);
+    setIsPlaying(false);
     try {
       const res = await apiClient.post("/api/whatsapp/simulate-voice", {
         phone_number: "+919876543210",
@@ -58,8 +98,10 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
     }
   };
 
+  const audioUrl = result ? resolveAudioUrl(result.audio_url) : "";
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
@@ -79,7 +121,12 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => {
+              if (typeof window !== "undefined" && window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+              }
+              onClose();
+            }}
             className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-lg transition-all"
           >
             ✕
@@ -142,16 +189,22 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                   Audio Reply Ready ({result.language?.toUpperCase()})
                 </span>
-                <span className="text-[11px] text-slate-400">100% Free AI TTS Engine</span>
+                <button
+                  onClick={handlePlayVoiceNote}
+                  className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow transition-all flex items-center gap-1"
+                >
+                  <span>🔊</span>
+                  <span>Play Aloud</span>
+                </button>
               </div>
 
               {/* Native Audio Player */}
-              {result.audio_url && (
+              {audioUrl && (
                 <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex flex-col gap-2">
                   <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
                     <span>🔊 WhatsApp Voice Note Stream:</span>
                     <a
-                      href={result.audio_url}
+                      href={audioUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="text-emerald-400 hover:underline text-[11px]"
@@ -160,9 +213,15 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
                     </a>
                   </div>
                   <audio
+                    ref={audioRef}
                     controls
-                    autoPlay
-                    src={result.audio_url}
+                    preload="auto"
+                    src={audioUrl}
+                    onPlay={() => setIsPlaying(true)}
+                    onEnded={() => setIsPlaying(false)}
+                    onError={() => {
+                      console.warn("Audio file streaming error, web speech fallback active.");
+                    }}
                     className="w-full h-10 accent-emerald-500"
                   />
                 </div>

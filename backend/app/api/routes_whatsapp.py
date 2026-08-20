@@ -97,6 +97,7 @@ async def twilio_whatsapp_webhook(
 
 @router.post("/simulate", response_model=WhatsAppSimulateResponse, summary="Simulate WhatsApp conversation without Twilio")
 async def simulate_whatsapp_message(
+    request: Request,
     req: WhatsAppSimulateRequest,
     db: Session = Depends(get_db),
 ):
@@ -120,7 +121,10 @@ async def simulate_whatsapp_message(
 
     audio_url = None
     if req.enable_voice_reply:
-        voice_res = voice_service.generate_voice_response(text=reply_text, lang=lang)
+        base_url = str(request.base_url).rstrip("/")
+        if "loca.lt" in base_url or "ngrok" in base_url or "render.com" in base_url:
+            base_url = base_url.replace("http://", "https://")
+        voice_res = voice_service.generate_voice_response(text=reply_text, lang=lang, base_url=base_url)
         audio_url = voice_res.get("audio_url")
 
     return WhatsAppSimulateResponse(
@@ -134,6 +138,7 @@ async def simulate_whatsapp_message(
 
 @router.post("/simulate-voice", summary="Simulate direct voice note input & audio reply")
 async def simulate_voice_note(
+    request: Request,
     req: WhatsAppVoiceSimulateRequest,
     db: Session = Depends(get_db),
 ):
@@ -151,8 +156,12 @@ async def simulate_voice_note(
         db=db,
     )
 
+    base_url = str(request.base_url).rstrip("/")
+    if "loca.lt" in base_url or "ngrok" in base_url or "render.com" in base_url:
+        base_url = base_url.replace("http://", "https://")
+
     # Generate regional voice audio
-    voice_res = voice_service.generate_voice_response(text=reply_text, lang=req.language)
+    voice_res = voice_service.generate_voice_response(text=reply_text, lang=req.language, base_url=base_url)
 
     return {
         "phone_number": phone_clean,

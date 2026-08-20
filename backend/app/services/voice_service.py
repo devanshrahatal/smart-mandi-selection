@@ -51,7 +51,7 @@ class VoiceService:
         cls,
         text: str,
         lang: str = "en",
-        base_url: str = "http://localhost:8000",
+        base_url: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Synthesize speech MP3 for the given text in the requested regional language.
@@ -78,7 +78,11 @@ class VoiceService:
                 tts = gTTS(text=concise_speech, lang=gtts_lang, slow=False)
                 tts.save(str(filepath))
 
-            audio_url = f"{base_url.rstrip('/')}/static/audio/{filename}"
+            if base_url:
+                audio_url = f"{base_url.rstrip('/')}/static/audio/{filename}"
+            else:
+                audio_url = f"/static/audio/{filename}"
+
             return {
                 "success": True,
                 "filename": filename,
