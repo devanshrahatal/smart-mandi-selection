@@ -186,21 +186,24 @@ def generate_price_series(base_price: float, multiplier: float, days: int = 30) 
     return prices
 
 
-def seed():
+def seed(db_session=None):
     """Main seed function — creates all demo data."""
     print("Seeding Smart Mandi database...\n")
 
     # Create all tables
     Base.metadata.create_all(bind=engine)
-    print("[OK] Tables created")
 
-    db = SessionLocal()
+    own_session = False
+    if db_session is not None:
+        db = db_session
+    else:
+        db = SessionLocal()
+        own_session = True
 
     try:
         # --- Check if already seeded ---
         if db.query(Mandi).count() > 0:
             print("[WARN] Database already has data. Skipping seed.")
-            print("  To re-seed, drop all tables first and run again.")
             return
 
         # --- Mandis ---
@@ -274,16 +277,71 @@ def seed():
         print(f"[OK] {price_count} price records created (30 days x {len(MANDIS)} mandis x {len(CROPS)} crops)")
 
         # --- Default admin user ---
-        # Password: admin123 (plaintext here, hashed via passlib in Phase 7)
-        # For now we store a bcrypt placeholder so the schema is correct
-        admin = AdminUser(
-            username="admin",
-            email="admin@smartmandi.in",
-            hashed_password="$2b$12$placeholder_will_be_set_in_phase7",
-            role="admin",
-        )
-        db.add(admin)
-        print("[OK] Default admin user created (admin / admin123)")
+        admin = db.query(AdminUser).filter(AdminUser.username == "admin").first()
+        if not admin:
+            from app.core.security import get_password_hash
+            admin = AdminUser(
+                username="admin",
+                email="admin@smartmandi.in",
+                hashed_password=get_password_hash("admin123"),
+                role="admin",
+            )
+            db.add(admin)
+            print("[OK] Default admin user created (admin / admin123)")
+
+        # --- Demo Farmer Queries ---
+        from datetime import datetime
+        now = datetime.utcnow()
+        demo_queries = [
+            FarmerQuery(
+                phone_number="+919876543210",
+                crop_name="Tomato",
+                quantity_quintals=20.0,
+                location_name="Jaipur, Rajasthan",
+                source="whatsapp",
+                recommendation_outcome="Kota Krishi Mandi (+₹3,400 net profit)",
+                created_at=now - timedelta(minutes=25),
+            ),
+            FarmerQuery(
+                phone_number="+919812345678",
+                crop_name="Onion",
+                quantity_quintals=50.0,
+                location_name="Nashik, Maharashtra",
+                source="whatsapp",
+                recommendation_outcome="Lasalgaon APMC (+₹5,800 net profit)",
+                created_at=now - timedelta(hours=2),
+            ),
+            FarmerQuery(
+                phone_number="+919765432109",
+                crop_name="Potato",
+                quantity_quintals=35.0,
+                location_name="Agra, UP",
+                source="voice",
+                recommendation_outcome="Azadpur Mandi (+₹4,200 net profit)",
+                created_at=now - timedelta(hours=4),
+            ),
+            FarmerQuery(
+                phone_number="+919654321098",
+                crop_name="Wheat",
+                quantity_quintals=100.0,
+                location_name="Karnal, Haryana",
+                source="whatsapp",
+                recommendation_outcome="Khanna Grain Market (+₹8,500 net profit)",
+                created_at=now - timedelta(hours=6),
+            ),
+            FarmerQuery(
+                phone_number="+919543210987",
+                crop_name="Soybean",
+                quantity_quintals=40.0,
+                location_name="Indore, MP",
+                source="kisan_pool",
+                recommendation_outcome="Indore Mandi (Pooled Logistics 48% saved)",
+                created_at=now - timedelta(hours=8),
+            ),
+        ]
+        for q in demo_queries:
+            db.add(q)
+        print(f"[OK] {len(demo_queries)} sample farmer queries seeded")
 
         # --- Commit everything ---
         db.commit()

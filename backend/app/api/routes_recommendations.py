@@ -36,12 +36,24 @@ router = APIRouter(tags=["Recommendations"])
 @router.get("/crops", response_model=List[CropOut], summary="List all supported crops")
 def list_crops(db: Session = Depends(get_db)):
     """Returns all crops available in the system with their perishability index."""
+    if db.query(Crop).count() == 0:
+        try:
+            from scripts.seed_data import seed
+            seed(db)
+        except Exception as err:
+            logger.warning("Auto-seed in list_crops failed: %s", err)
     return db.query(Crop).order_by(Crop.name.asc()).all()
 
 
 @router.get("/mandis", response_model=List[MandiOut], summary="List all tracked mandis")
 def list_mandis(db: Session = Depends(get_db)):
     """Returns all active mandis with their location coordinates and default cost configurations."""
+    if db.query(Mandi).count() == 0:
+        try:
+            from scripts.seed_data import seed
+            seed(db)
+        except Exception as err:
+            logger.warning("Auto-seed in list_mandis failed: %s", err)
     return db.query(Mandi).filter(Mandi.is_active == True).order_by(Mandi.name.asc()).all()
 
 

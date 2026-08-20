@@ -130,6 +130,17 @@ def get_admin_profile(current_admin: AdminUser = Depends(get_current_admin)):
     return current_admin
 
 
+@router.post("/seed", summary="Manually trigger demo dataset seeding")
+def trigger_seed(db: Session = Depends(get_db)):
+    """Populate database with 10 mandis, 5 crops, 1,500 prices, and cost configs."""
+    try:
+        from scripts.seed_data import seed
+        seed(db)
+        return {"status": "success", "message": "Demo data populated successfully"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
 @router.get("/overview", response_model=DashboardOverviewData, summary="Dashboard analytics overview")
 def get_dashboard_overview(
     db: Session = Depends(get_db),
@@ -139,6 +150,14 @@ def get_dashboard_overview(
     Provides aggregated analytics: total queries, queries today,
     crop distribution breakdown, top recommended mandis, and live query feed.
     """
+    # Auto-seed if running on a fresh database
+    if db.query(Mandi).count() == 0:
+        try:
+            from scripts.seed_data import seed
+            seed(db)
+        except Exception as err:
+            logger.warning("Auto-seed on overview failed: %s", err)
+
     total_mandis = db.query(Mandi).filter(Mandi.is_active == True).count()
     total_crops = db.query(Crop).count()
     total_queries = db.query(FarmerQuery).count()
@@ -227,6 +246,12 @@ def get_admin_mandis(
     current_admin: AdminUser = Depends(get_current_admin),
 ):
     """List all active mandis with their location and editable cost parameters."""
+    if db.query(Mandi).count() == 0:
+        try:
+            from scripts.seed_data import seed
+            seed(db)
+        except Exception as err:
+            logger.warning("Auto-seed in get_admin_mandis failed: %s", err)
     return db.query(Mandi).order_by(Mandi.name.asc()).all()
 
 
