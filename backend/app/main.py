@@ -108,6 +108,13 @@ def create_app() -> FastAPI:
     app.include_router(admin_router, prefix="/api/admin")
     app.include_router(pooling_router)
 
+    # --- Root redirect to API docs ---
+    from fastapi.responses import RedirectResponse
+
+    @app.get("/", include_in_schema=False)
+    async def root_redirect():
+        return RedirectResponse(url="/docs")
+
     return app
 
 

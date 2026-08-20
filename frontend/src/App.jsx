@@ -186,7 +186,7 @@ function LandingPage() {
                 {t("openAdminBtn")}
               </Link>
               <a
-                href="http://localhost:8000/docs"
+                href={`${import.meta.env.VITE_API_BASE_URL || "https://smart-mandi-selection.onrender.com"}/docs`}
                 target="_blank"
                 rel="noreferrer"
                 className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm font-medium text-[var(--color-text-secondary)] hover:text-white hover:border-[var(--color-text-muted)] transition-colors"
@@ -325,7 +325,7 @@ function LandingPage() {
             <Link to="/admin/dashboard" className="hover:text-white transition-colors">
               {t("adminDashboardBtn")}
             </Link>
-            <a href="http://localhost:8000/docs" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+            <a href={`${import.meta.env.VITE_API_BASE_URL || "https://smart-mandi-selection.onrender.com"}/docs`} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
               {t("swaggerDocsBtn")}
             </a>
           </div>
