@@ -271,7 +271,7 @@ function LandingPage() {
                 </p>
               </div>
               <a
-                href="https://wa.me/14155238886?text=join%20smart-mandi"
+                href="https://wa.me/14155238886?text=join%20unusual-sea"
                 target="_blank"
                 rel="noreferrer"
                 className="mt-4 w-full py-2 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-md"
@@ -292,12 +292,12 @@ function LandingPage() {
                   Send this one-time message to start:
                 </p>
                 <div className="mt-2 p-2 rounded-lg bg-slate-900 border border-emerald-500/30 flex items-center justify-between font-mono text-xs text-emerald-300">
-                  <span>join smart-mandi</span>
+                  <span>join unusual-sea</span>
                 </div>
               </div>
               <button
                 onClick={() => {
-                  navigator.clipboard?.writeText("join smart-mandi");
+                  navigator.clipboard?.writeText("join unusual-sea");
                   setCopied(true);
                   setTimeout(() => setCopied(false), 2500);
                 }}
