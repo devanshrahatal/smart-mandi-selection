@@ -72,7 +72,7 @@ export default function ProfitMap({
   );
 
   return (
-    <div className="w-full h-[540px] rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl relative">
+    <div className="w-full h-[360px] sm:h-[460px] lg:h-[540px] rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl relative">
       <MapContainer
         center={centerPosition}
         zoom={6}
@@ -172,24 +172,24 @@ export default function ProfitMap({
       </MapContainer>
 
       {/* Map Legend Overlay */}
-      <div className="absolute top-4 right-4 bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-slate-700 shadow-xl z-[1000] text-xs text-slate-200">
-        <h4 className="font-bold text-slate-100 mb-1.5">Profit Route Legend</h4>
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-300"></span>
-            <span>#1 Max Net Profit (Optimal)</span>
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-slate-900/95 backdrop-blur-md p-2.5 sm:p-3 rounded-xl border border-slate-700 shadow-xl z-[1000] text-[10px] sm:text-xs text-slate-200">
+        <h4 className="font-bold text-slate-100 mb-1 sm:mb-1.5 hidden sm:block">Profit Route Legend</h4>
+        <div className="space-y-1 sm:space-y-1.5">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-300"></span>
+            <span>#1 Max Profit</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-teal-500 inline-block"></span>
-            <span>#2 Moderate Net Profit</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-teal-500 inline-block"></span>
+            <span>#2 Moderate</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
-            <span>#3 Lower Net Profit</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 inline-block"></span>
+            <span>#3 Lower</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-600 inline-block"></span>
-            <span>Farmer Origin Location</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-blue-600 inline-block"></span>
+            <span>Farmer Origin</span>
           </div>
         </div>
       </div>

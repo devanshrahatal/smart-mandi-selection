@@ -101,8 +101,8 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
   const audioUrl = result ? resolveAudioUrl(result.audio_url) : "";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+      <div className="bg-slate-900 border border-slate-700 w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl p-5 sm:p-8 shadow-2xl relative">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
           <div className="flex items-center gap-3">
