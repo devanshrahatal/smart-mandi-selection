@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  # MySQL 8.0 Database
+  db:
+    image: mysql:8.0
+    container_name: smart_mandi_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: smart_mandi
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: smart_mandi_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smart_mandi_backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      DATABASE_URL: mysql+pymysql://root:rootpassword@db:3306/smart_mandi
+      REDIS_URL: redis://redis:6379/0
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      AGMARKNET_API_KEY: ${AGMARKNET_API_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-smart-mandi-super-secret-key-for-jwt-tokens-2026}
+    ports:
+      - "8000:8000"
+
+  # React Frontend (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smart_mandi_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  mysql_data:
+  redis_data:

@@ -1,0 +1,267 @@
+/**
+ * Admin Dashboard Overview Page with Multi-Lingual Regional Support.
+ * Visualizes core platform analytics: query volume, top crops, top recommended mandis, and query stream.
+ */
+
+import React, { useState, useEffect } from "react";
+import { apiClient } from "../api/client";
+import { useLanguage } from "../hooks/useLanguage";
+import ExportButton from "../components/ExportButton";
+
+export default function DashboardOverview() {
+  const { t } = useLanguage();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchOverview = async () => {
+    try {
+      setLoading(true);
+      const res = await apiClient.get("/api/admin/overview");
+      setData(res.data);
+    } catch (err) {
+      console.error("Failed to load overview data:", err);
+      setError("Failed to connect to backend analytics. Please verify backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOverview();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12 flex items-center justify-center">
+        <div className="text-sm font-mono text-[var(--color-text-secondary)] animate-pulse">
+          Loading platform intelligence...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8 animate-fade-in-up">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-white">{t("overviewTitle")}</h1>
+          <p className="text-xs text-[var(--color-text-secondary)] mt-1">
+            {t("overviewSubtitle")}
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={fetchOverview}
+            className="px-3 py-2 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] text-xs text-[var(--color-text-secondary)] hover:text-white transition-colors"
+          >
+            {t("refreshBtn")}
+          </button>
+          <ExportButton />
+        </div>
+      </div>
+
+      {/* 4 Metric Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {data?.metrics?.map((m) => (
+          <div
+            key={m.label}
+            className="surface-card p-5 border border-[var(--color-border-subtle)] space-y-1"
+          >
+            <p className="text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">
+              {m.label}
+            </p>
+            <p className="text-2xl font-bold mono tracking-tight text-white">
+              {m.value}
+            </p>
+            {m.change && (
+              <p className="text-[11px] text-[var(--color-accent)] flex items-center gap-1 font-mono">
+                <span>↑</span>
+                <span>{m.change}</span>
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* SIH Innovation Feature Cards */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <a
+          href="/map"
+          className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/70 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 transition-all flex items-center justify-between group shadow-lg"
+        >
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              Interactive Geospatial Map
+            </span>
+            <h3 className="text-base font-bold text-white mt-1 group-hover:text-emerald-300 transition-colors">
+              Explore Mandi Profit & Route Map →
+            </h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Visual road haulage routes, green-to-red profit pins, and live deduction comparisons.
+            </p>
+          </div>
+        </a>
+
+        <a
+          href="/pooling"
+          className="p-5 rounded-2xl bg-gradient-to-r from-teal-950/70 to-slate-900 border border-teal-500/40 hover:border-teal-400 transition-all flex items-center justify-between group shadow-lg"
+        >
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+              Kisan Shared Logistics
+            </span>
+            <h3 className="text-base font-bold text-white mt-1 group-hover:text-teal-300 transition-colors">
+              Open Kisan Pool & Savings Calculator →
+            </h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Cluster smallholder harvests (5-25q) to slash commercial truckload freight by 45-60%.
+            </p>
+          </div>
+        </a>
+      </div>
+
+      {/* Analytics Grid: Top Crops & Top Mandis */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Top Queried Crops */}
+        <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-white">{t("topCropsTitle")}</h2>
+            <span className="text-[11px] font-mono text-[var(--color-text-muted)]">By volume</span>
+          </div>
+
+          <div className="space-y-3">
+            {data?.top_crops && data.top_crops.length > 0 ? (
+              data.top_crops.map((c) => (
+                <div key={c.crop_name} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-white">{c.crop_name}</span>
+                    <span className="font-mono text-[var(--color-text-secondary)]">
+                      {c.query_count} queries ({c.percentage}%)
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-[var(--color-surface-overlay)] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-[var(--color-accent)] transition-all duration-500"
+                      style={{ width: `${Math.max(c.percentage, 10)}%` }}
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-xs text-[var(--color-text-muted)] py-4 text-center">
+                No crop queries logged yet. Test with WhatsApp simulator or API!
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Top Recommended Mandis */}
+        <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-white">{t("topMandisTitle")}</h2>
+            <span className="text-[11px] font-mono text-[var(--color-text-muted)]">Highest Net Profit Rank</span>
+          </div>
+
+          <div className="space-y-2.5">
+            {data?.top_mandis && data.top_mandis.length > 0 ? (
+              data.top_mandis.map((m, idx) => (
+                <div
+                  key={m.mandi_name}
+                  className="flex items-center justify-between p-2.5 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border-subtle)] text-xs"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-5 h-5 rounded-md bg-[var(--color-surface-raised)] border border-[var(--color-border)] flex items-center justify-center font-mono font-bold text-[10px] text-[var(--color-accent)]">
+                      #{idx + 1}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-white">{m.mandi_name}</p>
+                      <p className="text-[10px] text-[var(--color-text-muted)]">{m.state}</p>
+                    </div>
+                  </div>
+                  <div className="text-right font-mono">
+                    <p className="text-[var(--color-accent)] font-medium">{m.recommendation_count} times #1</p>
+                    <p className="text-[10px] text-[var(--color-text-muted)]">Avg modal ₹{m.avg_modal_price}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-xs text-[var(--color-text-muted)] py-4 text-center">
+                No recommendation logs yet.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Live Farmer Query Stream */}
+      <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-semibold text-white">{t("liveStreamTitle")}</h2>
+            <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
+              {t("liveStreamSubtitle")}
+            </p>
+          </div>
+          <span className="text-xs font-mono text-[var(--color-text-secondary)]">
+            Total Queries: {data?.total_queries || 0}
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[var(--color-surface-raised)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-muted)] font-medium">
+              <tr>
+                <th className="py-2.5 px-3">Phone</th>
+                <th className="py-2.5 px-3">Crop</th>
+                <th className="py-2.5 px-3 text-right">Quantity</th>
+                <th className="py-2.5 px-3">Timestamp</th>
+                <th className="py-2.5 px-3">Recommendation Outcome</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border-subtle)]">
+              {data?.recent_queries && data.recent_queries.length > 0 ? (
+                data.recent_queries.map((q) => (
+                  <tr key={q.id} className="hover:bg-[var(--color-surface-overlay)] transition-colors">
+                    <td className="py-2.5 px-3 font-mono text-[var(--color-text-secondary)]">
+                      {q.phone_number}
+                    </td>
+                    <td className="py-2.5 px-3 font-medium text-white">
+                      {q.crop_name}
+                    </td>
+                    <td className="py-2.5 px-3 text-right font-mono text-white">
+                      {q.quantity_quintals} q
+                    </td>
+                    <td className="py-2.5 px-3 text-[var(--color-text-muted)] font-mono text-[11px]">
+                      {q.created_at}
+                    </td>
+                    <td className="py-2.5 px-3 text-[var(--color-text-secondary)] max-w-md truncate">
+                      {q.response_preview}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="py-8 text-center text-xs text-[var(--color-text-muted)]">
+                    No queries logged yet. Queries sent via WhatsApp Bot or API will stream here automatically.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
