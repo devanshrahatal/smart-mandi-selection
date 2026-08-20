@@ -164,25 +164,41 @@ function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 pt-16 pb-16">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs text-emerald-300 mb-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-16 pb-12 sm:pb-16">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          {/* Logo Brand Card — Appears 1st on Mobile, 2nd on Desktop */}
+          <div className="order-1 lg:order-2 lg:col-span-5 flex justify-center animate-fade-in-up">
+            <div className="relative p-2.5 sm:p-3 rounded-3xl bg-gradient-to-b from-emerald-500/20 via-slate-800/40 to-slate-900/60 border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 group">
+              <img
+                src="/logo.jpg"
+                alt="Smart Mandi Selection Brand"
+                className="w-52 sm:w-72 lg:w-80 rounded-2xl shadow-xl object-contain transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 rounded-full bg-slate-950/90 border border-emerald-500/40 text-[10px] sm:text-[11px] font-bold text-emerald-300 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                Smart Mandi Selection Platform
+              </div>
+            </div>
+          </div>
+
+          {/* Text Content & Headings — Appears 2nd on Mobile, 1st on Desktop */}
+          <div className="order-2 lg:order-1 lg:col-span-7 animate-fade-in-up flex flex-col items-center lg:items-start text-center lg:text-left mt-2 lg:mt-0">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs text-emerald-300 mb-5">
               <span className="status-dot bg-emerald-400" />
               {t("heroTag")}
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.1] mb-5 text-white">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4 text-white">
               {t("heroTitleLine1")}
               <br />
               <span className="text-emerald-400">{t("heroTitleLine2")}</span>
             </h1>
 
-            <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-xl mb-8">
+            <p className="text-sm sm:text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-xl mb-7">
               {t("heroSubtitle")}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
               <Link
                 to="/admin/dashboard"
                 className="px-5 py-2.5 rounded-lg bg-emerald-400 text-black font-semibold text-sm hover:bg-emerald-300 transition-colors shadow-lg shadow-emerald-500/20"
@@ -197,20 +213,6 @@ function LandingPage() {
               >
                 {t("swaggerDocsBtn")}
               </a>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 flex justify-center animate-fade-in-up">
-            <div className="relative p-3 rounded-3xl bg-gradient-to-b from-emerald-500/20 via-slate-800/40 to-slate-900/60 border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 group">
-              <img
-                src="/logo.jpg"
-                alt="Smart Mandi Selection Brand"
-                className="w-72 sm:w-80 rounded-2xl shadow-xl object-contain transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-slate-950/90 border border-emerald-500/40 text-[11px] font-bold text-emerald-300 shadow-md whitespace-nowrap flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Smart Mandi Selection Platform
-              </div>
             </div>
           </div>
         </div>
