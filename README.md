@@ -10,6 +10,7 @@
 
 > 🌐 **Live Web Application:** [https://smart-mandi-selection.vercel.app/](https://smart-mandi-selection.vercel.app/)  
 > 📖 **API Documentation (Swagger):** [https://smart-mandi-selection.onrender.com/docs](https://smart-mandi-selection.onrender.com/docs)  
+> 📄 **Official User Manual (PDF):** [Smart_Mandi_Selection_User_Manual.pdf](./Smart_Mandi_Selection_User_Manual.pdf)  
 > 👨‍💻 **Engineered & Architected by:** **Devansh Rahatal**  
 > *Helping farmers maximize real take-home earnings by calculating Net Profit (Price minus Transport, Handling, Mandi Commission, and Transit Spoilage) across candidate markets.*
 
