@@ -243,51 +243,62 @@ def seed_database(db: Optional[Session] = None):
 
         # 5. Demo Farmer Queries
         now = datetime.utcnow()
+        kota_mandi = mandi_objects.get("Kota Krishi Mandi")
+        azadpur_mandi = mandi_objects.get("Azadpur Mandi")
+        vashi_mandi = mandi_objects.get("Vashi APMC")
+        tomato_crop = crop_objects.get("Tomato")
+        onion_crop = crop_objects.get("Onion")
+        potato_crop = crop_objects.get("Potato")
+        wheat_crop = crop_objects.get("Wheat")
+
         demo_queries = [
             FarmerQuery(
                 phone_number="+919876543210",
+                crop_id=tomato_crop.id if tomato_crop else None,
                 crop_name="Tomato",
                 quantity_quintals=20.0,
-                location_name="Jaipur, Rajasthan",
-                source="whatsapp",
-                recommendation_outcome="Kota Krishi Mandi (+₹3,400 net profit)",
+                latitude=26.9124,
+                longitude=75.7873,
+                recommended_mandi_id=kota_mandi.id if kota_mandi else None,
+                query_text="Tomato 20q from Jaipur",
+                response_text="Best Mandi: Kota Krishi Mandi | Net Profit: Rs 38,400",
                 created_at=now - timedelta(minutes=25),
             ),
             FarmerQuery(
                 phone_number="+919812345678",
+                crop_id=onion_crop.id if onion_crop else None,
                 crop_name="Onion",
                 quantity_quintals=50.0,
-                location_name="Nashik, Maharashtra",
-                source="whatsapp",
-                recommendation_outcome="Lasalgaon APMC (+₹5,800 net profit)",
+                latitude=19.9975,
+                longitude=73.7898,
+                recommended_mandi_id=vashi_mandi.id if vashi_mandi else None,
+                query_text="50 quintals onion from Nashik",
+                response_text="Best Mandi: Vashi APMC | Net Profit: Rs 78,500",
                 created_at=now - timedelta(hours=2),
             ),
             FarmerQuery(
                 phone_number="+919765432109",
+                crop_id=potato_crop.id if potato_crop else None,
                 crop_name="Potato",
                 quantity_quintals=35.0,
-                location_name="Agra, UP",
-                source="voice",
-                recommendation_outcome="Azadpur Mandi (+₹4,200 net profit)",
+                latitude=27.1767,
+                longitude=78.0081,
+                recommended_mandi_id=azadpur_mandi.id if azadpur_mandi else None,
+                query_text="Potato 35q from Agra",
+                response_text="Best Mandi: Azadpur Mandi | Net Profit: Rs 34,200",
                 created_at=now - timedelta(hours=4),
             ),
             FarmerQuery(
                 phone_number="+919654321098",
+                crop_id=wheat_crop.id if wheat_crop else None,
                 crop_name="Wheat",
                 quantity_quintals=100.0,
-                location_name="Karnal, Haryana",
-                source="whatsapp",
-                recommendation_outcome="Khanna Grain Market (+₹8,500 net profit)",
+                latitude=29.6857,
+                longitude=76.9905,
+                recommended_mandi_id=azadpur_mandi.id if azadpur_mandi else None,
+                query_text="Wheat 100q from Karnal",
+                response_text="Best Mandi: Azadpur Mandi | Net Profit: Rs 2,15,000",
                 created_at=now - timedelta(hours=6),
-            ),
-            FarmerQuery(
-                phone_number="+919543210987",
-                crop_name="Soybean",
-                quantity_quintals=40.0,
-                location_name="Indore, MP",
-                source="kisan_pool",
-                recommendation_outcome="Indore Mandi (Pooled Logistics 48% saved)",
-                created_at=now - timedelta(hours=8),
             ),
         ]
         for q in demo_queries:
