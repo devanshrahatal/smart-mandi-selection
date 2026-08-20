@@ -1,7 +1,18 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Tooltip } from "react-leaflet";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+
+// Helper component to smoothly re-center map when farmer location changes
+function MapRecenter({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center && typeof center[0] === "number" && typeof center[1] === "number" && !isNaN(center[0]) && !isNaN(center[1])) {
+      map.setView(center, map.getZoom(), { animate: true });
+    }
+  }, [center, map]);
+  return null;
+}
 
 // Create custom SVG Leaflet icons for farmer and color-coded profit tiers
 const createCustomIcon = (color, label = "", isGold = false) => {
@@ -45,7 +56,20 @@ export default function ProfitMap({
   cropName = "Tomato",
   quantity = 20,
 }) {
-  const centerPosition = [farmerLocation.lat, farmerLocation.lon];
+  const lat = Number(farmerLocation?.lat) || 26.9124;
+  const lon = Number(farmerLocation?.lon ?? farmerLocation?.lng) || 75.7873;
+  const farmerName = farmerLocation?.name || "Farmer";
+  const centerPosition = [lat, lon];
+
+  // Filter valid mandis with valid coordinates
+  const validMandis = (mandis || []).filter(
+    (m) =>
+      m &&
+      typeof m.latitude === "number" &&
+      !isNaN(m.latitude) &&
+      typeof m.longitude === "number" &&
+      !isNaN(m.longitude)
+  );
 
   return (
     <div className="w-full h-[540px] rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl relative">
@@ -56,6 +80,8 @@ export default function ProfitMap({
         className="w-full h-full z-0"
         style={{ background: "#0f172a" }}
       >
+        <MapRecenter center={centerPosition} />
+
         {/* OpenStreetMap / CartoDB dark-mode friendly free tiles */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -63,33 +89,32 @@ export default function ProfitMap({
         />
 
         {/* Farmer Location Pin */}
-        <Marker position={[farmerLocation.lat, farmerLocation.lon]} icon={farmerIcon}>
+        <Marker position={[lat, lon]} icon={farmerIcon}>
           <Popup>
             <div className="p-2 text-slate-900">
-              <h3 className="font-bold text-sm text-blue-700">Farmer Origin ({farmerLocation.name})</h3>
+              <h3 className="font-bold text-sm text-blue-700">Farmer Origin ({farmerName})</h3>
               <p className="text-xs text-slate-600 mt-1">
                 Selling: <b>{quantity} Quintals</b> of <b>{cropName}</b>
               </p>
             </div>
           </Popup>
           <Tooltip permanent direction="top" offset={[0, -16]}>
-            <span className="font-semibold text-xs text-blue-900">Farmer: {farmerLocation.name}</span>
+            <span className="font-semibold text-xs text-blue-900">Farmer: {farmerName}</span>
           </Tooltip>
         </Marker>
 
         {/* Mandi Pins and Route Polylines */}
-        {mandis.map((mandi, idx) => {
+        {validMandis.map((mandi, idx) => {
           const isBest = idx === 0;
-          let icon = isBest ? goldMandiIcon : idx === 1 ? silverMandiIcon : idx === 2 ? bronzeMandiIcon : redMandiIcon;
-          let routeColor = isBest ? "#16a34a" : idx === 1 ? "#0d9488" : idx === 2 ? "#ca8a04" : "#94a3b8";
-          let routeDash = isBest ? "solid" : "6, 6";
+          const icon = isBest ? goldMandiIcon : idx === 1 ? silverMandiIcon : idx === 2 ? bronzeMandiIcon : redMandiIcon;
+          const routeColor = isBest ? "#16a34a" : idx === 1 ? "#0d9488" : idx === 2 ? "#ca8a04" : "#94a3b8";
 
           return (
             <React.Fragment key={mandi.mandi_id || idx}>
               {/* Route Line from Farmer to Mandi */}
               <Polyline
                 positions={[
-                  [farmerLocation.lat, farmerLocation.lon],
+                  [lat, lon],
                   [mandi.latitude, mandi.longitude],
                 ]}
                 pathOptions={{
@@ -101,7 +126,7 @@ export default function ProfitMap({
               >
                 <Tooltip sticky>
                   <div className="text-xs font-semibold text-slate-900">
-                    Route to {mandi.mandi_name}: {mandi.distance_km?.toFixed(1)} km (~{mandi.travel_time_hours?.toFixed(1)} hrs)
+                    Route to {mandi.mandi_name}: {Number(mandi.distance_km || 0).toFixed(1)} km (~{Number(mandi.travel_time_hours || 0).toFixed(1)} hrs)
                   </div>
                 </Tooltip>
               </Polyline>
@@ -123,19 +148,19 @@ export default function ProfitMap({
                     <div className="space-y-1 text-xs">
                       <div className="flex justify-between">
                         <span className="text-slate-600">Net Take-Home:</span>
-                        <b className="text-emerald-700">₹{mandi.net_profit_per_quintal?.toLocaleString()}/q</b>
+                        <b className="text-emerald-700">₹{Number(mandi.net_profit_per_quintal || 0).toLocaleString()}/q</b>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600">Modal Price:</span>
-                        <span>₹{mandi.modal_price?.toLocaleString()}</span>
+                        <span>₹{Number(mandi.modal_price || 0).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600">Deductions:</span>
-                        <span className="text-rose-600">-₹{mandi.deductions?.toLocaleString()}</span>
+                        <span className="text-rose-600">-₹{Number(mandi.deductions || 0).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600">Distance:</span>
-                        <span>{mandi.distance_km?.toFixed(1)} km</span>
+                        <span>{Number(mandi.distance_km || 0).toFixed(1)} km</span>
                       </div>
                     </div>
                   </div>

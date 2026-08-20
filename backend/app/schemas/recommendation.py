@@ -42,6 +42,8 @@ class RecommendationItem(BaseModel):
     mandi_name: str
     state: str
     district: str
+    latitude: Optional[float] = Field(None, example=25.2138)
+    longitude: Optional[float] = Field(None, example=75.8648)
     distance_km: float
     travel_time_hours: float
     badges: List[str] = Field(default_factory=list, example=["BEST PROFIT", "RECOMMENDED"])

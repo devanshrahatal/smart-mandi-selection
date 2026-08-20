@@ -39,20 +39,21 @@ export default function ProfitMapPage() {
         farmer_longitude: selectedOrigin.lon,
       };
       const res = await apiClient.post("/api/recommendations", payload);
-      if (res.data && res.data.ranked_mandis) {
-        const mapped = res.data.ranked_mandis.map((m) => ({
+      const rawList = res.data?.recommendations || res.data?.ranked_mandis || [];
+      if (rawList.length > 0) {
+        const mapped = rawList.map((m) => ({
           mandi_id: m.mandi_id,
           mandi_name: m.mandi_name,
           district: m.district,
           state: m.state,
-          latitude: m.mandi_id === 1 ? 25.2138 : m.mandi_id === 2 ? 19.076 : m.mandi_id === 3 ? 28.7165 : m.mandi_id === 4 ? 23.0225 : 22.7196,
-          longitude: m.mandi_id === 1 ? 75.8648 : m.mandi_id === 2 ? 72.8777 : m.mandi_id === 3 ? 77.1724 : m.mandi_id === 4 ? 72.5714 : 75.8577,
+          latitude: m.latitude || (m.mandi_id === 1 ? 25.2138 : m.mandi_id === 2 ? 19.076 : m.mandi_id === 3 ? 28.7165 : m.mandi_id === 4 ? 23.0225 : 22.7196),
+          longitude: m.longitude || (m.mandi_id === 1 ? 75.8648 : m.mandi_id === 2 ? 72.8777 : m.mandi_id === 3 ? 77.1724 : m.mandi_id === 4 ? 72.5714 : 75.8577),
           distance_km: m.distance_km,
           travel_time_hours: m.travel_time_hours,
-          modal_price: m.modal_price,
-          net_profit_per_quintal: m.cost_breakdown?.net_profit_per_quintal,
-          deductions: m.cost_breakdown?.total_deductions_per_quintal,
-          total_net_profit: m.cost_breakdown?.total_net_profit,
+          modal_price: m.cost_breakdown?.modal_price_per_quintal || m.modal_price || 0,
+          net_profit_per_quintal: m.cost_breakdown?.net_profit_per_quintal || 0,
+          deductions: m.cost_breakdown?.total_deductions_per_quintal || 0,
+          total_net_profit: m.cost_breakdown?.total_net_profit || 0,
         }));
         setRecommendations(mapped);
       }
@@ -148,12 +149,12 @@ export default function ProfitMapPage() {
       <ProfitMap
         farmerLocation={{
           lat: selectedOrigin.lat,
-          lng: selectedOrigin.lon,
+          lon: selectedOrigin.lon,
           name: selectedOrigin.name,
         }}
         mandis={recommendations}
         cropName={t(selectedCrop) || selectedCrop}
-        quantityQuintals={quantity}
+        quantity={quantity}
       />
 
       {/* Ranked Table */}

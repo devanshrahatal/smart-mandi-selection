@@ -236,6 +236,8 @@ async def get_mandi_recommendations(
                 mandi_name=mandi.name,
                 state=mandi.state,
                 district=mandi.district,
+                latitude=mandi.latitude,
+                longitude=mandi.longitude,
                 distance_km=dist_km,
                 travel_time_hours=travel_h,
                 badges=badges,
