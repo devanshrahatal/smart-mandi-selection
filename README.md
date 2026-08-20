@@ -177,6 +177,14 @@ docker-compose up --build
 
 ---
 
-## 👥 Contributors & Acknowledgements
-- **Smart India Hackathon 2026**
-- Agmarknet & Ministry of Agriculture & Farmers Welfare for open market price datasets.
+## 👨‍💻 Project Lead & Developer
+
+* **Creator & Lead Architect:** **Devansh Rahatal**  
+* **Project:** Smart Mandi Selection & Logistics Optimization Platform  
+* **Tech Stack:** FastAPI • React (Vite) • SQLAlchemy • MySQL / SQLite • Leaflet Maps • Twilio WhatsApp • Voice AI (gTTS)
+
+---
+
+## 👥 Acknowledgements
+* **Agmarknet & Ministry of Agriculture & Farmers Welfare** for open APMC market datasets.
+* Designed and built for agricultural intelligence and transparent farmer price discovery.
