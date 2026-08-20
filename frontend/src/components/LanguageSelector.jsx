@@ -28,11 +28,11 @@ export default function LanguageSelector() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border)] text-xs font-medium text-white transition-colors"
+        className="inline-flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border)] text-xs font-medium text-white transition-colors"
       >
-        <span>{activeLang.icon}</span>
-        <span className="hidden sm:inline">{activeLang.label}</span>
-        <span className="text-[10px] text-[var(--color-text-muted)]">▼</span>
+        <span className="text-sm leading-none">{activeLang.icon}</span>
+        <span className="hidden md:inline">{activeLang.label}</span>
+        <span className="text-[9px] text-[var(--color-text-muted)]">▼</span>
       </button>
 
       {open && (

@@ -30,6 +30,7 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
@@ -38,12 +39,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Custom scrollbar */

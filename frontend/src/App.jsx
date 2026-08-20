@@ -131,32 +131,33 @@ function LandingPage() {
     <div className="min-h-screen bg-[var(--color-surface)] flex flex-col">
       {/* Navigation */}
       <nav className="border-b border-[var(--color-border-subtle)] sticky top-0 z-50 bg-[var(--color-surface)]/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <img
               src="/logo.jpg"
               alt="Smart Mandi Logo"
-              className="w-10 h-10 rounded-xl object-contain bg-white/5 p-0.5 border border-emerald-500/30 shadow-md shadow-emerald-500/10"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-white/5 p-0.5 border border-emerald-500/30 shadow-md shadow-emerald-500/10 shrink-0"
             />
-            <div>
-              <div className="flex items-center">
-                <span className="font-bold text-base tracking-tight text-white">{t("appName")}</span>
-                <span className="text-[10px] text-emerald-400 ml-1.5 font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">{t("appName")}</span>
+                <span className="hidden sm:inline-block text-[9px] sm:text-[10px] text-emerald-400 font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 whitespace-nowrap">
                   SIH 2026
                 </span>
               </div>
-              <p className="text-[9px] text-[var(--color-text-muted)] font-medium leading-none mt-0.5 hidden sm:block">
+              <p className="text-[9px] text-[var(--color-text-muted)] font-medium leading-none mt-0.5 hidden md:block truncate">
                 Better Prices • Lower Costs • Higher Profits
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-xs text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-1.5 sm:gap-3 text-xs shrink-0">
             <LanguageSelector />
             <Link
               to="/admin/dashboard"
-              className="px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-white font-medium hover:bg-[var(--color-border)] transition-colors"
+              className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-white font-semibold hover:bg-[var(--color-border)] transition-colors whitespace-nowrap text-xs flex items-center gap-1"
             >
-              {t("adminDashboardBtn")}
+              <span className="hidden sm:inline">{t("adminDashboardBtn")}</span>
+              <span className="sm:hidden">Admin →</span>
             </Link>
           </div>
         </div>
@@ -349,53 +350,53 @@ function LandingPage() {
       </section>
 
       {/* Comparison Demo */}
-      <section id="comparison" className="max-w-7xl mx-auto px-6 py-20">
-        <div className="mb-10">
+      <section id="comparison" className="max-w-7xl mx-auto px-3 sm:px-6 py-12 sm:py-20 w-full overflow-hidden">
+        <div className="mb-6 sm:mb-10">
           <p className="text-xs font-semibold text-[var(--color-accent)] uppercase tracking-widest mb-2 font-mono">
             {t("scenarioTag")}
           </p>
-          <h2 className="text-2xl font-bold tracking-tight text-white">{t("scenarioTitle")}</h2>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">{t("scenarioTitle")}</h2>
           <p className="text-[var(--color-text-secondary)] mt-2 max-w-xl text-xs leading-relaxed">
             {t("scenarioDesc")}
           </p>
         </div>
 
-        <div className="surface-card overflow-hidden border border-[var(--color-border-subtle)]">
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
+        <div className="surface-card overflow-hidden border border-[var(--color-border-subtle)] rounded-2xl w-full">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-xs text-left min-w-[580px]">
               <thead className="bg-[var(--color-surface-raised)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-muted)] uppercase tracking-wider font-medium">
                 <tr>
-                  <th className="py-3 px-4">{t("thMandi")}</th>
-                  <th className="py-3 px-4 text-right">{t("thGrossPrice")}</th>
-                  <th className="py-3 px-4 text-right">{t("thTransport")}</th>
-                  <th className="py-3 px-4 text-right">{t("thCommission")}</th>
-                  <th className="py-3 px-4 text-right">{t("thLoading")}</th>
-                  <th className="py-3 px-4 text-right">{t("thSpoilage")}</th>
-                  <th className="py-3 px-4 text-right font-bold">{t("thNetProfit")}</th>
+                  <th className="py-3 px-3 sm:px-4 whitespace-nowrap">{t("thMandi")}</th>
+                  <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">{t("thGrossPrice")}</th>
+                  <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">{t("thTransport")}</th>
+                  <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">{t("thCommission")}</th>
+                  <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">{t("thLoading")}</th>
+                  <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">{t("thSpoilage")}</th>
+                  <th className="py-3 px-3 sm:px-4 text-right font-bold whitespace-nowrap">{t("thNetProfit")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--color-border-subtle)]">
                 {SAMPLE_COMPARISON.map((row) => (
                   <tr key={row.mandi} className={row.best ? "bg-[var(--color-accent-glow)]" : ""}>
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-2">
+                    <td className="py-3.5 px-3 sm:px-4 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
                         {row.best && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent)] bg-[var(--color-accent)]/10 px-2 py-0.5 rounded">
+                          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent)] bg-[var(--color-accent)]/10 px-1.5 py-0.5 rounded">
                             {t("badgeBest")}
                           </span>
                         )}
-                        <span className={`text-[13px] ${row.best ? "font-semibold text-white" : "text-[var(--color-text-secondary)]"}`}>
+                        <span className={`text-xs sm:text-[13px] ${row.best ? "font-semibold text-white" : "text-[var(--color-text-secondary)]"}`}>
                           {row.mandi}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-right mono font-medium text-white">₹{row.price}</td>
-                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)]">-₹{row.transport}</td>
-                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)]">-₹{row.commission}</td>
-                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)]">-₹{row.loading}</td>
-                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)]">-₹{row.spoilage}</td>
+                    <td className="py-3.5 px-3 sm:px-4 text-right mono font-medium text-white whitespace-nowrap">₹{row.price}</td>
+                    <td className="py-3.5 px-3 sm:px-4 text-right mono text-[var(--color-text-muted)] whitespace-nowrap">-₹{row.transport}</td>
+                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)] whitespace-nowrap">-₹{row.commission}</td>
+                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)] whitespace-nowrap">-₹{row.loading}</td>
+                    <td className="py-3.5 px-4 text-right mono text-[var(--color-text-muted)] whitespace-nowrap">-₹{row.spoilage}</td>
                     <td
-                      className={`py-3.5 px-4 text-right mono font-bold text-sm ${
+                      className={`py-3.5 px-3 sm:px-4 text-right mono font-bold text-xs sm:text-sm whitespace-nowrap ${
                         row.best ? "text-[var(--color-accent)]" : "text-white"
                       }`}
                     >

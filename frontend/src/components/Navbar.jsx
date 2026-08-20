@@ -35,23 +35,23 @@ export default function Navbar() {
   return (
     <>
       <header className="border-b border-[var(--color-border-subtle)] sticky top-0 z-50 bg-[var(--color-surface)]/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
           {/* Brand Logo & Title */}
-          <div className="flex items-center gap-3 md:gap-6">
-            <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+          <div className="flex items-center gap-2 sm:gap-4 md:gap-6 min-w-0">
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
               <img
                 src="/logo.jpg"
                 alt="Smart Mandi Logo"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain bg-white/5 p-0.5 border border-emerald-500/30 transition-transform group-hover:scale-105 shadow-md shadow-emerald-500/10"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-white/5 p-0.5 border border-emerald-500/30 transition-transform group-hover:scale-105 shadow-md shadow-emerald-500/10 shrink-0"
               />
-              <div>
-                <div className="flex items-center">
-                  <span className="font-bold text-sm sm:text-base tracking-tight text-white">{t("appName")}</span>
-                  <span className="text-[9px] sm:text-[10px] text-emerald-400 ml-1.5 font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">{t("appName")}</span>
+                  <span className="hidden sm:inline-block text-[9px] sm:text-[10px] text-emerald-400 font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 whitespace-nowrap">
                     SIH 2026
                   </span>
                 </div>
-                <p className="text-[9px] text-[var(--color-text-muted)] font-medium leading-none mt-0.5 hidden sm:block">
+                <p className="text-[9px] text-[var(--color-text-muted)] font-medium leading-none mt-0.5 hidden md:block truncate">
                   Better Prices • Lower Costs • Higher Profits
                 </p>
               </div>
@@ -79,17 +79,17 @@ export default function Navbar() {
           </div>
 
           {/* Right Side: Voice AI Demo, Language Switcher & Auth */}
-          <div className="flex items-center gap-2 sm:gap-3 text-sm">
+          <div className="flex items-center gap-1.5 sm:gap-3 text-sm shrink-0">
             {/* Voice AI Demo Trigger */}
             <button
               onClick={() => setVoiceModalOpen(true)}
-              className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 hover:text-emerald-200 border border-emerald-500/30 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shadow-sm"
+              className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 hover:text-emerald-200 border border-emerald-500/30 text-xs font-semibold px-2 py-1.5 sm:px-3 rounded-lg transition-all flex items-center gap-1 shadow-sm"
               title="Voice AI Simulator"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
               </svg>
-              <span className="hidden sm:inline">Voice AI</span>
+              <span className="hidden md:inline">Voice AI</span>
             </button>
 
             {/* Language Switcher */}
