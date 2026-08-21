@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { useLanguage } from "../hooks/useLanguage";
 import ExportButton from "../components/ExportButton";
@@ -97,8 +98,8 @@ export default function DashboardOverview() {
 
       {/* Platform Innovation Feature Cards */}
       <div className="grid md:grid-cols-2 gap-4">
-        <a
-          href="/map"
+        <Link
+          to="/map"
           className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/70 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 transition-all flex items-center justify-between group shadow-lg"
         >
           <div>
@@ -112,10 +113,10 @@ export default function DashboardOverview() {
               {t("mapBannerDesc")}
             </p>
           </div>
-        </a>
+        </Link>
 
-        <a
-          href="/pooling"
+        <Link
+          to="/pooling"
           className="p-5 rounded-2xl bg-gradient-to-r from-teal-950/70 to-slate-900 border border-teal-500/40 hover:border-teal-400 transition-all flex items-center justify-between group shadow-lg"
         >
           <div>
@@ -129,7 +130,7 @@ export default function DashboardOverview() {
               {t("poolBannerDesc")}
             </p>
           </div>
-        </a>
+        </Link>
       </div>
 
       {/* Analytics Grid: Top Crops & Top Mandis */}
