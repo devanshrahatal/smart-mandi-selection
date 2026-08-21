@@ -5,7 +5,9 @@
 
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD ? "https://smart-mandi-selection.onrender.com" : "http://localhost:8000");
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -34,8 +36,11 @@ apiClient.interceptors.response.use(
       // Clear expired token
       localStorage.removeItem("smart_mandi_token");
       localStorage.removeItem("smart_mandi_user");
-      // Only redirect if currently inside admin area
-      if (window.location.pathname.startsWith("/admin") && window.location.pathname !== "/admin/login") {
+      // Redirect if on any protected dashboard or map route
+      const currentPath = window.location.pathname;
+      const isProtectedPath =
+        currentPath.startsWith("/admin") || currentPath === "/map" || currentPath === "/pooling";
+      if (isProtectedPath && currentPath !== "/admin/login") {
         window.location.href = "/admin/login";
       }
     }
