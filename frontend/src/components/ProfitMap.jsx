@@ -72,17 +72,17 @@ export default function ProfitMap({
   );
 
   return (
-    <div className="w-full h-[360px] sm:h-[460px] lg:h-[540px] rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl relative">
+    <div className="w-full h-[360px] sm:h-[460px] lg:h-[540px] rounded-2xl overflow-hidden border border-[var(--color-border-subtle)] shadow-2xl relative">
       <MapContainer
         center={centerPosition}
         zoom={6}
         scrollWheelZoom={true}
         className="w-full h-full z-0"
-        style={{ background: "#0f172a" }}
+        style={{ background: "var(--color-surface)" }}
       >
         <MapRecenter center={centerPosition} />
 
-        {/* OpenStreetMap / CartoDB dark-mode friendly free tiles */}
+        {/* OpenStreetMap / CartoDB clean tiles */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
@@ -172,8 +172,8 @@ export default function ProfitMap({
       </MapContainer>
 
       {/* Map Legend Overlay */}
-      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-slate-900/95 backdrop-blur-md p-2.5 sm:p-3 rounded-xl border border-slate-700 shadow-xl z-[1000] text-[10px] sm:text-xs text-slate-200">
-        <h4 className="font-bold text-slate-100 mb-1 sm:mb-1.5 hidden sm:block">Profit Route Legend</h4>
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 backdrop-blur-md p-2.5 sm:p-3 rounded-xl border shadow-xl z-[1000] text-[10px] sm:text-xs" style={{ background: "var(--glass-bg)", borderColor: "var(--glass-border)", color: "var(--color-text-primary)" }}>
+        <h4 className="font-bold mb-1 sm:mb-1.5 hidden sm:block text-[var(--color-text-primary)]">Profit Route Legend</h4>
         <div className="space-y-1 sm:space-y-1.5">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-300"></span>

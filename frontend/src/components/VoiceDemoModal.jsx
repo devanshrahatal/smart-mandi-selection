@@ -101,21 +101,27 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
   const audioUrl = result ? resolveAudioUrl(result.audio_url) : "";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-700 w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl p-5 sm:p-8 shadow-2xl relative">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 backdrop-blur-md animate-fadeIn"
+      style={{ background: "var(--modal-overlay)" }}
+    >
+      <div
+        className="w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl p-5 sm:p-8 shadow-2xl relative border"
+        style={{ background: "var(--voice-modal-bg)", borderColor: "var(--voice-modal-border)" }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+        <div className="flex items-center justify-between border-b pb-4 mb-6" style={{ borderColor: "var(--color-border-subtle)" }}>
           <div className="flex items-center gap-3">
-            <span className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+            <span className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-[var(--color-accent)] flex items-center justify-center border border-emerald-500/30">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
               </svg>
             </span>
             <div>
-              <h2 className="text-xl font-black text-slate-100">
+              <h2 className="text-xl font-black text-[var(--color-text-primary)]">
                 Voice AI Speech-to-Speech Simulator
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[var(--color-text-muted)]">
                 Test regional speech queries & generated audio note replies (100% Free)
               </p>
             </div>
@@ -127,7 +133,7 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
               }
               onClose();
             }}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-lg transition-all"
+            className="w-8 h-8 rounded-full bg-[var(--color-surface-overlay)] hover:bg-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] flex items-center justify-center text-lg transition-all"
           >
             ✕
           </button>
@@ -136,7 +142,7 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
         {/* Language Tabs */}
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
               1. Choose Regional Language Dialect:
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -146,8 +152,8 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
                   onClick={() => handleSelectSample(sample)}
                   className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
                     selectedSample.lang === sample.lang
-                      ? "bg-emerald-600 text-white shadow-md shadow-emerald-700/40 border border-emerald-400"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                      ? "bg-[var(--color-accent)] text-white shadow-md border border-[var(--color-accent)]"
+                      : "bg-[var(--voice-tab-bg)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] border border-[var(--voice-tab-border)]"
                   }`}
                 >
                   {sample.label}
@@ -158,7 +164,7 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
 
           {/* Voice Input Textarea */}
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
               2. Spoken Voice Note Transcript:
             </label>
             <div className="relative">
@@ -166,7 +172,8 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
                 type="text"
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                className="w-full rounded-2xl px-4 py-3 text-sm border focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-colors"
+                style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
                 placeholder="Speak or type query..."
               />
             </div>
@@ -176,22 +183,25 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
           <button
             onClick={handleRunVoiceSimulation}
             disabled={loading}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-emerald-700/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full bg-[var(--color-accent)] hover:brightness-110 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading ? "Synthesizing Regional Audio..." : "Process Voice Query & Generate Audio Reply"}
           </button>
 
           {/* Simulation Output Card */}
           {result && (
-            <div className="mt-6 p-5 bg-slate-950/90 border border-emerald-500/40 rounded-2xl space-y-4 animate-fadeIn">
+            <div
+              className="mt-6 p-5 rounded-2xl space-y-4 animate-fadeIn border"
+              style={{ background: "var(--voice-result-bg)", borderColor: "var(--voice-result-border)" }}
+            >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-400 uppercase flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span className="text-xs font-bold text-[var(--color-accent)] uppercase flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                   Audio Reply Ready ({result.language?.toUpperCase()})
                 </span>
                 <button
                   onClick={handlePlayVoiceNote}
-                  className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow transition-all flex items-center gap-1"
+                  className="px-3 py-1 bg-[var(--color-accent)] hover:brightness-110 text-white text-xs font-bold rounded-lg shadow transition-all flex items-center gap-1"
                 >
                   <span>🔊</span>
                   <span>Play Aloud</span>
@@ -200,14 +210,17 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
 
               {/* Native Audio Player */}
               {audioUrl && (
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
+                <div
+                  className="p-3 rounded-xl border flex flex-col gap-2"
+                  style={{ background: "var(--voice-audio-bg)", borderColor: "var(--voice-audio-border)" }}
+                >
+                  <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)] font-semibold">
                     <span>🔊 WhatsApp Voice Note Stream:</span>
                     <a
                       href={audioUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-emerald-400 hover:underline text-[11px]"
+                      className="text-[var(--color-accent)] hover:underline text-[11px]"
                     >
                       Download MP3 ↗
                     </a>
@@ -228,8 +241,15 @@ export default function VoiceDemoModal({ isOpen, onClose }) {
               )}
 
               {/* Bot Spoken Message */}
-              <div className="text-xs text-slate-300 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-                <span className="font-bold text-emerald-300 block mb-1">Spoken Summary:</span>
+              <div
+                className="text-xs p-3 rounded-xl border"
+                style={{
+                  background: "var(--voice-audio-bg)",
+                  borderColor: "var(--voice-audio-border)",
+                  color: "var(--color-text-secondary)"
+                }}
+              >
+                <span className="font-bold text-[var(--color-accent)] block mb-1">Spoken Summary:</span>
                 <p className="leading-relaxed">{result.spoken_summary}</p>
               </div>
             </div>

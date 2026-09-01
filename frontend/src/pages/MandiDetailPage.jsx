@@ -1,5 +1,5 @@
 /**
- * Mandi Detail & Price Trend Analytics Page with Multi-Lingual Regional Support.
+ * Mandi Detail & Price Trend Analytics Page with Multi-Lingual Regional Support & Dual Theme.
  * Allows filtering by Mandi and Crop, and renders 30-day price curves with summary metrics.
  */
 
@@ -79,7 +79,7 @@ export default function MandiDetailPage() {
       {/* Header & Filter Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">{t("trendsTitle")}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{t("trendsTitle")}</h1>
           <p className="text-xs text-[var(--color-text-secondary)] mt-1">
             {t("trendsSubtitle")}
           </p>
@@ -96,7 +96,8 @@ export default function MandiDetailPage() {
                 setSelectedMandiId(id);
                 setSearchParams({ mandi_id: id });
               }}
-              className="px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-xs text-white focus:outline-none focus:border-[var(--color-accent)] font-medium"
+              className="px-3.5 py-2 rounded-lg border text-xs focus:outline-none focus:border-[var(--color-accent)] font-medium transition-colors"
+              style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
             >
               {mandis.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -111,7 +112,8 @@ export default function MandiDetailPage() {
             <select
               value={selectedCropId}
               onChange={(e) => setSelectedCropId(parseInt(e.target.value))}
-              className="px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-xs text-white focus:outline-none focus:border-[var(--color-accent)] font-medium"
+              className="px-3.5 py-2 rounded-lg border text-xs focus:outline-none focus:border-[var(--color-accent)] font-medium transition-colors"
+              style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
             >
               {crops.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -133,13 +135,13 @@ export default function MandiDetailPage() {
 
         <div className="surface-card p-4 space-y-1">
           <p className="text-xs text-[var(--color-text-muted)] font-medium uppercase">{t("kpiHigh")}</p>
-          <p className="text-2xl font-bold mono text-white">₹{highestPrice.toLocaleString()}</p>
+          <p className="text-2xl font-bold mono text-[var(--color-text-primary)]">₹{highestPrice.toLocaleString()}</p>
           <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">{t("peakPriceBadge")}</p>
         </div>
 
         <div className="surface-card p-4 space-y-1">
           <p className="text-xs text-[var(--color-text-muted)] font-medium uppercase">{t("kpiLow")}</p>
-          <p className="text-2xl font-bold mono text-white">₹{lowestPrice.toLocaleString()}</p>
+          <p className="text-2xl font-bold mono text-[var(--color-text-primary)]">₹{lowestPrice.toLocaleString()}</p>
           <p className="text-[11px] text-[var(--color-text-secondary)] font-mono">{t("floorPriceBadge")}</p>
         </div>
 
@@ -156,7 +158,7 @@ export default function MandiDetailPage() {
       <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-base font-semibold text-white">
+            <h2 className="text-base font-semibold text-[var(--color-text-primary)]">
               {selectedMandi?.name} — {t(selectedCrop?.name) || selectedCrop?.name} {t("priceHistoryTitle")}
             </h2>
             <p className="text-xs text-[var(--color-text-muted)]">
@@ -183,29 +185,29 @@ export default function MandiDetailPage() {
       {/* Mandi Cost Configuration Profile */}
       {selectedMandi && (
         <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
-          <h2 className="text-sm font-semibold text-white">Mandi Cost Parameters & Profile</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Mandi Cost Parameters & Profile</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5">
+            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5 border border-[var(--color-border-subtle)]">
               <p className="text-[var(--color-text-muted)]">Mandi Commission</p>
-              <p className="text-sm font-mono font-semibold text-white">
+              <p className="text-sm font-mono font-semibold text-[var(--color-text-primary)]">
                 {selectedMandi.cost_config?.commission_percentage || 6.0}%
               </p>
             </div>
-            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5">
+            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5 border border-[var(--color-border-subtle)]">
               <p className="text-[var(--color-text-muted)]">Loading / Unloading</p>
-              <p className="text-sm font-mono font-semibold text-white">
+              <p className="text-sm font-mono font-semibold text-[var(--color-text-primary)]">
                 ₹{(selectedMandi.cost_config?.loading_cost_per_quintal || 30) + (selectedMandi.cost_config?.unloading_cost_per_quintal || 20)}/q
               </p>
             </div>
-            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5">
+            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5 border border-[var(--color-border-subtle)]">
               <p className="text-[var(--color-text-muted)]">Transport Base Rate</p>
-              <p className="text-sm font-mono font-semibold text-white">
+              <p className="text-sm font-mono font-semibold text-[var(--color-text-primary)]">
                 ₹{selectedMandi.cost_config?.transport_rate_per_km_per_quintal || 2.5}/km/q
               </p>
             </div>
-            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5">
+            <div className="p-3 rounded-lg bg-[var(--color-surface-overlay)] space-y-0.5 border border-[var(--color-border-subtle)]">
               <p className="text-[var(--color-text-muted)]">Location Coordinates</p>
-              <p className="text-sm font-mono font-semibold text-white">
+              <p className="text-sm font-mono font-semibold text-[var(--color-text-primary)]">
                 {selectedMandi.latitude?.toFixed(2)}, {selectedMandi.longitude?.toFixed(2)}
               </p>
             </div>

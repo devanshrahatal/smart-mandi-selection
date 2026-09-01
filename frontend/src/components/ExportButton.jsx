@@ -1,5 +1,5 @@
 /**
- * CSV Export Button component.
+ * CSV Export Button component with Dual Theme.
  * Calls /api/admin/export-report and triggers browser file download.
  */
 
@@ -38,7 +38,7 @@ export default function ExportButton() {
     <button
       onClick={handleExport}
       disabled={downloading}
-      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-xs font-medium text-white hover:bg-[var(--color-border)] transition-colors disabled:opacity-50"
+      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-xs font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-border)] transition-colors disabled:opacity-50"
     >
       <span>📥</span>
       <span>{downloading ? "Generating CSV..." : "Export Report (CSV)"}</span>

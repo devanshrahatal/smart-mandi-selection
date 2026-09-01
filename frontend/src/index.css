@@ -6,23 +6,302 @@
 @tailwind utilities;
 
 /* ============================================================
-   Global styles
+   Design Tokens — Light Mode (Default)
    ============================================================ */
 
 :root {
+  /* Surface & Background */
+  --color-surface: #f8fafb;
+  --color-surface-raised: #ffffff;
+  --color-surface-overlay: #f1f5f9;
+  --color-surface-inset: #e8edf2;
+
+  /* Borders */
+  --color-border: #d1d5db;
+  --color-border-subtle: #e5e7eb;
+
+  /* Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #9ca3af;
+
+  /* Accent — Agriculture green */
+  --color-accent: #16a34a;
+  --color-accent-dim: #15803d;
+  --color-accent-glow: rgba(22, 163, 74, 0.08);
+  --color-accent-soft: rgba(22, 163, 74, 0.12);
+
+  /* Semantic */
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+
+  /* Component Helpers */
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(209, 213, 219, 0.6);
+
+  /* Scrollbar */
+  --scrollbar-thumb: #c4c9cf;
+  --scrollbar-thumb-hover: #a0a6ae;
+
+  /* Nav & Header */
+  --nav-bg: rgba(248, 250, 251, 0.92);
+  --nav-text: #111827;
+
+  /* Gradient Hero */
+  --hero-gradient-from: rgba(22, 163, 74, 0.08);
+  --hero-gradient-via: rgba(241, 245, 249, 0.6);
+  --hero-gradient-to: rgba(20, 184, 166, 0.06);
+
+  /* Cards on sections */
+  --section-card-bg: rgba(241, 245, 249, 0.8);
+  --section-card-border: rgba(209, 213, 219, 0.6);
+
+  /* WhatsApp card */
+  --whatsapp-card-bg: linear-gradient(135deg, rgba(22, 163, 74, 0.06) 0%, rgba(241, 245, 249, 0.95) 50%, rgba(20, 184, 166, 0.05) 100%);
+  --whatsapp-step-bg: rgba(248, 250, 251, 0.9);
+  --whatsapp-step-border: rgba(209, 213, 219, 0.6);
+  --whatsapp-code-bg: #f1f5f9;
+
+  /* Feature section */
+  --feature-section-bg: #f1f5f9;
+
+  /* Pool/Map section card */
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --panel-border: rgba(209, 213, 219, 0.7);
+
+  /* Input fields */
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-text: #111827;
+
+  /* Modal overlay */
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+  --modal-bg: #ffffff;
+  --modal-border: #e5e7eb;
+
+  /* Table */
+  --table-row-hover: rgba(241, 245, 249, 0.8);
+  --table-header-bg: #f8fafb;
+
+  /* Badges & Pills */
+  --badge-muted-bg: #f1f5f9;
+  --badge-muted-text: #6b7280;
+
+  /* Dashboard gradient cards */
+  --gradient-card-from: rgba(22, 163, 74, 0.06);
+  --gradient-card-to: rgba(241, 245, 249, 0.95);
+  --gradient-card-border: rgba(22, 163, 74, 0.25);
+
+  --gradient-card2-from: rgba(20, 184, 166, 0.06);
+  --gradient-card2-to: rgba(241, 245, 249, 0.95);
+  --gradient-card2-border: rgba(20, 184, 166, 0.25);
+
+  /* Mobile menu */
+  --mobile-menu-bg: rgba(255, 255, 255, 0.98);
+  --mobile-menu-border: #e5e7eb;
+
+  /* Active Pool card */
+  --pool-card-bg: rgba(255, 255, 255, 0.9);
+  --pool-card-border: rgba(209, 213, 219, 0.7);
+  --pool-detail-bg: #f8fafb;
+  --pool-detail-border: #e5e7eb;
+  --pool-progress-bg: #e5e7eb;
+
+  /* Calculator result */
+  --calc-result-bg: #f1f5f9;
+  --calc-result-border: rgba(22, 163, 74, 0.2);
+  --calc-kpi-bg: #ffffff;
+  --calc-kpi-border: #e5e7eb;
+  --calc-savings-bg: rgba(22, 163, 74, 0.06);
+  --calc-savings-border: rgba(22, 163, 74, 0.3);
+
+  /* Voice modal */
+  --voice-modal-bg: #ffffff;
+  --voice-modal-border: #e5e7eb;
+  --voice-tab-bg: #f1f5f9;
+  --voice-tab-border: #d1d5db;
+  --voice-input-bg: #f8fafb;
+  --voice-result-bg: #f1f5f9;
+  --voice-result-border: rgba(22, 163, 74, 0.3);
+  --voice-audio-bg: #f8fafb;
+  --voice-audio-border: #e5e7eb;
+
+  /* Profit map ranked table */
+  --ranked-header-bg: #f1f5f9;
+  --ranked-header-text: #6b7280;
+  --ranked-divider: rgba(209, 213, 219, 0.5);
+  --ranked-hover: rgba(241, 245, 249, 0.6);
+  --ranked-best-bg: rgba(22, 163, 74, 0.04);
+  --ranked-badge-default-bg: #f1f5f9;
+  --ranked-badge-default-text: #6b7280;
+
+  /* Prototype notice */
+  --notice-bg: #f8fafb;
+  --notice-border: #e5e7eb;
+
+  /* Logo brand card */
+  --brand-card-gradient: linear-gradient(180deg, rgba(22,163,74,0.08) 0%, rgba(241,245,249,0.4) 50%, rgba(248,250,251,0.7) 100%);
+  --brand-card-border: rgba(22, 163, 74, 0.2);
+  --brand-badge-bg: rgba(248, 250, 251, 0.95);
+  --brand-badge-border: rgba(22, 163, 74, 0.25);
+
+  /* Range slider track */
+  --slider-track: #e5e7eb;
+}
+
+
+/* ============================================================
+   Design Tokens — Dark Mode Override
+   ============================================================ */
+
+[data-theme="dark"] {
+  /* Surface & Background */
   --color-surface: #0a0a0b;
   --color-surface-raised: #111113;
   --color-surface-overlay: #18181b;
+  --color-surface-inset: #1e1e21;
+
+  /* Borders */
   --color-border: #27272a;
   --color-border-subtle: #1e1e21;
+
+  /* Text */
   --color-text-primary: #fafafa;
   --color-text-secondary: #a1a1aa;
   --color-text-muted: #71717a;
+
+  /* Accent */
   --color-accent: #22c55e;
   --color-accent-dim: #16a34a;
   --color-accent-glow: rgba(34, 197, 94, 0.08);
+  --color-accent-soft: rgba(34, 197, 94, 0.12);
+
+  /* Semantic */
   --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Component Helpers */
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --card-shadow-hover: 0 8px 24px rgba(0,0,0,0.4);
+  --glass-bg: rgba(17, 17, 19, 0.85);
+  --glass-border: rgba(39, 39, 42, 0.6);
+
+  /* Scrollbar */
+  --scrollbar-thumb: #333;
+  --scrollbar-thumb-hover: #555;
+
+  /* Nav & Header */
+  --nav-bg: rgba(10, 10, 11, 0.95);
+  --nav-text: #fafafa;
+
+  /* Gradient Hero */
+  --hero-gradient-from: rgba(34, 197, 94, 0.2);
+  --hero-gradient-via: rgba(30, 41, 59, 0.4);
+  --hero-gradient-to: rgba(15, 23, 42, 0.6);
+
+  /* Cards on sections */
+  --section-card-bg: rgba(30, 41, 59, 0.8);
+  --section-card-border: rgba(51, 65, 85, 0.6);
+
+  /* WhatsApp card */
+  --whatsapp-card-bg: linear-gradient(135deg, rgba(6, 78, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(17, 94, 89, 0.9) 100%);
+  --whatsapp-step-bg: rgba(2, 6, 23, 0.6);
+  --whatsapp-step-border: rgba(30, 41, 59, 0.8);
+  --whatsapp-code-bg: #0f172a;
+
+  /* Feature section */
+  --feature-section-bg: #111113;
+
+  /* Pool/Map section card */
+  --panel-bg: rgba(30, 41, 59, 0.8);
+  --panel-border: rgba(51, 65, 85, 0.6);
+
+  /* Input fields */
+  --input-bg: #0f172a;
+  --input-border: #334155;
+  --input-text: #f1f5f9;
+
+  /* Modal overlay */
+  --modal-overlay: rgba(0, 0, 0, 0.75);
+  --modal-bg: #0f172a;
+  --modal-border: #334155;
+
+  /* Table */
+  --table-row-hover: rgba(30, 41, 59, 0.4);
+  --table-header-bg: rgba(15, 23, 42, 0.8);
+
+  /* Badges & Pills */
+  --badge-muted-bg: rgba(51, 65, 85, 1);
+  --badge-muted-text: #cbd5e1;
+
+  /* Dashboard gradient cards */
+  --gradient-card-from: rgba(6, 78, 59, 0.7);
+  --gradient-card-to: #0f172a;
+  --gradient-card-border: rgba(34, 197, 94, 0.4);
+
+  --gradient-card2-from: rgba(17, 94, 89, 0.7);
+  --gradient-card2-to: #0f172a;
+  --gradient-card2-border: rgba(20, 184, 166, 0.4);
+
+  /* Mobile menu */
+  --mobile-menu-bg: rgba(15, 23, 42, 0.98);
+  --mobile-menu-border: #1e293b;
+
+  /* Active Pool card */
+  --pool-card-bg: rgba(30, 41, 59, 0.7);
+  --pool-card-border: rgba(51, 65, 85, 0.6);
+  --pool-detail-bg: rgba(15, 23, 42, 0.6);
+  --pool-detail-border: #1e293b;
+  --pool-progress-bg: #0f172a;
+
+  /* Calculator result */
+  --calc-result-bg: rgba(15, 23, 42, 0.9);
+  --calc-result-border: rgba(34, 197, 94, 0.3);
+  --calc-kpi-bg: rgba(30, 41, 59, 0.6);
+  --calc-kpi-border: #334155;
+  --calc-savings-bg: rgba(6, 78, 59, 0.7);
+  --calc-savings-border: rgba(34, 197, 94, 0.6);
+
+  /* Voice modal */
+  --voice-modal-bg: #0f172a;
+  --voice-modal-border: #334155;
+  --voice-tab-bg: #1e293b;
+  --voice-tab-border: #334155;
+  --voice-input-bg: #020617;
+  --voice-result-bg: rgba(2, 6, 23, 0.9);
+  --voice-result-border: rgba(34, 197, 94, 0.4);
+  --voice-audio-bg: #0f172a;
+  --voice-audio-border: #1e293b;
+
+  /* Profit map ranked table */
+  --ranked-header-bg: rgba(15, 23, 42, 0.8);
+  --ranked-header-text: #94a3b8;
+  --ranked-divider: rgba(51, 65, 85, 0.6);
+  --ranked-hover: rgba(51, 65, 85, 0.4);
+  --ranked-best-bg: rgba(6, 78, 59, 0.2);
+  --ranked-badge-default-bg: #334155;
+  --ranked-badge-default-text: #cbd5e1;
+
+  /* Prototype notice */
+  --notice-bg: rgba(2, 6, 23, 0.8);
+  --notice-border: rgba(30, 41, 59, 0.9);
+
+  /* Logo brand card */
+  --brand-card-gradient: linear-gradient(180deg, rgba(34,197,94,0.2) 0%, rgba(30,41,59,0.4) 50%, rgba(15,23,42,0.6) 100%);
+  --brand-card-border: rgba(34, 197, 94, 0.3);
+  --brand-badge-bg: rgba(2, 6, 23, 0.9);
+  --brand-badge-border: rgba(34, 197, 94, 0.4);
+
+  /* Range slider track */
+  --slider-track: #334155;
 }
+
+
+/* ============================================================
+   Global Styles
+   ============================================================ */
 
 * {
   margin: 0;
@@ -41,6 +320,7 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   max-width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -54,31 +334,64 @@ body {
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #555; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
 /* ============================================================
-   Component styles
+   Theme Toggle Button
+   ============================================================ */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.theme-toggle-icon {
+  display: inline-flex;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ============================================================
+   Component Styles
    ============================================================ */
 
 @layer components {
-  /* Subtle card — no blur, just clean surfaces */
+  /* Subtle card — clean surfaces */
   .surface-card {
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border-subtle);
     border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .surface-card-hover {
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border-subtle);
     border-radius: 12px;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .surface-card-hover:hover {
     border-color: var(--color-border);
     background-color: var(--color-surface-overlay);
+    box-shadow: var(--card-shadow-hover);
   }
 
   /* Mono-spaced data values */
@@ -126,3 +439,30 @@ body {
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
 .delay-600 { animation-delay: 0.6s; }
+
+/* ============================================================
+   Select/Input Styling for Light Mode
+   ============================================================ */
+
+select,
+input[type="text"],
+input[type="number"],
+input[type="password"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] select,
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="password"] {
+  color-scheme: dark;
+}
+
+/* Range slider styling */
+input[type="range"] {
+  accent-color: var(--color-accent);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: var(--slider-track);
+}

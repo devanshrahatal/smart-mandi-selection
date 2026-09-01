@@ -1,5 +1,5 @@
 /**
- * Cost Configuration Page with Multi-Lingual Regional Support.
+ * Cost Configuration Page with Multi-Lingual Regional Support & Dual Theme.
  * Admin interface to update mandi commission %, loading/unloading rates, and transport coefficients.
  */
 
@@ -83,7 +83,7 @@ export default function CostConfigPage() {
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8 animate-fade-in-up">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">{t("costTitle")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{t("costTitle")}</h1>
         <p className="text-xs text-[var(--color-text-secondary)] mt-1">
           {t("costSubtitle")}
         </p>
@@ -101,18 +101,21 @@ export default function CostConfigPage() {
 
       {/* Edit Modal Dialog */}
       {editingMandi && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in-up">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in-up"
+          style={{ background: "var(--modal-overlay)" }}
+        >
           <div className="surface-card w-full max-w-lg p-6 border border-[var(--color-border)] shadow-2xl space-y-5">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-base font-bold text-white">Edit Cost Parameters</h2>
+                <h2 className="text-base font-bold text-[var(--color-text-primary)]">Edit Cost Parameters</h2>
                 <p className="text-xs text-[var(--color-accent)] font-medium mt-0.5">
                   {editingMandi.name} ({editingMandi.district}, {editingMandi.state})
                 </p>
               </div>
               <button
                 onClick={() => setEditingMandi(null)}
-                className="text-[var(--color-text-muted)] hover:text-white text-sm"
+                className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] text-sm"
               >
                 ✕
               </button>
@@ -133,7 +136,8 @@ export default function CostConfigPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, commission_percentage: e.target.value })
                   }
-                  className="w-full px-3 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-white focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                  className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                  style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
                 />
                 <p className="text-[10px] text-[var(--color-text-muted)] mt-1">
                   Deducted as a percentage of gross crop modal sale price (typical 3% to 8%).
@@ -154,7 +158,8 @@ export default function CostConfigPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, loading_cost_per_quintal: e.target.value })
                     }
-                    className="w-full px-3 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-white focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                    className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                    style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
                   />
                 </div>
 
@@ -171,7 +176,8 @@ export default function CostConfigPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, unloading_cost_per_quintal: e.target.value })
                     }
-                    className="w-full px-3 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-white focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                    className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                    style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
                   />
                 </div>
               </div>
@@ -189,7 +195,8 @@ export default function CostConfigPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, transport_rate_per_km_per_quintal: e.target.value })
                   }
-                  className="w-full px-3 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-white focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                  className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:border-[var(--color-accent)] font-mono"
+                  style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
                 />
                 <p className="text-[10px] text-[var(--color-text-muted)] mt-1">
                   Multiplied by distance to calculate transit haulage costs.
@@ -200,14 +207,14 @@ export default function CostConfigPage() {
                 <button
                   type="button"
                   onClick={() => setEditingMandi(null)}
-                  className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)] hover:text-white transition-colors"
+                  className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-overlay)] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-lg bg-[var(--color-accent)] text-black font-semibold text-xs hover:bg-[var(--color-accent-dim)] transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-[var(--color-accent)] text-white font-semibold text-xs hover:brightness-110 transition-colors disabled:opacity-50"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>

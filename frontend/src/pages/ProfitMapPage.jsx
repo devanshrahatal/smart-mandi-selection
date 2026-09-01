@@ -74,19 +74,19 @@ export default function ProfitMapPage() {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      {/* Header */}
-      <div className="bg-slate-800/80 border border-slate-700/60 backdrop-blur-md rounded-2xl p-6 shadow-xl">
-        <h1 className="text-2xl font-black text-slate-100 flex items-center gap-2">
+      {/* Header Controls Card */}
+      <div className="surface-card p-6 border border-[var(--color-border-subtle)] shadow-xl">
+        <h1 className="text-2xl font-black text-[var(--color-text-primary)] flex items-center gap-2">
           {t("mapTitle")}
         </h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
           {t("mapSubtitle")}
         </p>
 
         {/* Filter Controls */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
               {t("mapOriginLabel")}
             </label>
             <select
@@ -95,7 +95,8 @@ export default function ProfitMapPage() {
                 const found = POPULAR_ORIGINS.find((o) => o.name === e.target.value);
                 if (found) setSelectedOrigin(found);
               }}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              className="w-full rounded-xl px-4 py-2.5 text-sm border focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-colors"
+              style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
             >
               {POPULAR_ORIGINS.map((orig) => (
                 <option key={orig.name} value={orig.name}>
@@ -106,13 +107,14 @@ export default function ProfitMapPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
               {t("mapCropLabel")}
             </label>
             <select
               value={selectedCrop}
               onChange={(e) => setSelectedCrop(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              className="w-full rounded-xl px-4 py-2.5 text-sm border focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-colors"
+              style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
             >
               {crops.length > 0 ? (
                 crops.map((c) => (
@@ -133,8 +135,8 @@ export default function ProfitMapPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              {t("mapQuantityLabel")}: <b className="text-emerald-400 font-mono">{quantity}q</b>
+            <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
+              {t("mapQuantityLabel")}: <b className="text-[var(--color-accent)] font-mono">{quantity}q</b>
             </label>
             <input
               type="range"
@@ -143,7 +145,8 @@ export default function ProfitMapPage() {
               step="5"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 mt-2"
+              className="w-full h-2 rounded-lg appearance-none cursor-pointer mt-2"
+              style={{ background: "var(--slider-track)" }}
             />
           </div>
         </div>
@@ -162,13 +165,13 @@ export default function ProfitMapPage() {
       />
 
       {/* Ranked Table */}
-      <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
-        <h2 className="text-lg font-bold text-slate-100 mb-4">
+      <div className="surface-card p-6 border border-[var(--color-border-subtle)] shadow-xl">
+        <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-4">
           {t("mapRankedHeading")} ({t(selectedCrop) || selectedCrop} — {quantity}q)
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-900/80 text-slate-400 font-semibold border-b border-slate-700">
+            <thead className="text-[var(--color-text-muted)] font-semibold border-b border-[var(--color-border-subtle)]" style={{ background: "var(--table-header-bg)" }}>
               <tr>
                 <th className="py-3 px-4">Rank</th>
                 <th className="py-3 px-4">Mandi</th>
@@ -179,46 +182,46 @@ export default function ProfitMapPage() {
                 <th className="py-3 px-4 text-right">Total Take-Home</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-700/60 font-mono">
+            <tbody className="divide-y divide-[var(--color-border-subtle)] font-mono">
               {recommendations.map((m, idx) => (
                 <tr
                   key={m.mandi_id}
-                  className={`hover:bg-slate-700/40 transition-colors ${
-                    idx === 0 ? "bg-emerald-950/20 font-bold" : ""
+                  className={`hover:bg-[var(--color-surface-overlay)] transition-colors ${
+                    idx === 0 ? "bg-[var(--ranked-best-bg)] font-bold" : ""
                   }`}
                 >
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-0.5 rounded text-[11px] font-bold ${
                         idx === 0
-                          ? "bg-emerald-500 text-slate-950"
+                          ? "bg-[var(--color-accent)] text-white"
                           : idx === 1
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                          : "bg-slate-700 text-slate-300"
+                          ? "bg-amber-500/20 text-amber-600 border border-amber-500/40"
+                          : "bg-[var(--badge-muted-bg)] text-[var(--badge-muted-text)]"
                       }`}
                     >
                       #{idx + 1} {idx === 0 ? "BEST" : ""}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-sans font-semibold text-slate-100">
+                  <td className="py-3 px-4 font-sans font-semibold text-[var(--color-text-primary)]">
                     {m.mandi_name}
-                    <div className="text-[10px] text-slate-400 font-normal">{m.state}</div>
+                    <div className="text-[10px] text-[var(--color-text-muted)] font-normal">{m.state}</div>
                   </td>
-                  <td className="py-3 px-4 text-slate-300">
+                  <td className="py-3 px-4 text-[var(--color-text-secondary)]">
                     {m.distance_km} km ({m.travel_time_hours}h)
                   </td>
-                  <td className="py-3 px-4 text-right text-slate-200">₹{m.modal_price}</td>
-                  <td className="py-3 px-4 text-right text-rose-400 font-medium">-₹{m.deductions}</td>
+                  <td className="py-3 px-4 text-right text-[var(--color-text-primary)]">₹{m.modal_price}</td>
+                  <td className="py-3 px-4 text-right text-red-500 font-medium">-₹{m.deductions}</td>
                   <td
                     className={`py-3 px-4 text-right text-sm font-black ${
-                      idx === 0 ? "text-emerald-400" : "text-slate-200"
+                      idx === 0 ? "text-[var(--color-accent)]" : "text-[var(--color-text-primary)]"
                     }`}
                   >
                     ₹{m.net_profit_per_quintal}
                   </td>
                   <td
                     className={`py-3 px-4 text-right text-sm font-black ${
-                      idx === 0 ? "text-emerald-300" : "text-slate-100"
+                      idx === 0 ? "text-[var(--color-accent)]" : "text-[var(--color-text-primary)]"
                     }`}
                   >
                     ₹{m.total_net_profit?.toLocaleString()}

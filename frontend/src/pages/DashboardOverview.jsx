@@ -1,5 +1,5 @@
 /**
- * Admin Dashboard Overview Page with Multi-Lingual Regional Support.
+ * Admin Dashboard Overview Page with Multi-Lingual Regional Support & Dual Theme.
  * Visualizes core platform analytics: query volume, top crops, top recommended mandis, and query stream.
  */
 
@@ -45,7 +45,7 @@ export default function DashboardOverview() {
   if (error) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-sm">
           {error}
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function DashboardOverview() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">{t("overviewTitle")}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{t("overviewTitle")}</h1>
           <p className="text-xs text-[var(--color-text-secondary)] mt-1">
             {t("overviewSubtitle")}
           </p>
@@ -65,7 +65,7 @@ export default function DashboardOverview() {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchOverview}
-            className="px-3 py-2 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] text-xs text-[var(--color-text-secondary)] hover:text-white transition-colors"
+            className="px-3 py-2 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border)] transition-colors"
           >
             {t("refreshBtn")}
           </button>
@@ -83,7 +83,7 @@ export default function DashboardOverview() {
             <p className="text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">
               {t(m.label) || m.label}
             </p>
-            <p className="text-2xl font-bold mono tracking-tight text-white">
+            <p className="text-2xl font-bold mono tracking-tight text-[var(--color-text-primary)]">
               {m.value}
             </p>
             {m.change && (
@@ -100,16 +100,20 @@ export default function DashboardOverview() {
       <div className="grid md:grid-cols-2 gap-4">
         <Link
           to="/map"
-          className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/70 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 transition-all flex items-center justify-between group shadow-lg"
+          className="p-5 rounded-2xl border transition-all flex items-center justify-between group shadow-lg"
+          style={{
+            background: "linear-gradient(to right, var(--gradient-card-from), var(--gradient-card-to))",
+            borderColor: "var(--gradient-card-border)"
+          }}
         >
           <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
               {t("mapBannerTag")}
             </span>
-            <h3 className="text-base font-bold text-white mt-1 group-hover:text-emerald-300 transition-colors">
+            <h3 className="text-base font-bold text-[var(--color-text-primary)] mt-1 group-hover:text-[var(--color-accent)] transition-colors">
               {t("mapBannerTitle")}
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-1">
               {t("mapBannerDesc")}
             </p>
           </div>
@@ -117,16 +121,20 @@ export default function DashboardOverview() {
 
         <Link
           to="/pooling"
-          className="p-5 rounded-2xl bg-gradient-to-r from-teal-950/70 to-slate-900 border border-teal-500/40 hover:border-teal-400 transition-all flex items-center justify-between group shadow-lg"
+          className="p-5 rounded-2xl border transition-all flex items-center justify-between group shadow-lg"
+          style={{
+            background: "linear-gradient(to right, var(--gradient-card2-from), var(--gradient-card2-to))",
+            borderColor: "var(--gradient-card2-border)"
+          }}
         >
           <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+            <span className="text-[10px] font-black uppercase tracking-wider text-teal-600 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
               {t("poolBannerTag")}
             </span>
-            <h3 className="text-base font-bold text-white mt-1 group-hover:text-teal-300 transition-colors">
+            <h3 className="text-base font-bold text-[var(--color-text-primary)] mt-1 group-hover:text-teal-600 transition-colors">
               {t("poolBannerTitle")}
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-1">
               {t("poolBannerDesc")}
             </p>
           </div>
@@ -138,7 +146,7 @@ export default function DashboardOverview() {
         {/* Top Queried Crops */}
         <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white">{t("topCropsTitle")}</h2>
+            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">{t("topCropsTitle")}</h2>
             <span className="text-[11px] font-mono text-[var(--color-text-muted)]">{t("byVolume")}</span>
           </div>
 
@@ -147,7 +155,7 @@ export default function DashboardOverview() {
               data.top_crops.map((c) => (
                 <div key={c.crop_name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-white">{t(c.crop_name) || c.crop_name}</span>
+                    <span className="font-medium text-[var(--color-text-primary)]">{t(c.crop_name) || c.crop_name}</span>
                     <span className="font-mono text-[var(--color-text-secondary)]">
                       {c.query_count} queries ({c.percentage}%)
                     </span>
@@ -171,7 +179,7 @@ export default function DashboardOverview() {
         {/* Top Recommended Mandis */}
         <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white">{t("topMandisTitle")}</h2>
+            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">{t("topMandisTitle")}</h2>
             <span className="text-[11px] font-mono text-[var(--color-text-muted)]">{t("highestProfitRank")}</span>
           </div>
 
@@ -187,7 +195,7 @@ export default function DashboardOverview() {
                       #{idx + 1}
                     </span>
                     <div>
-                      <p className="font-semibold text-white">{m.mandi_name}</p>
+                      <p className="font-semibold text-[var(--color-text-primary)]">{m.mandi_name}</p>
                       <p className="text-[10px] text-[var(--color-text-muted)]">{m.state}</p>
                     </div>
                   </div>
@@ -210,7 +218,7 @@ export default function DashboardOverview() {
       <div className="surface-card p-6 border border-[var(--color-border-subtle)] space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-white">{t("liveStreamTitle")}</h2>
+            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">{t("liveStreamTitle")}</h2>
             <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
               {t("liveStreamSubtitle")}
             </p>
@@ -235,11 +243,11 @@ export default function DashboardOverview() {
               {data?.recent_queries && data.recent_queries.length > 0 ? (
                 data.recent_queries.map((q, idx) => (
                   <tr key={idx} className="hover:bg-[var(--color-surface-overlay)] transition-colors">
-                    <td className="py-3 text-white">{q.phone_number}</td>
+                    <td className="py-3 text-[var(--color-text-primary)]">{q.phone_number}</td>
                     <td className="py-3 text-[var(--color-accent)] font-semibold">{t(q.crop_name) || q.crop_name}</td>
-                    <td className="py-3 text-slate-300">{q.quantity_quintals} q</td>
+                    <td className="py-3 text-[var(--color-text-secondary)]">{q.quantity_quintals} q</td>
                     <td className="py-3 text-[var(--color-text-muted)]">{q.created_at}</td>
-                    <td className="py-3 text-slate-300 font-sans text-xs">{q.response_preview}</td>
+                    <td className="py-3 text-[var(--color-text-secondary)] font-sans text-xs">{q.response_preview}</td>
                   </tr>
                 ))
               ) : (

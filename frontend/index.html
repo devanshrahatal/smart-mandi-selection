@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,6 +16,18 @@
       rel="stylesheet"
     />
     <title>Smart Mandi Selection — Better Prices • Lower Costs • Higher Profits</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("smart_mandi_theme");
+          if (saved) {
+            document.documentElement.setAttribute("data-theme", saved);
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body class="antialiased">
     <div id="root"></div>

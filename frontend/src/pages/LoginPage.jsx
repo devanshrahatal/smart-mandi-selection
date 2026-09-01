@@ -1,11 +1,12 @@
 /**
  * Admin Login Page.
- * Dark-mode login card with instant authentication feedback.
+ * Themed login card with instant authentication feedback.
  */
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -34,7 +35,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 bg-[var(--color-surface)]">
+      {/* Theme toggle in top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md surface-card p-8 border border-[var(--color-border)] shadow-2xl animate-fade-in-up">
         {/* Header */}
         <div className="text-center mb-8">
@@ -42,10 +48,11 @@ export default function LoginPage() {
             <img
               src="/logo.jpg"
               alt="Smart Mandi Logo"
-              className="w-16 h-16 rounded-2xl object-contain bg-white/5 p-1 border border-emerald-500/30 mx-auto mb-3 shadow-xl shadow-emerald-500/20 transition-transform group-hover:scale-105"
+              className="w-16 h-16 rounded-2xl object-contain p-1 border border-emerald-500/30 mx-auto mb-3 shadow-xl shadow-emerald-500/20 transition-transform group-hover:scale-105"
+              style={{ background: "var(--color-surface-overlay)" }}
             />
           </Link>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Smart Mandi Admin Portal</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text-primary)] tracking-tight">Smart Mandi Admin Portal</h1>
           <p className="text-xs text-[var(--color-text-secondary)] mt-1.5">
             Sign in to manage mandis, cost parameters, and view price intelligence.
           </p>
@@ -53,7 +60,7 @@ export default function LoginPage() {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-400">
+          <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-500">
             {error}
           </div>
         )}
@@ -69,7 +76,8 @@ export default function LoginPage() {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-sm text-white focus:outline-none focus:border-[var(--color-accent)] transition-colors font-mono"
+              className="w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-mono"
+              style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
               placeholder="admin"
             />
           </div>
@@ -83,7 +91,8 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-sm text-white focus:outline-none focus:border-[var(--color-accent)] transition-colors font-mono"
+              className="w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-mono"
+              style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
               placeholder="••••••••"
             />
           </div>
@@ -91,7 +100,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-[var(--color-accent)] text-black font-semibold text-sm hover:bg-[var(--color-accent-dim)] transition-colors disabled:opacity-50 mt-2 shadow-lg shadow-[var(--color-accent)]/10"
+            className="w-full py-2.5 rounded-lg bg-[var(--color-accent)] text-white font-semibold text-sm hover:brightness-110 transition-colors disabled:opacity-50 mt-2 shadow-lg"
           >
             {loading ? "Authenticating..." : "Sign In to Dashboard"}
           </button>
@@ -101,7 +110,7 @@ export default function LoginPage() {
         <div className="mt-6 pt-5 border-t border-[var(--color-border-subtle)] text-center text-xs text-[var(--color-text-muted)] space-y-1 font-mono">
           <p>Demo credentials pre-filled:</p>
           <p className="text-[var(--color-text-secondary)]">
-            Username: <span className="text-white">admin</span> | Password: <span className="text-white">admin123</span>
+            Username: <span className="text-[var(--color-text-primary)]">admin</span> | Password: <span className="text-[var(--color-text-primary)]">admin123</span>
           </p>
         </div>
 
@@ -109,7 +118,7 @@ export default function LoginPage() {
         <div className="mt-4 text-center">
           <Link
             to="/"
-            className="text-xs text-[var(--color-text-secondary)] hover:text-white transition-colors"
+            className="text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
           >
             ← Back to Public Website
           </Link>

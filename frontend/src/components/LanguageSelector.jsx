@@ -1,5 +1,5 @@
 /**
- * Language Selector Dropdown component.
+ * Language Selector Dropdown component with Dual Theme.
  * Allows instant language switching between English, Hindi, Marathi, and Gujarati.
  */
 
@@ -28,7 +28,7 @@ export default function LanguageSelector() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border)] text-xs font-medium text-white transition-colors"
+        className="inline-flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border)] text-xs font-medium text-[var(--color-text-primary)] transition-colors"
       >
         <span className="text-sm leading-none">{activeLang.icon}</span>
         <span className="hidden md:inline">{activeLang.label}</span>
@@ -49,8 +49,8 @@ export default function LanguageSelector() {
               }}
               className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
                 language === l.code
-                  ? "bg-[var(--color-accent)]/10 text-[var(--color-accent)] font-semibold"
-                  : "text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-surface-overlay)]"
+                  ? "bg-[var(--color-accent-soft)] text-[var(--color-accent)] font-semibold"
+                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-overlay)]"
               }`}
             >
               <div className="flex items-center gap-2.5">

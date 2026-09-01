@@ -1,5 +1,5 @@
 /**
- * Filterable Mandi Table component.
+ * Filterable Mandi Table component with Dual Theme.
  * Displays all active mandis with search filter and cost parameters.
  */
 
@@ -28,7 +28,8 @@ export default function MandiTable({ mandis = [], onEditCost }) {
             placeholder={t("searchMandiPlaceholder") || "Search by mandi, state, or district..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3.5 py-2 rounded-lg bg-[var(--color-surface-overlay)] border border-[var(--color-border)] text-xs text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+            className="w-full px-3.5 py-2 rounded-lg border text-xs focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+            style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}
           />
         </div>
         <span className="text-xs text-[var(--color-text-muted)] font-mono self-end sm:self-center">
@@ -66,16 +67,16 @@ export default function MandiTable({ mandis = [], onEditCost }) {
                   className="hover:bg-[var(--color-surface-overlay)] transition-colors"
                 >
                   <td className="py-3.5 px-4">
-                    <div className="font-semibold text-white text-[13px]">{mandi.name}</div>
+                    <div className="font-semibold text-[var(--color-text-primary)] text-[13px]">{mandi.name}</div>
                     <div className="text-[11px] text-[var(--color-text-muted)] font-mono">
                       {mandi.latitude.toFixed(4)}, {mandi.longitude.toFixed(4)}
                     </div>
                   </td>
                   <td className="py-3.5 px-4">
                     <span className="text-[var(--color-text-secondary)]">{mandi.district}, </span>
-                    <span className="text-white font-medium">{mandi.state}</span>
+                    <span className="text-[var(--color-text-primary)] font-medium">{mandi.state}</span>
                   </td>
-                  <td className="py-3.5 px-4 text-right font-mono font-medium text-white">
+                  <td className="py-3.5 px-4 text-right font-mono font-medium text-[var(--color-text-primary)]">
                     {cfg.commission_percentage}%
                   </td>
                   <td className="py-3.5 px-4 text-right font-mono text-[var(--color-text-secondary)]">
@@ -88,7 +89,7 @@ export default function MandiTable({ mandis = [], onEditCost }) {
                     <div className="flex items-center justify-center gap-2">
                       <Link
                         to={`/admin/mandis?mandi_id=${mandi.id}`}
-                        className="px-2.5 py-1 rounded bg-[var(--color-surface-overlay)] hover:bg-[var(--color-border)] text-white text-[11px] font-medium transition-colors"
+                        className="px-2.5 py-1 rounded bg-[var(--color-surface-overlay)] hover:bg-[var(--color-border)] text-[var(--color-text-primary)] text-[11px] font-medium transition-colors border border-[var(--color-border-subtle)]"
                       >
                         {t("priceTrendsTab") || "Trends"}
                       </Link>
