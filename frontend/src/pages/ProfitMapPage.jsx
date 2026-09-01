@@ -231,7 +231,7 @@ export default function ProfitMapPage() {
                 </span>
               </div>
               <h3 className="text-lg font-black text-[var(--color-text-primary)] flex items-center gap-2">
-                ⏳ Optimal Sale Window: <span className="text-[var(--color-accent)]">{saleWindow.recommended_window}</span>
+                Optimal Sale Window: <span className="text-[var(--color-accent)]">{saleWindow.recommended_window}</span>
               </h3>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {saleWindow.rationale}

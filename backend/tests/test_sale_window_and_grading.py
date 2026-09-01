@@ -106,3 +106,38 @@ def test_recommendations_with_grading_payload():
         assert "sale_window" in top_mandi
         assert top_mandi["cost_breakdown"]["quality_grade"] == "A"
         assert data["sale_window_recommendation"] is not None
+
+
+def test_ml_price_forecaster_metrics():
+    """Verify Scikit-Learn ML Price Forecaster trains and computes R2, RMSE, and 7-day predictions."""
+    from app.database import SessionLocal
+    from app.services.ml_price_forecaster import ml_forecaster
+
+    db = SessionLocal()
+    try:
+        res = ml_forecaster.train_and_forecast(db=db, mandi_id=1, crop_id=1, forecast_days=7)
+        assert "model_metadata" in res
+        assert res["model_metadata"]["algorithm"] == "Ridge Time-Decay Regressor (Scikit-Learn)"
+        assert "r2_accuracy_score" in res["model_metadata"]
+        assert "rmse" in res["model_metadata"]
+        assert len(res["forecast_points"]) == 7
+        assert "predicted_price" in res["forecast_points"][0]
+        assert "lower_bound_95" in res["forecast_points"][0]
+        assert "upper_bound_95" in res["forecast_points"][0]
+        assert res["market_signal"] in ["BULLISH (Upward Trend)", "BEARISH (Downward Pressure)", "STABLE / CONSOLIDATING"]
+    finally:
+        db.close()
+
+
+def test_ml_forecast_api_endpoint():
+    """Verify GET /api/ml/forecast/{mandi_id}/{crop_id} endpoint."""
+    client = TestClient(app)
+    response = client.get("/api/ml/forecast/1/1?days=7")
+    if response.status_code == 200:
+        data = response.json()
+        assert "model_metadata" in data
+        assert "forecast_points" in data
+        assert len(data["forecast_points"]) == 7
+        assert "mandi" in data
+        assert "crop" in data
+

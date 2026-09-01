@@ -29,6 +29,7 @@ from app.services.agmarknet_service import agmarknet_service
 from app.services.cost_engine import cost_engine
 from app.services.trend_engine import trend_engine
 from app.services.sale_window_service import sale_window_service
+from app.services.ml_price_forecaster import ml_forecaster
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,39 @@ def get_sale_window_timing(
         quality_grade=quality_grade,
     )
     return SaleWindowInfo(**result)
+
+
+@router.get("/ml/forecast/{mandi_id}/{crop_id}", summary="Trained Machine Learning 7-Day Price Forecast & Metrics")
+def get_ml_price_forecast(
+    mandi_id: int,
+    crop_id: int,
+    days: int = Query(7, ge=1, le=14, description="Forecast horizon in days"),
+    db: Session = Depends(get_db),
+):
+    """
+    Trains a Scikit-Learn Ridge Regressor on historical mandi modal prices and generates
+    7-day forward predictions with R² accuracy score, RMSE, and 95% confidence intervals.
+    """
+    crop = db.query(Crop).filter(Crop.id == crop_id).first()
+    if not crop:
+        raise HTTPException(status_code=404, detail="Crop not found")
+
+    mandi = db.query(Mandi).filter(Mandi.id == mandi_id).first()
+    if not mandi:
+        raise HTTPException(status_code=404, detail="Mandi not found")
+
+    forecast = ml_forecaster.train_and_forecast(
+        db=db,
+        mandi_id=mandi_id,
+        crop_id=crop_id,
+        forecast_days=days,
+    )
+    return {
+        "mandi": {"id": mandi.id, "name": mandi.name, "district": mandi.district, "state": mandi.state},
+        "crop": {"id": crop.id, "name": crop.name, "category": crop.category},
+        **forecast,
+    }
+
 
 
 @router.post("/recommendations", response_model=RecommendationResponse, summary="Get ranked mandi recommendations")

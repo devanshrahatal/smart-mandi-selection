@@ -624,13 +624,13 @@ class WhatsAppBotService:
         sw_window = best.get("sale_window", {}).get("recommended_window", "Sell within 1–2 Days")
         sw_forecast = best.get("sale_window", {}).get("price_forecast", "Stable prices")
         if lang == "hi":
-            lines.append(f"⏳ *बिक्री समय सलाह (Sale-Window):* {sw_window} ({sw_forecast})\n")
+            lines.append(f"📅 *बिक्री समय सलाह (Sale-Window):* {sw_window} ({sw_forecast})\n")
         elif lang == "mr":
-            lines.append(f"⏳ *विक्री वेळ सल्ला (Sale-Window):* {sw_window} ({sw_forecast})\n")
+            lines.append(f"📅 *विक्री वेळ सल्ला (Sale-Window):* {sw_window} ({sw_forecast})\n")
         elif lang == "gu":
-            lines.append(f"⏳ *વેચાણ સમય સલાહ (Sale-Window):* {sw_window} ({sw_forecast})\n")
+            lines.append(f"📅 *વેચાણ સમય સલાહ (Sale-Window):* {sw_window} ({sw_forecast})\n")
         else:
-            lines.append(f"⏳ *Optimal Sale-Window:* {sw_window} ({sw_forecast})\n")
+            lines.append(f"📅 *Optimal Sale-Window:* {sw_window} ({sw_forecast})\n")
 
         lines.append(f"💡 *{msg['key_insight']}:*\n{key_insight}\n")
 
