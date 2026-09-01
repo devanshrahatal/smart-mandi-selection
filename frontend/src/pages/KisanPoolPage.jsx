@@ -165,10 +165,16 @@ export default function KisanPoolPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {/* Slider 1: Solo Quantity */}
           <div>
-            <label className="block text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-              {t("poolSoloQty")}: <b className="text-[var(--color-accent)] font-mono">{soloQty}q</b>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">
+                {t("poolSoloQty")}
+              </label>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-emerald-500/10 text-emerald-600 border border-emerald-500/30">
+                {soloQty} Quintals
+              </span>
+            </div>
             <input
               type="range"
               min="2"
@@ -182,15 +188,28 @@ export default function KisanPoolPage() {
                 setTotalQty(newTot);
                 handleCalculate(val, newTot, distanceKm);
               }}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-              style={{ background: "var(--slider-track)" }}
+              className="custom-range-slider"
+              style={{
+                background: `linear-gradient(to right, #16a34a 0%, #16a34a ${((soloQty - 2) / 23) * 100}%, var(--slider-track) ${((soloQty - 2) / 23) * 100}%, var(--slider-track) 100%)`
+              }}
             />
+            <div className="flex items-center justify-between text-[10px] font-mono text-[var(--color-text-muted)] mt-0.5">
+              <span>2q (Min)</span>
+              <span>12q</span>
+              <span>25q (Max Solo)</span>
+            </div>
           </div>
 
+          {/* Slider 2: Total Pooled Quantity */}
           <div>
-            <label className="block text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-              {t("poolTotalQty")}: <b className="text-teal-600 font-mono">{totalQty}q</b>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">
+                {t("poolTotalQty")}
+              </label>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-teal-500/10 text-teal-600 border border-teal-500/30">
+                {totalQty} Quintals
+              </span>
+            </div>
             <input
               type="range"
               min={soloQty}
@@ -202,15 +221,28 @@ export default function KisanPoolPage() {
                 setTotalQty(val);
                 handleCalculate(soloQty, val, distanceKm);
               }}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-              style={{ background: "var(--slider-track)" }}
+              className="custom-range-slider"
+              style={{
+                background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${((totalQty - soloQty) / (120 - soloQty || 1)) * 100}%, var(--slider-track) ${((totalQty - soloQty) / (120 - soloQty || 1)) * 100}%, var(--slider-track) 100%)`
+              }}
             />
+            <div className="flex items-center justify-between text-[10px] font-mono text-[var(--color-text-muted)] mt-0.5">
+              <span>{soloQty}q (Solo)</span>
+              <span>60q (Medium)</span>
+              <span>120q (Heavy Truck)</span>
+            </div>
           </div>
 
+          {/* Slider 3: Distance */}
           <div>
-            <label className="block text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-              {t("poolDistance")}: <b className="text-blue-600 font-mono">{distanceKm} km</b>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">
+                {t("poolDistance")}
+              </label>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-blue-500/10 text-blue-600 border border-blue-500/30">
+                {distanceKm} km
+              </span>
+            </div>
             <input
               type="range"
               min="30"
@@ -222,9 +254,16 @@ export default function KisanPoolPage() {
                 setDistanceKm(val);
                 handleCalculate(soloQty, totalQty, val);
               }}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-              style={{ background: "var(--slider-track)" }}
+              className="custom-range-slider"
+              style={{
+                background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((distanceKm - 30) / 570) * 100}%, var(--slider-track) ${((distanceKm - 30) / 570) * 100}%, var(--slider-track) 100%)`
+              }}
             />
+            <div className="flex items-center justify-between text-[10px] font-mono text-[var(--color-text-muted)] mt-0.5">
+              <span>30 km</span>
+              <span>300 km</span>
+              <span>600 km (Far)</span>
+            </div>
           </div>
 
           <div className="flex items-end">

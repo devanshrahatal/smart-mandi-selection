@@ -135,9 +135,14 @@ export default function ProfitMapPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-              {t("mapQuantityLabel")}: <b className="text-[var(--color-accent)] font-mono">{quantity}q</b>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider">
+                {t("mapQuantityLabel")}
+              </label>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-[var(--color-accent-soft)] text-[var(--color-accent)] border border-[var(--color-accent)]/30">
+                {quantity} Quintals
+              </span>
+            </div>
             <input
               type="range"
               min="5"
@@ -145,9 +150,16 @@ export default function ProfitMapPage() {
               step="5"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer mt-2"
-              style={{ background: "var(--slider-track)" }}
+              className="custom-range-slider"
+              style={{
+                background: `linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) ${((quantity - 5) / 95) * 100}%, var(--slider-track) ${((quantity - 5) / 95) * 100}%, var(--slider-track) 100%)`
+              }}
             />
+            <div className="flex items-center justify-between text-[10px] font-mono text-[var(--color-text-muted)] mt-0.5">
+              <span>5q (Small)</span>
+              <span>50q</span>
+              <span>100q (Bulk)</span>
+            </div>
           </div>
         </div>
       </div>
