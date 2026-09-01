@@ -1,125 +1,110 @@
-# Smart Mandi Selection — System Architecture & Technical Specifications
+# 🏛️ Smart Mandi Selection — System Architecture & Technical Specifications
 
-> **Smart India Hackathon (SIH 2026)**  
-> **Problem Statement**: Intelligent agricultural marketplace recommendation system calculating true net farmer profit.
+> **Smart India Hackathon 2026**  
+> **Problem Statement ID**: **26132** (*"Strengthening market linkages and price discovery for farmers"*)  
+> **Architect & Lead Developer**: **Devansh Rahatal**
 
 ---
 
-## 1. High-Level System Architecture
+## 1. Complete System Architecture Diagram
 
 ```mermaid
 flowchart TD
-    subgraph Clients["User Channels"]
-        WA["📱 WhatsApp Farmer (Twilio)"]
-        WEB["💻 Admin Dashboard (React + Recharts)"]
+    subgraph Clients["Omni-Channel Interfaces"]
+        WA["📱 Twilio WhatsApp Bot"]
+        VOICE["🎙️ Speech-to-Speech Voice AI"]
+        WEB["💻 React 18 + Vite Web App"]
     end
 
-    subgraph Gateway["API Layer (FastAPI)"]
+    subgraph API["FastAPI Gateway & Route Controllers"]
         REC["/api/recommendations"]
-        WABOT["/api/whatsapp/webhook"]
-        ADMIN["/api/admin/*"]
-        AUTH["JWT Security & Auth"]
+        ML_API["/api/ml/forecast"]
+        MKT_API["/api/marketplace/*"]
+        LINK_API["/api/linkages/*"]
+        POOL_API["/api/pooling/*"]
+        WA_API["/api/whatsapp/webhook"]
+        AUTH_API["/api/admin/* (JWT)"]
     end
 
-    subgraph Engines["Core Intelligence Engines"]
+    subgraph Engines["Core Intelligence & Computation Engines"]
         NPE["Net Profit Calculation Engine"]
-        DIST["Google Maps Distance Matrix"]
-        TREND["7d / 14d Price Trend Engine"]
-        SPOIL["Perishability Spoilage Model"]
+        SKL["Scikit-Learn Ridge ML Forecaster"]
+        SW["Perishability Sale-Window Advisor"]
+        POOL_ENG["Freight Pooling Optimizer"]
+        DIST["Google Maps / Haversine Matrix"]
+        ESCROW["Escrow State Machine"]
     end
 
-    subgraph Caching["Caching & State (Redis)"]
-        R_PRICE["Price Cache (6h TTL)"]
-        R_DIST["Distance Cache (24h TTL)"]
-        R_SESS["WhatsApp Sessions (2h TTL)"]
+    subgraph Storage["Data & Caching Layer"]
+        SQL[("PostgreSQL / SQLite Database")]
+        REDIS[("Upstash Redis Cloud Cache")]
     end
 
-    subgraph Persistence["Database (MySQL 8.0)"]
-        DB_MANDI["Mandis & Coordinates"]
-        DB_PRICE["30-Day Historical Prices"]
-        DB_CONFIG["Per-Mandi Cost Configs"]
-        DB_QUERIES["Farmer Query Audit Logs"]
-        DB_ADMIN["Admin Users (bcrypt)"]
-    end
-
-    WA -->|Webhook / Simulate| WABOT
-    WEB -->|REST / JWT| Gateway
-    WABOT --> NPE
-    REC --> NPE
-    NPE --> DIST
-    NPE --> SPOIL
-    NPE --> TREND
-    DIST <--> R_DIST
-    NPE <--> R_PRICE
-    WABOT <--> R_SESS
-    NPE <--> Persistence
-    ADMIN --> Persistence
+    WA --> WA_API
+    VOICE --> API
+    WEB --> API
+    API --> Engines
+    Engines <--> Storage
 ```
 
 ---
 
-## 2. Net Profit Optimization Formula
+## 2. Mathematical Formulations & ML Logic
 
-A fundamental flaw in existing agricultural portals (like e-NAM and Agmarknet) is that they only display **Gross Modal Price**. Farmers travel long distances chasing a higher price, only to discover that transport fees, mandi commissions, and spoilage losses resulted in a lower net return.
+### A. Net Profit Optimization Formula
+$$\text{Net Profit} = P_{\text{modal}} \times M_{\text{grade}} - \Big(C_{\text{transport}} + C_{\text{handling}} + C_{\text{commission}} + C_{\text{spoilage}}\Big)$$
 
-$$\text{Net Profit} = \text{Modal Price} - \Big(\text{Transport Cost} + \text{Loading/Unloading} + \text{Mandi Commission} + \text{Spoilage Risk}\Big)$$
+- **Quality Multiplier ($M_{\text{grade}}$)**: Grade A ($1.10\times$), Grade B ($1.00\times$), Grade C ($0.80\times$).
+- **Handling Charges ($C_{\text{handling}}$)**: Localized palledari and mandi entry fee per quintal.
+- **APMC Commission ($C_{\text{commission}}$)**: $P_{\text{modal}} \times \frac{\text{Commission \%}}{100}$.
 
-### Mathematical Parameter Definitions
+### B. Biological Transit Spoilage Loss
+$$C_{\text{spoilage}} = P_{\text{modal}} \times I_{\text{perish}} \times \left(\frac{T_{\text{transit}}}{24}\right) \times 0.15$$
 
-| Variable | Description | Formula / Standard Baseline |
-|----------|-------------|-----------------------------|
-| $P_{\text{modal}}$ | Modal market price of crop | ₹ / quintal |
-| $C_{\text{transport}}$ | Road transit haulage fee | $\text{Distance (km)} \times \text{Rate (₹/km/q)}$ |
-| $C_{\text{handling}}$ | Mandi loading + unloading charge | ₹ / quintal (configured per mandi) |
-| $C_{\text{commission}}$ | APMC Mandi fee percentage | $P_{\text{modal}} \times \frac{\text{Commission \%}}{100}$ |
-| $C_{\text{spoilage}}$ | Transit value loss due to decay | $P_{\text{modal}} \times I_{\text{perish}} \times \left(\frac{T_{\text{transit}}}{24}\right) \times 0.15$ |
+- $I_{\text{perish}}$: Perishability Index ($0.85$ for Tomato, $0.25$ for Onion, $0.20$ for Potato, $0.05$ for Wheat, $0.70$ for Banana).
+- $T_{\text{transit}}$: Estimated driving duration ($T_{\text{transit}} = \frac{\text{Road Distance}}{40\text{ km/h}}$).
 
-Where:
-- $I_{\text{perish}}$: Crop perishability index ($0.05$ for durable grains like Wheat, up to $0.85$ for perishables like Tomato).
-- $T_{\text{transit}}$: Travel duration in hours ($T_{\text{transit}} = \frac{\text{Road Distance}}{40\text{ km/h}}$).
-- $0.15$: Standard maximum single-day degradation ceiling without active refrigeration.
+### C. Scikit-Learn 7-Day Machine Learning Regression
+$$\hat{y}(t) = \beta_0 + \beta_1 t, \quad \min_{\beta} \sum_{i=1}^n w_i \left(y_i - (\beta_0 + \beta_1 t_i)\right)^2 + \alpha \|\beta\|_2^2$$
+- Sample weights $w_i = \exp\left(-\frac{\text{age}_i}{\lambda}\right)$ with half-life decay $\lambda=10.0$ giving primary weight to recent market momentum.
+- Statistical metrics calculated:
+  - **Coefficient of Determination ($R^2$)**: $1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}$
+  - **Root Mean Squared Error (RMSE)**: $\sqrt{\frac{1}{n} \sum (y_i - \hat{y}_i)^2}$
+  - **95% Confidence Interval**: $\hat{y} \pm 1.96 \cdot \text{RMSE}$
 
 ---
 
-## 3. Multi-Tier Data Ingestion & Fallback Cascade
+## 3. Micro-Engine Specifications
 
-To ensure 100% uptime even when external government APIs undergo maintenance:
+| Module | Core Functionality | Primary Technologies |
+|---|---|---|
+| **Price Engine** | 5-factor net take-home calculation across mandis | Python, NumPy, Pandas |
+| **ML Engine** | 7-day price regression with exponential time decay | Scikit-Learn, NumPy |
+| **Marketplace** | Farmer lot creation & digital corporate bidding | FastAPI, SQLAlchemy ORM |
+| **Kisan Pool** | Smallholder freight clustering (45-60% savings) | Greedy Bin-Packing Algorithm |
+| **Cold Storage** | Distance-based WDRA mapping & Storage ROI | Haversine Formula, OSRM |
+| **Escrow Engine** | 4-stage payment tracking & QR e-Receipt generation | Cryptographic UUID, Canvas |
+| **Voice AI** | Speech-to-Speech regional voice assistance | Web Speech API, gTTS, SpeechRecognition |
+| **WhatsApp Bot** | 4-language conversational NLP bot | Twilio API, Python Regex NLP |
+
+---
+
+## 4. Multi-Tier Data Ingestion & Fallback Strategy
 
 ```mermaid
 graph LR
     REQ["Fetch Price Request"] --> C{In Redis Cache?}
-    C -- Yes --> RET["Return Cached Price (Fastest < 5ms)"]
+    C -- Yes --> RET["Return Cached Price (< 5ms)"]
     C -- No --> API{Agmarknet API Available?}
     API -- Yes --> SAVE["Save to DB & Cache (6h TTL)"]
-    API -- No --> DB{MySQL DB Price Exists?}
-    DB -- Yes --> DBP["Return Latest DB Price & Cache"]
-    DB -- No --> EST["Return Crop Baseline Estimate"]
+    API -- No --> DB{Database Price Exists?}
+    DB -- Yes --> DBP["Return DB Record & Cache"]
+    DB -- No --> EST["Return Crop Baseline Baseline"]
 ```
 
 ---
 
-## 4. Geospatial Distance & Highway Modeling
-
-- **Tier 1 — Google Maps Distance Matrix API**: Fetches real-time driving distances and traffic-adjusted travel durations.
-- **Tier 2 — Redis Geospatial Cache (24h TTL)**: Caches `(lat1, lon1) -> (lat2, lon2)` pairs to minimize API billing.
-- **Tier 3 — Haversine Formula with Indian Road Detour Factor**:
-  $$d = 2r \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta\phi}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\Delta\lambda}{2}\right)}\right)$$
-  $$\text{Road Distance} = d \times 1.28 \quad (\text{Indian National Highway Detour Multiplier})$$
-  $$\text{Travel Time} = \frac{\text{Road Distance}}{40\text{ km/h}} \quad (\text{Medium Commercial Vehicle Speed})$$
-
----
-
-## 5. Conversational WhatsApp State Machine
-
-```mermaid
-stateDiagram-v2
-    [*] --> IDLE: First message / "Hi"
-    IDLE --> AWAITING_QUANTITY: User selects crop (e.g. "Tomato")
-    AWAITING_QUANTITY --> AWAITING_LOCATION: User inputs quantity (e.g. "20 quintals")
-    AWAITING_LOCATION --> RECOMMENDATION_ACTIVE: User shares GPS pin or City name
-    RECOMMENDATION_ACTIVE --> RECOMMENDATION_ACTIVE: "why" / "details" (Shows cost breakdown)
-    RECOMMENDATION_ACTIVE --> IDLE: "new" / "reset"
-```
-
-- **Natural Language Parsing**: Supports Hindi aliases (*pyaaz*, *aloo*, *tamatar*, *gehu*, *kanda*, *batata*) and various units (*kg*, *quintals*, *tonnes*).
-- **Session Persistence**: Farmers' conversational context is maintained in Redis with 2-hour TTL.
+## 5. Security & Cryptographic Standards
+- **Authentication**: JWT (JSON Web Tokens) with HS256 algorithm and bcrypt password hashing.
+- **Escrow Verification**: SHA-256 / UUID alphanumeric hash embedded into printable e-Receipt QR codes.
+- **Data Compliance**: Modeled after e-NAM & RBI Nodal Escrow guidelines for seamless integration with banking webhook APIs.
