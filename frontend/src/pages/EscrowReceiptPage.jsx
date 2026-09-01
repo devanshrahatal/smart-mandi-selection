@@ -83,6 +83,19 @@ export default function EscrowReceiptPage() {
         </button>
       </div>
 
+      {/* Escrow Architecture Notice */}
+      <div className="p-3.5 rounded-xl border bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs flex items-start gap-2.5">
+        <span className="text-base shrink-0">🛡️</span>
+        <div className="space-y-0.5">
+          <span className="font-bold font-mono uppercase tracking-wider text-[10px] text-emerald-600 dark:text-emerald-400 block">
+            Escrow State Machine Architecture • Modeled on e-NAM & RBI Nodal Guidelines
+          </span>
+          <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+            This module provides the <strong>cryptographic 4-stage milestone state machine</strong> (QC Verification $\rightarrow$ Weighbridge Sync $\rightarrow$ Dispatch $\rightarrow$ DBT Release). For production fund movement, the backend provides plug-and-play webhooks for RBI-authorized payment aggregators (e.g. Razorpay Route / ICICI Nodal Escrow API).
+          </p>
+        </div>
+      </div>
+
       {loading ? (
         <div className="py-20 text-center text-xs font-mono text-[var(--color-text-muted)]">
           Loading escrow orders and digital receipt ledger...

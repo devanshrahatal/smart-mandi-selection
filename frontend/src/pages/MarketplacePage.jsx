@@ -182,8 +182,21 @@ export default function MarketplacePage() {
                 : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
             }`}
           >
-            🌾 Farmer Lots & Bids ({lots.length})
+            🌾 Farmer Lots & Live Bids ({lots.length})
           </button>
+        </div>
+      </div>
+
+      {/* Prototype Reference Context Alert */}
+      <div className="p-3.5 rounded-xl border bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-300 text-xs flex items-start gap-2.5">
+        <span className="text-base shrink-0">ℹ️</span>
+        <div className="space-y-0.5">
+          <span className="font-bold font-mono uppercase tracking-wider text-[10px] text-blue-600 dark:text-blue-400 block">
+            Hackathon Prototype Demonstration Environment
+          </span>
+          <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+            Institutional buyer profiles below (ITC, BigBasket, Mother Dairy, Haldirams, etc.) are <strong>modeled reference profiles</strong> reflecting real-world public procurement benchmarks. They demonstrate our open corporate self-onboarding architecture and automated GSTIN/e-Way bill validation pipeline.
+          </p>
         </div>
       </div>
 
