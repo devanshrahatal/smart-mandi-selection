@@ -28,6 +28,7 @@ export default function Navbar() {
   const navLinks = [
     { label: t("overviewTab") || "Overview", path: "/admin/dashboard" },
     { label: t("mapTab") || "Profit Map", path: "/map" },
+    { label: t("marketplaceTab") || "Marketplace", path: "/marketplace" },
     { label: t("poolingTab") || "Kisan Pool", path: "/pooling" },
     { label: t("priceTrendsTab") || "Price Trends", path: "/admin/mandis" },
     { label: t("costParamsTab") || "Cost Params", path: "/admin/costs" },

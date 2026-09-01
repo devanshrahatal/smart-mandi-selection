@@ -16,6 +16,7 @@ from app.api.routes_recommendations import router as recommendations_router
 from app.api.routes_whatsapp import router as whatsapp_router
 from app.api.routes_admin import router as admin_router
 from app.api.routes_pooling import router as pooling_router
+from app.api.routes_marketplace import router as marketplace_router
 from app.jobs.price_refresh_job import (
     start_price_refresh_scheduler,
     stop_price_refresh_scheduler,
@@ -107,6 +108,7 @@ def create_app() -> FastAPI:
     app.include_router(whatsapp_router, prefix="/api/whatsapp")
     app.include_router(admin_router, prefix="/api/admin")
     app.include_router(pooling_router)
+    app.include_router(marketplace_router, prefix="/api")
 
     # --- Root redirect to API docs ---
     from fastapi.responses import RedirectResponse

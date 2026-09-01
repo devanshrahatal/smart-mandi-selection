@@ -21,6 +21,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardOverview from "./pages/DashboardOverview";
 import MandiDetailPage from "./pages/MandiDetailPage";
 import CostConfigPage from "./pages/CostConfigPage";
+import MarketplacePage from "./pages/MarketplacePage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -485,6 +486,14 @@ export default function App() {
                       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
                         <ProfitMapPage />
                       </div>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/marketplace"
+                  element={
+                    <ProtectedRoute>
+                      <MarketplacePage />
                     </ProtectedRoute>
                   }
                 />

@@ -12,6 +12,9 @@ from sqlalchemy.orm import Session
 
 from app.database import engine, SessionLocal, Base
 from app.models import Mandi, Crop, MandiPrice, CostConfig, FarmerQuery, AdminUser
+from app.models.buyer import Buyer
+from app.models.lot import Lot
+from app.models.offer import Offer
 from app.core.security import get_password_hash
 
 logger = logging.getLogger(__name__)
@@ -373,6 +376,213 @@ def seed_database(db: Optional[Session] = None):
             for q in demo_queries:
                 db.add(q)
 
+        # 6. Seed Verified Institutional Buyers
+        if db.query(Buyer).count() == 0:
+            verified_buyers = [
+                Buyer(
+                    business_name="ITC e-Choupal Sourcing Center",
+                    buyer_type="Food Processor",
+                    gst_number="08AABCI1234F1Z5",
+                    is_verified=True,
+                    rating=4.9,
+                    state="Rajasthan",
+                    district="Kota",
+                    preferred_crops="Wheat, Soybean, Mustard",
+                    min_volume_quintals=20.0,
+                    payment_terms="Instant Bank NEFT (24 Hrs)",
+                    contact_person="Vikram Sharma",
+                    contact_phone="+919829012345",
+                ),
+                Buyer(
+                    business_name="BigBasket Direct Farm Sourcing Hub",
+                    buyer_type="Retail Chain",
+                    gst_number="24AABCB5678K1Z2",
+                    is_verified=True,
+                    rating=4.8,
+                    state="Gujarat",
+                    district="Vadodara",
+                    preferred_crops="Tomato, Onion, Potato, Banana",
+                    min_volume_quintals=10.0,
+                    payment_terms="Direct UPI / 24-hr RTGS",
+                    contact_person="Pooja Mehta",
+                    contact_phone="+919825167890",
+                ),
+                Buyer(
+                    business_name="Mother Dairy Fruit & Vegetable Hub",
+                    buyer_type="Institutional Buyer",
+                    gst_number="07AABCM9012N1Z9",
+                    is_verified=True,
+                    rating=4.9,
+                    state="Delhi",
+                    district="North Delhi",
+                    preferred_crops="Tomato, Potato, Onion",
+                    min_volume_quintals=15.0,
+                    payment_terms="Government Escrow Bank Transfer",
+                    contact_person="Rajesh Aggarwal",
+                    contact_phone="+919810045678",
+                ),
+                Buyer(
+                    business_name="Haldiram Snacks Agro Procurement",
+                    buyer_type="Food Processor",
+                    gst_number="27AABCH3456P1Z3",
+                    is_verified=True,
+                    rating=4.8,
+                    state="Maharashtra",
+                    district="Nagpur",
+                    preferred_crops="Potato, Onion, Spices",
+                    min_volume_quintals=25.0,
+                    payment_terms="Instant UPI + Weighing Advance",
+                    contact_person="Sanjay Jaiswal",
+                    contact_phone="+919823078901",
+                ),
+                Buyer(
+                    business_name="Sahyadri Farmers Producer Export Unit",
+                    buyer_type="Exporter",
+                    gst_number="27AABCS7890Q1Z4",
+                    is_verified=True,
+                    rating=4.9,
+                    state="Maharashtra",
+                    district="Nashik",
+                    preferred_crops="Tomato, Onion, Banana",
+                    min_volume_quintals=20.0,
+                    payment_terms="Cold-Chain Pickup + 48-hr Settlement",
+                    contact_person="Nitin Patil",
+                    contact_phone="+919822034567",
+                ),
+                Buyer(
+                    business_name="Reliance Retail Agro Cluster",
+                    buyer_type="Retail Chain",
+                    gst_number="24AABCR1122D1Z8",
+                    is_verified=True,
+                    rating=4.7,
+                    state="Gujarat",
+                    district="Ahmedabad",
+                    preferred_crops="Tomato, Potato, Onion, Banana",
+                    min_volume_quintals=10.0,
+                    payment_terms="Instant UPI at Farmgate Weighing",
+                    contact_person="Kiran Patel",
+                    contact_phone="+919879511223",
+                ),
+                Buyer(
+                    business_name="Blinkit Quick-Commerce Direct Farm Gate",
+                    buyer_type="Retail Chain",
+                    gst_number="06AABCG3344E1Z1",
+                    is_verified=True,
+                    rating=4.8,
+                    state="Rajasthan",
+                    district="Jaipur",
+                    preferred_crops="Tomato, Onion, Potato",
+                    min_volume_quintals=5.0,
+                    payment_terms="Daily Instant UPI Settlement",
+                    contact_person="Sunil Bishnoi",
+                    contact_phone="+919829199887",
+                ),
+                Buyer(
+                    business_name="Patanjali Agro Processing Center",
+                    buyer_type="Food Processor",
+                    gst_number="05AABCP5566R1Z6",
+                    is_verified=True,
+                    rating=4.7,
+                    state="Madhya Pradesh",
+                    district="Indore",
+                    preferred_crops="Wheat, Soybean, Mustard",
+                    min_volume_quintals=30.0,
+                    payment_terms="Direct DBT Bank Credit",
+                    contact_person="Amit Verma",
+                    contact_phone="+919826055443",
+                ),
+                Buyer(
+                    business_name="PepsiCo Agro Sourcing Network",
+                    buyer_type="Food Processor",
+                    gst_number="03AABCP9900T1Z5",
+                    is_verified=True,
+                    rating=4.9,
+                    state="Gujarat",
+                    district="Surat",
+                    preferred_crops="Potato, Tomato",
+                    min_volume_quintals=35.0,
+                    payment_terms="Contract Farming Premium (Instant NEFT)",
+                    contact_person="Dhaval Shah",
+                    contact_phone="+919825088776",
+                ),
+            ]
+            for b in verified_buyers:
+                db.add(b)
+            db.commit()
+
+        # 7. Seed Sample Active Lots & Digital Offers
+        if db.query(Lot).count() == 0:
+            itc_buyer = db.query(Buyer).filter(Buyer.business_name.ilike("%ITC%")).first()
+            bb_buyer = db.query(Buyer).filter(Buyer.business_name.ilike("%BigBasket%")).first()
+            md_buyer = db.query(Buyer).filter(Buyer.business_name.ilike("%Mother Dairy%")).first()
+
+            lot1 = Lot(
+                lot_id="LOT-2026-1042",
+                farmer_name="Rameshwar Prasad Jat",
+                phone_number="+919829045612",
+                crop_name="Tomato",
+                quantity_quintals=25.0,
+                quality_grade="A",
+                expected_price_per_q=2400.0,
+                origin_location="Chomu, Jaipur, Rajasthan",
+                harvest_date=(date.today() + timedelta(days=1)).strftime("%Y-%m-%d"),
+                status="Offer Received",
+            )
+            lot2 = Lot(
+                lot_id="LOT-2026-1088",
+                farmer_name="Bhagwan Das Patel",
+                phone_number="+919825133445",
+                crop_name="Onion",
+                quantity_quintals=40.0,
+                quality_grade="B",
+                expected_price_per_q=1850.0,
+                origin_location="Padra, Vadodara, Gujarat",
+                harvest_date=date.today().strftime("%Y-%m-%d"),
+                status="Offer Received",
+            )
+            lot3 = Lot(
+                lot_id="LOT-2026-1120",
+                farmer_name="Santosh Shinde",
+                phone_number="+919822077889",
+                crop_name="Banana",
+                quantity_quintals=50.0,
+                quality_grade="A",
+                expected_price_per_q=1600.0,
+                origin_location="Baramati, Pune, Maharashtra",
+                harvest_date=(date.today() + timedelta(days=2)).strftime("%Y-%m-%d"),
+                status="Active",
+            )
+            db.add_all([lot1, lot2, lot3])
+            db.commit()
+
+            if bb_buyer:
+                db.add(Offer(
+                    offer_id="BID-78401",
+                    lot_id=lot1.id,
+                    buyer_id=bb_buyer.id,
+                    offered_price_per_q=2450.0,
+                    pickup_option="Farmgate Pickup",
+                    status="Pending",
+                ))
+            if md_buyer:
+                db.add(Offer(
+                    offer_id="BID-78402",
+                    lot_id=lot1.id,
+                    buyer_id=md_buyer.id,
+                    offered_price_per_q=2420.0,
+                    pickup_option="Mandi Delivery",
+                    status="Pending",
+                ))
+            if itc_buyer:
+                db.add(Offer(
+                    offer_id="BID-92015",
+                    lot_id=lot2.id,
+                    buyer_id=itc_buyer.id,
+                    offered_price_per_q=1880.0,
+                    pickup_option="Farmgate Pickup",
+                    status="Pending",
+                ))
+
         db.commit()
         logger.info("Successfully seeded Smart Mandi dataset (%d mandis, 5 crops)", len(MANDIS))
     except Exception as e:
@@ -381,3 +591,4 @@ def seed_database(db: Optional[Session] = None):
     finally:
         if close_db:
             db.close()
+
