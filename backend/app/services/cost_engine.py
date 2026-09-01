@@ -25,6 +25,7 @@ class CostEngine:
         travel_time_hours: float,
         crop: Crop,
         cost_config: CostConfig,
+        quality_grade: str = "B",
     ) -> Dict[str, Any]:
         """
         Calculates itemized cost deductions and final take-home net profit.
@@ -36,11 +37,18 @@ class CostEngine:
             travel_time_hours: Road driving time (hours)
             crop: Crop model instance (contains perishability_index)
             cost_config: CostConfig model instance (mandi commission %, loading, transport rate)
+            quality_grade: Agricultural quality tier ("A" Premium = 1.10x, "B" FAQ = 1.00x, "C" Processing = 0.80x)
 
         Returns:
             Dictionary containing itemized costs and net profit.
         """
         qty = max(quantity_quintals, 0.1)
+
+        # 0. Quality Grade Multiplier
+        clean_grade = (quality_grade or "B").strip().upper()
+        grade_multipliers = {"A": 1.10, "B": 1.00, "C": 0.80}
+        grade_multiplier = grade_multipliers.get(clean_grade, 1.00)
+        adjusted_modal_price = round(modal_price * grade_multiplier, 2)
 
         # 1. Transport Cost
         rate_per_km = cost_config.transport_rate_per_km_per_quintal or 2.5
@@ -57,16 +65,14 @@ class CostEngine:
             + (cost_config.unloading_cost_per_quintal or 20.0)
         )
 
-        # 3. Mandi Commission
+        # 3. Mandi Commission (computed on adjusted price)
         comm_pct = cost_config.commission_percentage or 6.0
-        commission_per_quintal = round(modal_price * (comm_pct / 100.0), 2)
+        commission_per_quintal = round(adjusted_modal_price * (comm_pct / 100.0), 2)
 
         # 4. Spoilage Risk Deduction (perishability_index * travel_time_hours factor)
-        # Scaled: highly perishable crops (0.85) traveling 24+ hrs suffer significant depreciation
         perishability = max(min(crop.perishability_index or 0.5, 1.0), 0.0)
-        # Base factor: ~15% value loss per 24 hours of transit for max perishability (capped at 35%)
         spoilage_rate = min(perishability * (travel_time_hours / 24.0) * 0.15, 0.35)
-        spoilage_per_quintal = round(modal_price * spoilage_rate, 2)
+        spoilage_per_quintal = round(adjusted_modal_price * spoilage_rate, 2)
 
         # 5. Totals
         total_deductions = round(
@@ -77,11 +83,14 @@ class CostEngine:
             2,
         )
 
-        net_profit_per_quintal = round(modal_price - total_deductions, 2)
+        net_profit_per_quintal = round(adjusted_modal_price - total_deductions, 2)
         total_net_profit = round(net_profit_per_quintal * qty, 2)
 
         return {
-            "modal_price_per_quintal": round(modal_price, 2),
+            "raw_modal_price": round(modal_price, 2),
+            "quality_grade": clean_grade,
+            "grade_multiplier": grade_multiplier,
+            "modal_price_per_quintal": adjusted_modal_price,
             "transport_cost_per_quintal": transport_per_quintal,
             "loading_unloading_cost_per_quintal": loading_per_quintal,
             "commission_per_quintal": commission_per_quintal,

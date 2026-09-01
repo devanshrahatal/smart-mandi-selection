@@ -21,6 +21,7 @@ from app.services.agmarknet_service import agmarknet_service
 from app.services.distance_service import distance_service
 from app.services.cost_engine import cost_engine
 from app.services.trend_engine import trend_engine
+from app.services.sale_window_service import sale_window_service
 
 logger = logging.getLogger(__name__)
 
@@ -494,6 +495,15 @@ class WhatsAppBotService:
                     cost_config=cost_cfg,
                 )
 
+                # 4. Sale Window Recommendation
+                sw_res = sale_window_service.calculate_sale_window(
+                    db=db,
+                    mandi_id=mandi.id,
+                    crop_id=crop.id,
+                    crop=crop,
+                    modal_price=modal_price,
+                )
+
                 candidate_results.append({
                     "mandi_id": mandi.id,
                     "mandi_name": mandi.name,
@@ -503,6 +513,7 @@ class WhatsAppBotService:
                     "travel_time_hours": travel_hours,
                     "modal_price": modal_price,
                     "profit": profit_res,
+                    "sale_window": sw_res,
                 })
 
             # Sort by Net Profit descending
@@ -608,6 +619,18 @@ class WhatsAppBotService:
             )
             if second and gain_per_q > 0:
                 key_insight += f"Selling here yields ₹{gain_per_q:,.2f} more per quintal (+₹{total_gain:,.2f} total) compared to {second['mandi_name']}."
+
+        # Sale Window Timing Advice
+        sw_window = best.get("sale_window", {}).get("recommended_window", "Sell within 1–2 Days")
+        sw_forecast = best.get("sale_window", {}).get("price_forecast", "Stable prices")
+        if lang == "hi":
+            lines.append(f"⏳ *बिक्री समय सलाह (Sale-Window):* {sw_window} ({sw_forecast})\n")
+        elif lang == "mr":
+            lines.append(f"⏳ *विक्री वेळ सल्ला (Sale-Window):* {sw_window} ({sw_forecast})\n")
+        elif lang == "gu":
+            lines.append(f"⏳ *વેચાણ સમય સલાહ (Sale-Window):* {sw_window} ({sw_forecast})\n")
+        else:
+            lines.append(f"⏳ *Optimal Sale-Window:* {sw_window} ({sw_forecast})\n")
 
         lines.append(f"💡 *{msg['key_insight']}:*\n{key_insight}\n")
 

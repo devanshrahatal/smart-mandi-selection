@@ -1,7 +1,7 @@
 """
-Mandi Recommendation and Net Profit API Routes.
+Mandi Recommendation, Quality Grading, Sale-Window and Net Profit API Routes.
 Evaluates candidate mandis, calculates itemized costs, ranks by net profit,
-and generates comparative intelligence for farmers.
+and generates comparative intelligence and harvest timing recommendations for farmers.
 """
 
 import logging
@@ -20,6 +20,7 @@ from app.schemas.recommendation import (
     RecommendationItem,
     CostBreakdown,
     PriceTrendInfo,
+    SaleWindowInfo,
 )
 from app.schemas.crop import CropOut
 from app.schemas.mandi import MandiOut
@@ -27,6 +28,7 @@ from app.services.distance_service import distance_service
 from app.services.agmarknet_service import agmarknet_service
 from app.services.cost_engine import cost_engine
 from app.services.trend_engine import trend_engine
+from app.services.sale_window_service import sale_window_service
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +59,39 @@ def list_mandis(db: Session = Depends(get_db)):
     return db.query(Mandi).filter(Mandi.is_active == True).order_by(Mandi.name.asc()).all()
 
 
+@router.get("/recommendations/sale-window", response_model=SaleWindowInfo, summary="Get optimal sale-window timing advice")
+def get_sale_window_timing(
+    mandi_id: int = Query(..., description="Target Mandi ID"),
+    crop_id: int = Query(..., description="Crop ID"),
+    quality_grade: str = Query("B", description="Quality Grade ('A', 'B', 'C')"),
+    db: Session = Depends(get_db),
+):
+    """
+    Computes optimal harvest sale window advice based on price momentum,
+    crop perishability decay, and market arrival trend.
+    """
+    crop = db.query(Crop).filter(Crop.id == crop_id).first()
+    if not crop:
+        raise HTTPException(status_code=404, detail="Crop not found")
+
+    mandi = db.query(Mandi).filter(Mandi.id == mandi_id).first()
+    if not mandi:
+        raise HTTPException(status_code=404, detail="Mandi not found")
+
+    price_info = agmarknet_service.get_latest_price_with_fallback(db, mandi_id=mandi.id, crop_id=crop.id)
+    modal_price = price_info["modal_price"]
+
+    result = sale_window_service.calculate_sale_window(
+        db=db,
+        mandi_id=mandi.id,
+        crop_id=crop.id,
+        crop=crop,
+        modal_price=modal_price,
+        quality_grade=quality_grade,
+    )
+    return SaleWindowInfo(**result)
+
+
 @router.post("/recommendations", response_model=RecommendationResponse, summary="Get ranked mandi recommendations")
 async def get_mandi_recommendations(
     req: RecommendationRequest,
@@ -64,8 +99,8 @@ async def get_mandi_recommendations(
 ):
     """
     Main recommendation engine endpoint.
-    Given crop, quantity, and farmer GPS coordinates, returns all nearby candidate mandis
-    ranked by NET PROFIT (take-home earnings) with full cost breakdown and price trends.
+    Given crop, quantity, quality grade, and farmer GPS coordinates, returns all nearby candidate mandis
+    ranked by NET PROFIT with full cost breakdown, price trends, and optimal sale-window timing.
     """
     # 1. Resolve Crop
     crop = (
@@ -74,7 +109,6 @@ async def get_mandi_recommendations(
         .first()
     )
     if not crop:
-        # Check if partial match exists
         crop = db.query(Crop).filter(Crop.name.ilike(f"%{req.crop_name.strip()}%")).first()
 
     if not crop:
@@ -90,9 +124,9 @@ async def get_mandi_recommendations(
         raise HTTPException(status_code=500, detail="No active mandis configured in the database.")
 
     candidate_evaluations: List[dict] = []
+    grade = (req.quality_grade or "B").strip().upper()
 
     for mandi in mandis:
-        # Load or create default cost config
         cost_cfg = mandi.cost_config
         if not cost_cfg:
             cost_cfg = CostConfig(
@@ -126,7 +160,7 @@ async def get_mandi_recommendations(
         )
         modal_price = price_info["modal_price"]
 
-        # Calculate Net Profit
+        # Calculate Net Profit with Quality Grade
         cost_data = cost_engine.calculate_net_profit(
             modal_price=modal_price,
             quantity_quintals=req.quantity_quintals,
@@ -134,6 +168,7 @@ async def get_mandi_recommendations(
             travel_time_hours=travel_hours,
             crop=crop,
             cost_config=cost_cfg,
+            quality_grade=grade,
         )
 
         # Calculate 7-day and 14-day trend
@@ -144,12 +179,23 @@ async def get_mandi_recommendations(
             days=14,
         )
 
+        # Calculate sale-window advice for this mandi
+        sale_window_data = sale_window_service.calculate_sale_window(
+            db=db,
+            mandi_id=mandi.id,
+            crop_id=crop.id,
+            crop=crop,
+            modal_price=modal_price,
+            quality_grade=grade,
+        )
+
         candidate_evaluations.append({
             "mandi": mandi,
             "distance_km": distance_km,
             "travel_time_hours": travel_hours,
             "cost_data": cost_data,
             "trend_data": trend_data,
+            "sale_window_data": sale_window_data,
         })
 
     if not candidate_evaluations:
@@ -164,10 +210,8 @@ async def get_mandi_recommendations(
         reverse=True,
     )
 
-    # Identify highlights for badges
     min_distance = min(c["distance_km"] for c in candidate_evaluations)
     max_raw_price = max(c["cost_data"]["modal_price_per_quintal"] for c in candidate_evaluations)
-    top_net_profit = candidate_evaluations[0]["cost_data"]["net_profit_per_quintal"]
 
     ranked_items: List[RecommendationItem] = []
 
@@ -175,6 +219,7 @@ async def get_mandi_recommendations(
         mandi = item["mandi"]
         c_data = item["cost_data"]
         t_data = item["trend_data"]
+        sw_data = item["sale_window_data"]
         dist_km = item["distance_km"]
         travel_h = item["travel_time_hours"]
 
@@ -201,6 +246,9 @@ async def get_mandi_recommendations(
             badges.append("TRENDING UP")
             reasons.append(f"Price trending upward (+{t_data['change_7d_percent']}% in 7 days).")
 
+        if sw_data.get("action_badge"):
+            badges.append(sw_data["action_badge"])
+
         if not reasons:
             reasons.append(
                 f"Balanced option with {dist_km} km travel distance and {c_data['commission_percentage']}% commission."
@@ -209,6 +257,9 @@ async def get_mandi_recommendations(
         recommendation_reason = " ".join(reasons)
 
         breakdown = CostBreakdown(
+            raw_modal_price=c_data.get("raw_modal_price"),
+            quality_grade=c_data.get("quality_grade", "B"),
+            grade_multiplier=c_data.get("grade_multiplier", 1.00),
             modal_price_per_quintal=c_data["modal_price_per_quintal"],
             transport_cost_per_quintal=c_data["transport_cost_per_quintal"],
             loading_unloading_cost_per_quintal=c_data["loading_unloading_cost_per_quintal"],
@@ -229,6 +280,8 @@ async def get_mandi_recommendations(
             max_price_7d=t_data["max_price_7d"],
         )
 
+        sale_window_info = SaleWindowInfo(**sw_data)
+
         ranked_items.append(
             RecommendationItem(
                 rank=rank_idx,
@@ -243,6 +296,7 @@ async def get_mandi_recommendations(
                 badges=badges,
                 cost_breakdown=breakdown,
                 trend=trend_info,
+                sale_window=sale_window_info,
                 recommendation_reason=recommendation_reason,
             )
         )
@@ -253,7 +307,8 @@ async def get_mandi_recommendations(
 
     # Build comparative summary
     summary_parts = [
-        f"For {req.quantity_quintals} quintals of {crop.name}, {top_item.mandi_name} in {top_item.district} delivers the highest net take-home earnings of ₹{top_item.cost_breakdown.net_profit_per_quintal:,.2f}/quintal (Total: ₹{total_batch_profit:,.2f})."
+        f"For {req.quantity_quintals} quintals of {crop.name} (Grade {grade}), {top_item.mandi_name} in {top_item.district} delivers the highest net take-home earnings of ₹{top_item.cost_breakdown.net_profit_per_quintal:,.2f}/quintal (Total: ₹{total_batch_profit:,.2f}).",
+        f"Timing Advice: {top_item.sale_window.recommended_window} ({top_item.sale_window.price_forecast})."
     ]
     if len(ranked_items) >= 2:
         runner_up = ranked_items[1]
@@ -275,7 +330,7 @@ async def get_mandi_recommendations(
             longitude=req.farmer_longitude,
             quantity_quintals=req.quantity_quintals,
             recommended_mandi_id=top_item.mandi_id,
-            query_text=f"{crop.name} - {req.quantity_quintals}q",
+            query_text=f"{crop.name} ({grade}) - {req.quantity_quintals}q",
             response_text=comparison_summary,
         )
         db.add(query_log)
@@ -286,6 +341,7 @@ async def get_mandi_recommendations(
     return RecommendationResponse(
         crop_name=crop.name,
         quantity_quintals=req.quantity_quintals,
+        quality_grade=grade,
         farmer_location={
             "latitude": req.farmer_latitude,
             "longitude": req.farmer_longitude,
@@ -293,5 +349,6 @@ async def get_mandi_recommendations(
         total_mandis_evaluated=len(ranked_items),
         recommendations=ranked_items,
         top_recommendation=top_item,
+        sale_window_recommendation=top_item.sale_window,
         comparison_summary=comparison_summary,
     )
