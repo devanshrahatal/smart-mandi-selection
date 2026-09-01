@@ -29,9 +29,11 @@ export default function Navbar() {
     { label: t("overviewTab") || "Overview", path: "/admin/dashboard" },
     { label: t("mapTab") || "Profit Map", path: "/map" },
     { label: t("marketplaceTab") || "Marketplace", path: "/marketplace" },
+    { label: t("storageTab") || "Storage & Cold Chain", path: "/storage" },
+    { label: t("ordersTab") || "Escrow & Orders", path: "/orders" },
     { label: t("poolingTab") || "Kisan Pool", path: "/pooling" },
     { label: t("priceTrendsTab") || "Price Trends", path: "/admin/mandis" },
-    { label: t("costParamsTab") || "Cost Params", path: "/admin/costs" },
+    { label: t("grievanceTab") || "Grievance Portal", path: "/grievance" },
   ];
 
   return (

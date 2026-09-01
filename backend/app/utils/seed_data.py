@@ -15,6 +15,9 @@ from app.models import Mandi, Crop, MandiPrice, CostConfig, FarmerQuery, AdminUs
 from app.models.buyer import Buyer
 from app.models.lot import Lot
 from app.models.offer import Offer
+from app.models.warehouse import Warehouse
+from app.models.transaction import Transaction
+from app.models.dispute import Dispute
 from app.core.security import get_password_hash
 
 logger = logging.getLogger(__name__)
@@ -583,6 +586,198 @@ def seed_database(db: Optional[Session] = None):
                     status="Pending",
                 ))
 
+        # 8. Seed WDRA Accredited Warehouses & Cold Storages
+        if db.query(Warehouse).count() == 0:
+            warehouses_data = [
+                Warehouse(
+                    name="Sheetal Cold Storage & Agro Logistics",
+                    facility_type="Cold Storage",
+                    is_wdra_registered=True,
+                    registration_no="WDRA/RAJ/2024/092",
+                    capacity_mt=5000.0,
+                    available_capacity_mt=1800.0,
+                    storage_rate_per_quintal_per_month=35.0,
+                    state="Rajasthan",
+                    district="Jaipur",
+                    address="NH-52, Chomu Industrial Area, Jaipur 303702",
+                    latitude=26.9800,
+                    longitude=75.7200,
+                    contact_person="Mukesh Choudhary",
+                    contact_phone="+919829567890",
+                    temperature_range="2°C - 6°C",
+                    suitable_crops="Tomato, Potato, Onion",
+                ),
+                Warehouse(
+                    name="Indira Krishi Cold Storage Hub",
+                    facility_type="Cold Storage",
+                    is_wdra_registered=True,
+                    registration_no="WDRA/RAJ/2023/114",
+                    capacity_mt=8000.0,
+                    available_capacity_mt=2400.0,
+                    storage_rate_per_quintal_per_month=30.0,
+                    state="Rajasthan",
+                    district="Kota",
+                    address="Borkheda Agro Park, Kota, Rajasthan 324001",
+                    latitude=25.1950,
+                    longitude=75.8400,
+                    contact_person="Kishore Meena",
+                    contact_phone="+919829123499",
+                    temperature_range="0°C - 4°C",
+                    suitable_crops="Soybean, Wheat, Potato",
+                ),
+                Warehouse(
+                    name="Mahavir Cold Storage & Warehousing",
+                    facility_type="Cold Storage",
+                    is_wdra_registered=True,
+                    registration_no="WDRA/GUJ/2024/048",
+                    capacity_mt=6500.0,
+                    available_capacity_mt=2100.0,
+                    storage_rate_per_quintal_per_month=32.0,
+                    state="Gujarat",
+                    district="Vadodara",
+                    address="Sayajipura Bypass Road, Vadodara 390019",
+                    latitude=22.3120,
+                    longitude=73.2210,
+                    contact_person="Haresh Patel",
+                    contact_phone="+919825144556",
+                    temperature_range="2°C - 8°C",
+                    suitable_crops="Tomato, Potato, Banana, Onion",
+                ),
+                Warehouse(
+                    name="Sahyadri Cold Chain Logistics Terminal",
+                    facility_type="Cold Storage",
+                    is_wdra_registered=True,
+                    registration_no="WDRA/MAH/2023/201",
+                    capacity_mt=12000.0,
+                    available_capacity_mt=4500.0,
+                    storage_rate_per_quintal_per_month=38.0,
+                    state="Maharashtra",
+                    district="Nashik",
+                    address="Dindori Agro Export Zone, Nashik 422206",
+                    latitude=20.0150,
+                    longitude=73.7810,
+                    contact_person="Anand Shinde",
+                    contact_phone="+919822334455",
+                    temperature_range="-2°C - 4°C",
+                    suitable_crops="Tomato, Onion, Grapes, Banana",
+                ),
+                Warehouse(
+                    name="Azadpur Central Perishable Cold Terminal",
+                    facility_type="Cold Storage",
+                    is_wdra_registered=True,
+                    registration_no="WDRA/DEL/2022/015",
+                    capacity_mt=15000.0,
+                    available_capacity_mt=3200.0,
+                    storage_rate_per_quintal_per_month=42.0,
+                    state="Delhi",
+                    district="North Delhi",
+                    address="GT Karnal Road, Azadpur Mandi Gate #4, Delhi 110033",
+                    latitude=28.7120,
+                    longitude=77.1680,
+                    contact_person="Ravi Kant Gupta",
+                    contact_phone="+919810123987",
+                    temperature_range="1°C - 5°C",
+                    suitable_crops="Tomato, Potato, Onion, Green Peas",
+                ),
+                Warehouse(
+                    name="Central Warehousing Corporation (CWC) Dry Silo",
+                    facility_type="Dry Warehouse",
+                    is_wdra_registered=True,
+                    registration_no="WDRA/MP/2021/008",
+                    capacity_mt=25000.0,
+                    available_capacity_mt=8500.0,
+                    storage_rate_per_quintal_per_month=15.0,
+                    state="Madhya Pradesh",
+                    district="Indore",
+                    address="Sanwer Road Industrial Area, Indore 452015",
+                    latitude=22.7500,
+                    longitude=75.8300,
+                    contact_person="Deepak Malviya",
+                    contact_phone="+919826011223",
+                    temperature_range="Ambient (Fumigated)",
+                    suitable_crops="Wheat, Soybean, Gram",
+                ),
+            ]
+            for w in warehouses_data:
+                db.add(w)
+            db.commit()
+
+        # 9. Seed Demo Escrow Transactions
+        if db.query(Transaction).count() == 0:
+            lot1 = db.query(Lot).first()
+            buyer1 = db.query(Buyer).first()
+            tx1 = Transaction(
+                transaction_id="TXN-2026-8041",
+                lot_id=lot1.id if lot1 else None,
+                buyer_id=buyer1.id if buyer1 else None,
+                farmer_name="Rameshwar Prasad Jat",
+                farmer_phone="+919829045612",
+                buyer_name="BigBasket Direct Farm Sourcing Hub",
+                crop_name="Tomato",
+                quantity_quintals=25.0,
+                agreed_price_per_q=2450.0,
+                gross_amount=61250.0,
+                freight_deduction=1225.0,
+                platform_fee=306.25,
+                net_payable_to_farmer=59718.75,
+                escrow_status="ESCROW_LOCKED",
+                payment_method="Direct UPI / Escrow",
+                pickup_address="Farm Gate #3, Chomu, Jaipur, Rajasthan",
+                qr_receipt_code="SM-ESCROW-8041-A9F2",
+                notes="Grade A inspection scheduled. 100% funds locked in ICICI nodal escrow.",
+            )
+            tx2 = Transaction(
+                transaction_id="TXN-2026-7910",
+                lot_id=None,
+                buyer_id=None,
+                farmer_name="Bhagwan Das Patel",
+                farmer_phone="+919825133445",
+                buyer_name="ITC e-Choupal Sourcing Center",
+                crop_name="Onion",
+                quantity_quintals=40.0,
+                agreed_price_per_q=1880.0,
+                gross_amount=75200.0,
+                freight_deduction=1504.0,
+                platform_fee=376.0,
+                net_payable_to_farmer=73320.0,
+                escrow_status="SETTLED",
+                payment_method="Instant Bank NEFT",
+                pickup_address="Padra Agro Cluster, Vadodara, Gujarat",
+                qr_receipt_code="SM-ESCROW-7910-B4X1",
+                notes="Weighing complete (40.0q). Payout of ₹73,320 credited to SBI A/c ending in 4102.",
+            )
+            db.add_all([tx1, tx2])
+            db.commit()
+
+        # 10. Seed Demo Grievance Tickets
+        if db.query(Dispute).count() == 0:
+            disp1 = Dispute(
+                ticket_id="GRV-2026-104",
+                complainant_name="Ram Lal Meena",
+                complainant_phone="+919829123456",
+                target_entity_name="Azadpur Mandi Weigher #12",
+                dispute_category="Weight Discrepancy",
+                severity="HIGH",
+                description="Dispatched 30q loaded in truck, but APMC weigher reported 27.2q without conducting empty vehicle tare weight check.",
+                disputed_amount="₹6,720",
+                status="INVESTIGATING",
+                resolution_summary=None,
+            )
+            disp2 = Dispute(
+                ticket_id="GRV-2026-098",
+                complainant_name="Suresh Shinde",
+                complainant_phone="+919822119988",
+                target_entity_name="Vashi APMC Commission Agent #44",
+                dispute_category="Excessive Commission",
+                severity="MEDIUM",
+                description="Charged 8.5% commission on tomato sales instead of the legally mandated APMC cap of 6.0%.",
+                disputed_amount="₹2,850",
+                status="RESOLVED",
+                resolution_summary="APMC Grievance Officer issued notice. Excess ₹2,850 refunded via UPI to farmer on Aug 26.",
+            )
+            db.add_all([disp1, disp2])
+            db.commit()
+
         db.commit()
         logger.info("Successfully seeded Smart Mandi dataset (%d mandis, 5 crops)", len(MANDIS))
     except Exception as e:
@@ -591,4 +786,5 @@ def seed_database(db: Optional[Session] = None):
     finally:
         if close_db:
             db.close()
+
 

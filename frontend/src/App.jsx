@@ -22,6 +22,9 @@ import DashboardOverview from "./pages/DashboardOverview";
 import MandiDetailPage from "./pages/MandiDetailPage";
 import CostConfigPage from "./pages/CostConfigPage";
 import MarketplacePage from "./pages/MarketplacePage";
+import WarehouseStoragePage from "./pages/WarehouseStoragePage";
+import EscrowReceiptPage from "./pages/EscrowReceiptPage";
+import GrievancePortalPage from "./pages/GrievancePortalPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -494,6 +497,30 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <MarketplacePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/storage"
+                  element={
+                    <ProtectedRoute>
+                      <WarehouseStoragePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/orders"
+                  element={
+                    <ProtectedRoute>
+                      <EscrowReceiptPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/grievance"
+                  element={
+                    <ProtectedRoute>
+                      <GrievancePortalPage />
                     </ProtectedRoute>
                   }
                 />
