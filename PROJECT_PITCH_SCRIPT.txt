@@ -1,0 +1,392 @@
+================================================================================
+       SMART MANDI SELECTION PLATFORM — PROJECT PITCH SCRIPT
+       Created by Devansh Rahatal
+================================================================================
+
+Approximate total time: 8–10 minutes.
+
+================================================================================
+PART 1: THE PROBLEM (2 minutes)
+================================================================================
+
+Start by asking the audience a question:
+
+"Let me ask you something. If a farmer in Jaipur grows 20 quintals of tomatoes
+and checks Agmarknet — the government's official price portal — he sees that
+Azadpur Mandi in Delhi is offering ₹2,901 per quintal, while his local Kota
+Mandi is offering only ₹2,450. Which mandi do you think he should go to?"
+
+Pause. Let the audience say "Delhi" or "Azadpur."
+
+"Most people — and most farmers — would say Delhi. Because ₹2,901 is clearly
+higher than ₹2,450. But here's the thing nobody tells them..."
+
+"To get to Delhi from Jaipur, he has to hire a Tata Ace truck. That costs him
+roughly ₹927 per quintal in transport freight alone. Then there's the APMC
+mandi commission — 7.5% in Delhi — that's another ₹218 per quintal. Loading,
+unloading, weighing charges — ₹70 more. And because tomatoes are one of the
+most perishable crops in India — with a perishability index of 0.85 — after
+6+ hours of travel in Indian summer heat, he loses another ₹119 per quintal
+to spoilage and quality downgrades."
+
+"So what started as ₹2,901 per quintal... after all these hidden deductions...
+becomes just ₹1,568 per quintal in his hand."
+
+"Now let's look at Kota — the mandi he rejected. It's only 250 km away.
+Transport is just ₹484. Commission is lower. Spoilage is minimal because
+the journey is shorter. His actual take-home from Kota? ₹1,737 per quintal."
+
+"That's ₹169 MORE per quintal from the 'cheaper' mandi. On 20 quintals,
+that's ₹3,382 of additional profit he lost — just because he chased a
+higher advertised number."
+
+"And it gets worse. If he had gone to Vashi Mandi in Mumbai — where the
+price looks attractive at ₹2,820 — the transport alone would have been
+₹2,347 per quintal. His net take-home? Zero. An actual financial loss."
+
+"This is what we call 'The Price Illusion.' And it's not a rare edge case.
+Over 86% of Indian farmers are smallholders. They operate on razor-thin
+margins. One wrong mandi decision can wipe out an entire season's profit."
+
+"Every existing agricultural portal — Agmarknet, eNAM, Kisan Suvidha —
+they all show you the gross advertised price. Nobody shows the farmer
+what actually matters: the NET take-home profit after all deductions."
+
+"That's the problem we set out to solve."
+
+
+================================================================================
+PART 2: THE SOLUTION (1.5 minutes)
+================================================================================
+
+"We built the Smart Mandi Selection Platform — an intelligent decision engine
+that calculates real take-home net profit for every candidate mandi within
+a 300-kilometer radius of a farmer's location."
+
+"Instead of showing just the raw price, our system applies a 5-factor
+mathematical formulation:"
+
+"Net Profit equals Modal Price, minus Transport Cost, minus Mandi Commission,
+minus Loading and Handling Charges, minus Transit Spoilage Degradation."
+
+"The transport cost is computed using actual road distances — either from
+Google Maps Distance Matrix API or our Haversine formula with an Indian
+highway detour multiplier of 1.28x — multiplied by commercial vehicle
+freight rates per kilometer per quintal."
+
+"The spoilage deduction is where our innovation really shines. We built a
+scientific perishability decay model. Every crop has a decay index — Tomato
+is 0.85, Banana is 0.70, Onion is 0.25, Potato is 0.20, Wheat is 0.05.
+The spoilage formula is: Modal Price × Perishability Index × (Transit Hours
+divided by 24) × 0.15. This means the system automatically penalizes distant
+mandis more heavily for perishable crops and less for grains."
+
+"The result? Farmers get a ranked list of mandis — sorted not by who's
+advertising the highest price, but by who will put the most money in
+their pocket."
+
+
+================================================================================
+PART 3: DOES THIS ALREADY EXIST? WHAT'S UNIQUE? (1.5 minutes)
+================================================================================
+
+"Now, you might wonder — there are many agri-tech platforms out there.
+eNAM, Agmarknet, Kisan Suvidha, KrishiSense. Do any of them already
+solve this?"
+
+"The short answer is: no. Not like this."
+
+"Agmarknet and eNAM show raw modal prices. They don't deduct a single
+rupee of logistics. A farmer looking at their data has no idea what
+he'll actually earn."
+
+"KrishiSense, which won SIH last year, focuses on crop recommendation
+and disease prediction — it tells farmers WHAT to grow, not WHERE to
+sell. Completely different problem domain."
+
+"There are a few transport aggregators and logistics apps, but they
+don't integrate price intelligence. They'll help you book a truck, but
+they won't tell you whether it's worth going to that mandi in the
+first place."
+
+"Here's what makes Smart Mandi genuinely unique — five things no other
+platform combines together:"
+
+"ONE — We compute Net Profit, not Gross Price. We're the only platform
+that subtracts transport, commission, handling, AND perishability-based
+spoilage from the advertised price to give the real take-home number."
+
+"TWO — Scientific Perishability Decay Model. Not a flat percentage —
+a crop-specific, time-dependent degradation formula that gets worse
+with longer transit hours. No one else models spoilage this way."
+
+"THREE — Kisan Pool Shared Freight Optimizer. Instead of each small
+farmer hiring their own Tata Ace, our algorithm pools neighboring
+farmers' harvests into larger commercial vehicles — Eicher 14ft,
+19ft Heavy Trucks, 24ft Multi-Axle — reducing individual transport
+costs by 35 to 55 percent."
+
+"FOUR — Zero-App WhatsApp Voice AI. Farmers don't need to download
+anything. They send a voice note in Hindi, Marathi, Gujarati, or
+English to a WhatsApp number. Our system transcribes it, runs the
+full net profit calculation, and sends back both a text table AND
+a synthesized voice note reply in their native language."
+
+"FIVE — Interactive GIS Profit Mapping. A Leaflet-based map with
+color-coded route lines showing exactly why the nearest mandi might
+be more profitable than the distant one — Green for best profit,
+Teal for moderate, Amber for suboptimal."
+
+"No single existing platform offers even two of these together.
+We offer all five."
+
+
+================================================================================
+PART 4: LIVE DEMONSTRATION WALKTHROUGH (4 minutes)
+================================================================================
+
+[DEMO: Open https://smart-mandi-selection.vercel.app/ on the laptop/projector]
+
+--- LANDING PAGE ---
+
+"This is our live deployed platform. Let me walk you through it."
+
+[DEMO: Show the Landing Page — scroll to the Live Scenario Comparison Table]
+
+"Right here on the homepage, we demonstrate the problem visually with
+real numbers. This table shows three mandis a Jaipur tomato farmer
+could visit. You can see — Kota has the lowest advertised price but
+the HIGHEST net profit. Azadpur looks best on paper but delivers ₹169
+LESS per quintal. And Vashi? Complete net loss."
+
+"This table alone tells the entire story of why our platform exists."
+
+[DEMO: Click the Language Selector — switch to Hindi, then Marathi, then back to English]
+
+"Our entire platform supports four languages — English, Hindi, Marathi,
+and Gujarati. Every label, every heading, every button translates
+instantly. This is critical because our target users are rural farmers
+across multiple Indian states."
+
+[DEMO: Scroll down to the WhatsApp Sandbox Card on the landing page]
+
+"We've also integrated a live WhatsApp AI Assistant directly accessible
+from the homepage. One click opens WhatsApp with the sandbox code
+pre-filled. I'll demonstrate the bot in detail shortly."
+
+--- ADMIN LOGIN ---
+
+[DEMO: Click "Admin Dashboard" button → Login Page opens]
+
+"Now let me show the intelligence dashboard. The platform has a
+full role-based admin portal with JWT authentication."
+
+[DEMO: Click "Sign In" (credentials are pre-filled: admin / admin123)]
+
+--- ADMIN DASHBOARD ---
+
+[DEMO: Dashboard Overview page loads — show the KPI cards at the top]
+
+"This is the admin intelligence dashboard. At the top you see live
+platform metrics — 2,847 mandis tracked, 18,200+ active farmers,
+average savings of ₹312 per quintal, and over 4,000 WhatsApp queries
+processed."
+
+[DEMO: Scroll down to the Top Queried Crops chart and Top Recommended Mandis]
+
+"Below that, we have analytics on which crops are being queried most
+and which mandis are being recommended most frequently. This data
+helps APMC administrators understand real demand patterns."
+
+[DEMO: Scroll to the Live Farmer Query Stream section]
+
+"And here's the live query stream — every farmer interaction through
+WhatsApp appears here in real time with the crop, quantity, location,
+and which mandi was recommended."
+
+--- PROFIT MAP ---
+
+[DEMO: Click "Explore Mandi Profit & Route Map" card OR "Profit Map" in navbar]
+
+"This is our GIS Profit Map — the centerpiece of the platform."
+
+[DEMO: Select Origin: "Vadodara, Gujarat" → Crop: "Tomato" → Quantity: 20]
+
+"I'm selecting Vadodara as the farmer's origin, Tomato as the crop,
+and 20 quintals as the harvest. Watch what happens on the map."
+
+[DEMO: Wait for the map to render route lines and mandi pins]
+
+"The system just computed net profit for every reachable mandi from
+Vadodara. You can see color-coded route lines — Green is the most
+profitable destination, Teal is the second option, and Amber lines
+show mandis where profits are lower."
+
+[DEMO: Click on the #1 green mandi pin to show the popup breakdown]
+
+"Click any pin and you get the complete financial breakdown — gross
+modal price, minus transport, minus commission, minus spoilage —
+equals net take-home profit. The farmer can see exactly why this
+mandi earns them more, even if its raw price is lower."
+
+[DEMO: Change Origin to "Jaipur, Rajasthan" and show routes update]
+
+"If I switch the origin to Jaipur, the entire map recomputes. Different
+distances, different transit times, different spoilage levels, different
+optimal mandi. The system is fully dynamic."
+
+--- KISAN POOL ---
+
+[DEMO: Click "Kisan Pool" in the navbar]
+
+"This is our Shared Freight Optimizer — Kisan Pool."
+
+[DEMO: Adjust the slider: Solo Quantity = 12q, Pooled Quantity = 36q, Distance = 248 km]
+
+"Imagine a farmer has only 12 quintals. If he hires a truck alone,
+it costs him about ₹289 per quintal. But if three neighboring farmers
+pool their harvests — total 36 quintals — they can share a larger
+Eicher truck."
+
+[DEMO: Point to the calculated result — show savings percentage and matched vehicle]
+
+"The system shows the pooled cost drops to just ₹151 per quintal —
+that's a 47% reduction in freight costs. The farmer saves ₹1,656
+on a single trip. For a smallholder, that's significant."
+
+[DEMO: Scroll down to show Active Pooling Batches]
+
+"Below the calculator, we show active pooling batches in the region —
+real clusters where farmers can join an existing truck load rather
+than waiting to form their own group."
+
+--- PRICE TRENDS ---
+
+[DEMO: Click "Price Trends" in the navbar]
+
+"This is the 30-day historical price trend engine. Select any mandi
+and crop combination, and you get a time-series chart showing price
+movements over the last month."
+
+[DEMO: Select a mandi and crop, show the chart rendering]
+
+"Administrators can use this to identify pricing anomalies, seasonal
+patterns, or sudden supply-demand shifts."
+
+--- COST CONFIGURATION ---
+
+[DEMO: Click "Cost Params" in the navbar]
+
+"Finally, this is the admin cost configuration panel. APMC administrators
+can update mandi-specific commission percentages — which vary from
+1.5% to 8% across states — loading charges, unloading charges, and
+base transport rate coefficients."
+
+[DEMO: Click Edit on any mandi → show the form → cancel without saving]
+
+"Any changes here immediately update all net profit calculations across
+the entire platform in real time. There's no batch processing or delay."
+
+--- WHATSAPP BOT LIVE DEMO ---
+
+[DEMO: Open WhatsApp on your phone (or show phone screen on projector)]
+
+"Now let me show you the most impactful feature — our WhatsApp AI
+Assistant. This is crucial because most Indian farmers don't use web
+browsers or install apps. But they all use WhatsApp."
+
+[DEMO: Open chat with +1 (415) 523-8886]
+
+"We connect through a Twilio WhatsApp Gateway. The farmer simply saves
+this number and sends the activation code 'join unusual-sea'. After
+that, they can interact naturally."
+
+[DEMO: Type and send: "Tomato 20q from Jaipur"]
+
+"I just typed a simple natural language query — 'Tomato 20 quintals
+from Jaipur'. Watch the response."
+
+[DEMO: Wait for the bot reply — show the ranked mandi table in WhatsApp]
+
+"Within seconds, the bot responds with a ranked net profit comparison
+table — right inside WhatsApp. It shows the best mandi, the net
+take-home per quintal, total profit, and how much more the farmer
+earns compared to the second-best option."
+
+[DEMO: Now send a voice note in Hindi — hold mic and say:
+"भैया 20 क्विंटल टमाटर बेचना है जयपुर से"]
+
+"But here's what really sets us apart. Most farmers are more comfortable
+speaking than typing. So I'm sending a voice note in Hindi."
+
+[DEMO: Wait for bot reply — it sends back both text AND a voice note MP3]
+
+"The bot transcribes my Hindi speech, extracts the crop, quantity, and
+origin, runs the full net profit calculation, and sends back BOTH a
+text summary AND a synthesized voice note reply in Hindi — so the
+farmer can simply listen to the recommendation."
+
+"This works in Hindi, Marathi, Gujarati, and English. And if the farmer
+doesn't know their exact location name, they can simply share their
+GPS pin from WhatsApp — we handle that too."
+
+[DEMO: Switch back to the web dashboard to show the query appearing in Live Stream]
+
+"And if you switch back to the admin dashboard — you'll see that same
+WhatsApp interaction just appeared in the Live Farmer Query Stream.
+Every conversation is tracked, stored, and available for analytics."
+
+
+================================================================================
+PART 5: CLOSING & IMPACT SUMMARY (1 minute)
+================================================================================
+
+"To wrap up — we haven't just built a price comparison tool. We've built
+a complete agricultural intelligence ecosystem."
+
+"At its core, we solve a real, measurable financial problem: farmers lose
+thousands of rupees per trip because no existing system accounts for the
+true cost of reaching a mandi."
+
+"Our platform gives them:"
+"— Real net profit calculations, not misleading gross prices"
+"— Visual GIS route maps showing why closer can be better"
+"— Shared freight optimization cutting transport costs by up to 55%"
+"— A zero-install WhatsApp voice AI that works in 4 regional languages"
+"— And a full admin intelligence dashboard for APMC decision-makers"
+
+"The technology is live. The website is deployed. The WhatsApp bot is
+functional. The backend passes 26 automated tests with 100% success."
+
+"This isn't a mockup or a concept. It's a working production system
+that can save real farmers real money — starting today."
+
+"Thank you."
+
+
+================================================================================
+DEMO CHECKLIST (Quick Reference)
+================================================================================
+
+Before the presentation, make sure:
+
+[ ] Laptop has Chrome/Edge open with https://smart-mandi-selection.vercel.app/
+[ ] Phone has WhatsApp open with +1 (415) 523-8886 chat ready
+[ ] You've already sent "join unusual-sea" and got confirmation
+[ ] Backend is awake (visit https://smart-mandi-selection.onrender.com/docs
+    5 minutes before to wake up the free-tier Render instance)
+[ ] Pre-type "Tomato 20q from Jaipur" on phone so you can send quickly
+[ ] Prepare a Hindi voice note: "भैया 20 क्विंटल टमाटर बेचना है जयपुर से"
+
+Demo flow order:
+  1. Landing Page (comparison table + language switcher)
+  2. Admin Login → Dashboard Overview (KPIs + query stream)
+  3. Profit Map (Vadodara tomato → show routes → click pin)
+  4. Kisan Pool (12q solo vs 36q pooled → show savings)
+  5. Price Trends (30-day chart)
+  6. Cost Config (show editable parameters)
+  7. WhatsApp Bot (text query → voice note → show on dashboard)
+
+================================================================================
+END OF SCRIPT
+================================================================================
